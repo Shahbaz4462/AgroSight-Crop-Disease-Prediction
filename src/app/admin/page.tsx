@@ -1,325 +1,137 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { MODEL_VERSIONS, MOCK_EXPERT_REVIEWS } from "../../data/modelVersionsData";
 import { DISEASES_KNOWLEDGE_BASE } from "../../data/diseasesData";
 import { ExpertReviewCase, KnowledgeBaseEntry } from "../../types";
-import {
-  ShieldAlert,
-  Cpu,
-  Layers,
-  CheckCircle2,
-  XCircle,
-  RefreshCw,
-  Plus,
-  Edit,
-  Trash2,
-  Sparkles,
-  AlertTriangle,
-  Info,
-} from "lucide-react";
+import { PageHeader, SampleDataNote } from "../../components/layout/PageHeader";
+import { Trash2, Check, X, Flag } from "lucide-react";
+
+type Tab = "reviews" | "models" | "knowledge";
+type Action = "Confirmed" | "Overridden" | "Retrain Flagged";
+
+const TABS: { key: Tab; label: string }[] = [
+  { key: "reviews", label: "Review queue" },
+  { key: "models", label: "Models" },
+  { key: "knowledge", label: "Knowledge base" },
+];
+
+const statusBg: Record<string, string> = {
+  Active: "bg-accent text-[#0b1a12]",
+  Staging: "bg-warn text-[#0b1a12]",
+  Testing: "bg-card",
+  Deprecated: "bg-card text-muted",
+};
 
 export default function AdminPortalPage() {
-  const [activeTab, setActiveTab] = useState<"reviews" | "models" | "knowledge">("reviews");
-  const [reviewCases, setReviewCases] = useState<ExpertReviewCase[]>(MOCK_EXPERT_REVIEWS);
-  const [knowledgeList, setKnowledgeList] = useState<KnowledgeBaseEntry[]>(DISEASES_KNOWLEDGE_BASE);
+  const [tab, setTab] = useState<Tab>("reviews");
+  const [cases, setCases] = useState<ExpertReviewCase[]>(MOCK_EXPERT_REVIEWS);
+  const [kb, setKb] = useState<KnowledgeBaseEntry[]>(DISEASES_KNOWLEDGE_BASE);
 
-  const handleAction = (id: string, action: "Confirmed" | "Overridden" | "Retrain Flagged") => {
-    setReviewCases((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, status: action } : c))
-    );
-  };
+  const act = (id: string, status: Action) => setCases((p) => p.map((c) => (c.id === id ? { ...c, status } : c)));
+  const pending = cases.filter((c) => c.status === "Needs Review").length;
 
   return (
-    <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-zinc-200 dark:border-zinc-800 gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-mono uppercase font-bold text-emerald-500">
-              Expert Agronomist & MLOps Control Center
-            </span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-zinc-950 dark:text-white tracking-tight flex items-center gap-2">
-            <ShieldAlert className="w-6 h-6 text-emerald-500" />
-            <span>Admin & Model Governance Portal</span>
-          </h1>
-          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-            Human-in-the-loop review for low-confidence foliar specimens, active learning, and knowledge base curation
-          </p>
-        </div>
+    <div className="w-full">
+      <PageHeader label="Expert portal" title="Review & curate." sub="For agronomists: check uncertain scans, compare models and maintain the treatment library.">
+        <SampleDataNote text="Prototype. Sample cases, no sign-in yet." />
+      </PageHeader>
 
-        {/* Prototype Auth Demarcation Notice */}
-        <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs flex items-center gap-2">
-          <Info className="w-4 h-4 shrink-0" />
-          <span>Demo Exhibition Role: Senior Agronomist (Admin)</span>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-3">
-        <button
-          onClick={() => setActiveTab("reviews")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
-            activeTab === "reviews"
-              ? "bg-emerald-600 text-white shadow-sm"
-              : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-          }`}
-        >
-          <ShieldAlert className="w-4 h-4" />
-          <span>Cases Needing Review ({reviewCases.filter((c) => c.status === "Needs Review").length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("models")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
-            activeTab === "models"
-              ? "bg-emerald-600 text-white shadow-sm"
-              : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-          }`}
-        >
-          <Cpu className="w-4 h-4" />
-          <span>Model Registry & Versions</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab("knowledge")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
-            activeTab === "knowledge"
-              ? "bg-emerald-600 text-white shadow-sm"
-              : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-          }`}
-        >
-          <Layers className="w-4 h-4" />
-          <span>Disease Knowledge Base</span>
-        </button>
-      </div>
-
-      {/* TAB 1: EXPERT CASES NEEDING REVIEW */}
-      {activeTab === "reviews" && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
-              Pending Validation Queue (&lt;60% Confidence / OOD Instances)
-            </h3>
-            <span className="text-xs font-mono text-zinc-400">
-              Active Learning Candidates
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {reviewCases.map((item) => (
-              <div
-                key={item.id}
-                className="p-5 rounded-3xl bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-emerald-500/20 shadow-sm flex flex-col justify-between space-y-4"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-black shrink-0 border border-zinc-200 dark:border-zinc-800">
-                    <Image src={item.imageUrl} alt={item.predictedCrop} fill className="object-cover" />
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 font-bold border border-amber-500/20">
-                        {item.flagReason}
-                      </span>
-                      <span className="text-xs font-mono text-zinc-400">
-                        {item.confidence.toFixed(1)}%
-                      </span>
-                    </div>
-
-                    <h4 className="text-sm font-black text-zinc-900 dark:text-white">
-                      {item.predictedCrop}: {item.predictedDisease}
-                    </h4>
-
-                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                      Origin: {item.farmerLocation} • {new Date(item.submittedAt).toLocaleDateString()}
-                    </p>
-
-                    {item.reviewerNotes && (
-                      <p className="text-xs text-zinc-600 dark:text-zinc-300 italic pt-1">
-                        &quot;{item.reviewerNotes}&quot;
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Status & Expert Action Buttons */}
-                <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] font-mono uppercase text-zinc-400 block">Status:</span>
-                    <span
-                      className={`text-xs font-bold ${
-                        item.status === "Confirmed"
-                          ? "text-emerald-500"
-                          : item.status === "Retrain Flagged"
-                          ? "text-ai-cyan"
-                          : item.status === "Overridden"
-                          ? "text-rose-500"
-                          : "text-amber-500"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      onClick={() => handleAction(item.id, "Confirmed")}
-                      className="px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/30 text-emerald-500 text-xs font-semibold"
-                    >
-                      Confirm
-                    </button>
-                    <button
-                      onClick={() => handleAction(item.id, "Overridden")}
-                      className="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/30 text-rose-500 text-xs font-semibold"
-                    >
-                      Reject
-                    </button>
-                    <button
-                      onClick={() => handleAction(item.id, "Retrain Flagged")}
-                      className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-ai-cyan text-xs font-semibold border border-zinc-700"
-                    >
-                      Tag Retrain
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 2: MODEL REGISTRY & VERSIONS */}
-      {activeTab === "models" && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
-                Production Model Registry & Quantitative Metrics
-              </h3>
-              <p className="text-xs text-zinc-500">
-                Performance indicators benchmarked on held-out foliar test sets
-              </p>
-            </div>
-            <span className="px-3 py-1 rounded-full bg-amber-500/10 text-amber-500 text-[11px] font-mono border border-amber-500/20">
-              Demo Evaluation Metrics
-            </span>
-          </div>
-
-          <div className="space-y-4">
-            {MODEL_VERSIONS.map((model) => (
-              <div
-                key={model.id}
-                className="p-6 rounded-3xl bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-emerald-500/20 shadow-sm space-y-4"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-zinc-100 dark:border-zinc-800">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-lg font-black text-zinc-900 dark:text-white">
-                        {model.name}
-                      </h4>
-                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                        {model.status}
-                      </span>
-                    </div>
-                    <p className="text-xs text-zinc-500 font-mono mt-0.5">{model.architecture}</p>
-                  </div>
-
-                  <div className="text-right">
-                    <span className="text-xs font-mono text-zinc-400 block">Version {model.version}</span>
-                    <span className="text-[11px] text-zinc-500">Released: {model.releaseDate}</span>
-                  </div>
-                </div>
-
-                {/* Metrics Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
-                  <div className="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-100 dark:border-zinc-800">
-                    <span className="text-[10px] font-mono uppercase text-zinc-400 block">Accuracy</span>
-                    <span className="text-lg font-black font-mono text-emerald-500">{model.accuracy}%</span>
-                  </div>
-                  <div className="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-100 dark:border-zinc-800">
-                    <span className="text-[10px] font-mono uppercase text-zinc-400 block">Precision</span>
-                    <span className="text-lg font-black font-mono text-zinc-800 dark:text-zinc-200">{model.precision}%</span>
-                  </div>
-                  <div className="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-100 dark:border-zinc-800">
-                    <span className="text-[10px] font-mono uppercase text-zinc-400 block">Recall</span>
-                    <span className="text-lg font-black font-mono text-zinc-800 dark:text-zinc-200">{model.recall}%</span>
-                  </div>
-                  <div className="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-100 dark:border-zinc-800">
-                    <span className="text-[10px] font-mono uppercase text-zinc-400 block">F1-Score</span>
-                    <span className="text-lg font-black font-mono text-zinc-800 dark:text-zinc-200">{model.f1Score}%</span>
-                  </div>
-                  <div className="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-100 dark:border-zinc-800">
-                    <span className="text-[10px] font-mono uppercase text-zinc-400 block">Latency</span>
-                    <span className="text-lg font-black font-mono text-ai-cyan">{model.inferenceTimeMs} ms</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 3: DISEASE KNOWLEDGE BASE MANAGEMENT */}
-      {activeTab === "knowledge" && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
-              Agronomic Knowledge Entries ({knowledgeList.length})
-            </h3>
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-8 md:py-12 space-y-8">
+        <div role="tablist" className="grid grid-cols-3 border-2 border-ink">
+          {TABS.map((t) => (
             <button
-              onClick={() => alert("Prototype action: Disease creation modal will connect to backend API.")}
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-1.5"
+              key={t.key}
+              role="tab"
+              aria-selected={tab === t.key}
+              onClick={() => setTab(t.key)}
+              className={`h-14 label !text-[10px] sm:!text-[11px] border-r-2 last:border-r-0 border-ink ${tab === t.key ? "bg-ink text-paper" : "bg-card hover:bg-accent hover:text-[#0b1a12]"}`}
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Add New Disease Entry</span>
+              {t.label}
+              {t.key === "reviews" && pending > 0 ? ` · ${pending}` : ""}
             </button>
-          </div>
-
-          <div className="space-y-3">
-            {knowledgeList.map((entry) => (
-              <div
-                key={entry.id}
-                className="p-4 rounded-2xl bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm"
-              >
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-zinc-900 dark:text-white">
-                      {entry.crop}: {entry.disease}
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-semibold">
-                      {entry.pathogenType}
-                    </span>
-                  </div>
-                  <p className="text-xs text-zinc-500 font-mono italic mt-0.5">
-                    {entry.scientificName} • Verified by: {entry.verifiedBy}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 self-end sm:self-auto">
-                  <button
-                    onClick={() => alert(`Editing entry for ${entry.disease}`)}
-                    className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:text-emerald-500"
-                    title="Edit entry"
-                  >
-                    <Edit className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    onClick={() => setKnowledgeList((prev) => prev.filter((k) => k.id !== entry.id))}
-                    className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-rose-500 hover:bg-rose-500/10"
-                    title="Delete entry"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
-      )}
+
+        {tab === "reviews" && (
+          <section className="space-y-4">
+            <p className="label text-muted">Scans under 60% confidence or outside known crops</p>
+            <ul className="grid md:grid-cols-2 gap-5">
+              {cases.map((c) => (
+                <li key={c.id} className="border-2 border-ink bg-card flex flex-col">
+                  <div className="flex gap-4 p-4">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={c.imageUrl} alt={c.predictedCrop} className="w-24 h-24 object-cover border-2 border-ink bg-paper shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <span className="label !text-[10px] bg-warn text-[#0b1a12] border-2 border-ink px-1.5 py-1 inline-block">{c.flagReason}</span>
+                      <p className="mt-2 font-display font-bold text-xl leading-tight">{c.predictedCrop}</p>
+                      <p className="text-sm text-muted">{c.predictedDisease} · <span className="font-mono">{c.confidence.toFixed(1)}%</span></p>
+                      <p className="label !text-[10px] text-muted mt-2">{c.farmerLocation}</p>
+                    </div>
+                  </div>
+                  <div className="mt-auto border-t-2 border-ink flex items-stretch">
+                    <span className="label !text-[10px] px-4 flex items-center flex-1">{c.status}</span>
+                    <button onClick={() => act(c.id, "Confirmed")} aria-label="Confirm prediction" className="w-14 border-l-2 border-ink flex items-center justify-center hover:bg-accent hover:text-[#0b1a12]"><Check className="w-5 h-5" /></button>
+                    <button onClick={() => act(c.id, "Overridden")} aria-label="Reject prediction" className="w-14 border-l-2 border-ink flex items-center justify-center hover:bg-danger hover:text-white"><X className="w-5 h-5" /></button>
+                    <button onClick={() => act(c.id, "Retrain Flagged")} aria-label="Flag for retraining" className="w-14 border-l-2 border-ink flex items-center justify-center hover:bg-ink hover:text-paper"><Flag className="w-5 h-5" /></button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {tab === "models" && (
+          <ul className="grid lg:grid-cols-3 gap-5">
+            {MODEL_VERSIONS.map((m) => (
+              <li key={m.id} className="border-2 border-ink bg-card flex flex-col">
+                <div className="p-5 space-y-3 flex-1">
+                  <span className={`label !text-[10px] border-2 border-ink px-2 py-1 inline-block ${statusBg[m.status] ?? "bg-card"}`}>{m.status}</span>
+                  <h3 className="font-display font-extrabold text-2xl leading-tight">{m.name}</h3>
+                  <p className="text-sm text-muted">{m.architecture}</p>
+                  <p className="label !text-[10px] text-muted">v{m.version} · {m.supportedClasses} classes · {m.datasetSize}</p>
+                </div>
+                <dl className="grid grid-cols-2 border-t-2 border-ink divide-x-2 divide-ink">
+                  {[["Accuracy", `${m.accuracy}%`], ["F1", `${m.f1Score}%`]].map(([k, v]) => (
+                    <div key={k} className="p-4">
+                      <dt className="label !text-[10px] text-muted">{k}</dt>
+                      <dd className="mt-1 font-mono text-2xl">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <dl className="grid grid-cols-2 border-t-2 border-ink divide-x-2 divide-ink">
+                  {[["Precision", `${m.precision}%`], ["Speed", `${m.inferenceTimeMs} ms`]].map(([k, v]) => (
+                    <div key={k} className="p-4">
+                      <dt className="label !text-[10px] text-muted">{k}</dt>
+                      <dd className="mt-1 font-mono text-2xl">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {tab === "knowledge" && (
+          <section className="space-y-4">
+            <p className="label text-muted">{kb.length} entries</p>
+            <ul className="border-2 border-ink bg-card divide-y-2 divide-ink">
+              {kb.map((e) => (
+                <li key={e.id} className="flex items-stretch">
+                  <div className="flex-1 min-w-0 p-4">
+                    <p className="font-display font-bold text-xl leading-tight truncate">{e.crop} · {e.disease}</p>
+                    <p className="text-sm text-muted italic truncate">{e.scientificName}</p>
+                    <p className="label !text-[10px] text-muted mt-2">{e.pathogenType} · Verified by {e.verifiedBy}</p>
+                  </div>
+                  <button onClick={() => setKb((p) => p.filter((k) => k.id !== e.id))} aria-label={`Remove ${e.disease}`} className="w-14 border-l-2 border-ink flex items-center justify-center text-muted hover:bg-danger hover:text-white">
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
     </div>
   );
 }
-

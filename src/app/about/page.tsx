@@ -1,119 +1,46 @@
 import React from "react";
 import Link from "next/link";
-import {
-  Sparkles,
-  ShieldAlert,
-  Cpu,
-  Leaf,
-  Globe2,
-  CheckCircle2,
-  Award,
-  ArrowRight,
-  Heart,
-} from "lucide-react";
+import { ArrowUpRight, ScanLine } from "lucide-react";
+import { PageHeader } from "../../components/layout/PageHeader";
+
+const POINTS = [
+  { n: "01", t: "The problem", d: "Leaf diseases destroy an estimated 20–40% of crops worldwide each year. Many farmers can't reach a plant pathologist in time, and end up spraying the wrong thing or too much of it." },
+  { n: "02", t: "Our approach", d: "A photo of a leaf is compared against known crop diseases. If the match is weak, we say so and ask for a better photo instead of guessing." },
+  { n: "03", t: "Natural first", d: "Advice starts with low-cost natural options like neem and compost, and only then moves on to targeted sprays, with safety notes." },
+  { n: "04", t: "Built to connect", d: "The app is separate from the AI model, so a trained model can be plugged in without redesigning anything." },
+];
 
 export default function AboutPage() {
   return (
-    <div className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-16 space-y-12">
-      {/* Hero */}
-      <div className="text-center space-y-4 max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-semibold">
-          <Award className="w-3.5 h-3.5" />
-          <span>International University & Exhibition Project</span>
-        </div>
+    <div className="w-full">
+      <PageHeader label="About" title="Plant doctor, in your pocket." sub="AgroSight helps farmers spot crop disease early and know what to do next." />
 
-        <h1 className="text-3xl sm:text-5xl font-black text-zinc-950 dark:text-white tracking-tight leading-tight">
-          Pioneering AI-Driven Precision Agriculture
-        </h1>
-
-        <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-300 leading-relaxed">
-          AgroSight is an international-level research initiative engineered to bridge advanced computer vision,
-          edge deep neural networks, and sustainable agronomic treatment guidance for global smallholder farmers.
-        </p>
-      </div>
-
-      {/* Mandatory Advisory Notice */}
-      <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3.5 text-xs text-amber-900 dark:text-amber-200">
-        <ShieldAlert className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-        <div className="leading-relaxed">
-          <span className="font-bold block text-amber-800 dark:text-amber-300">
-            Advisory Technology Statement:
-          </span>
-          AgroSight is designed as an intelligent decision-support advisory system. While our neural models achieve
-          high benchmark accuracy, all chemical interventions must be validated against official product labels, local
-          regulations, and consultation with certified plant pathologists or local agricultural extension officers.
-        </div>
-      </div>
-
-      {/* Six Core Pillars */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="p-6 rounded-3xl bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-emerald-500/20 shadow-sm space-y-2">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3">
-            <Globe2 className="w-5 h-5" />
-          </div>
-          <h3 className="text-base font-bold text-zinc-900 dark:text-white">The Global Challenge</h3>
-          <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Foliar crop diseases account for an estimated 20% to 40% of global agricultural yield losses annually.
-            In developing regions, delayed diagnosis and lack of access to trained plant pathologists cause farmers
-            to misapply chemical pesticides, escalating financial strain and ecological degradation.
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-8 md:py-14 space-y-12">
+        <div className="bg-warn text-[#0b1a12] border-2 border-ink p-5 md:p-6 shadow-hard">
+          <p className="label">Please note</p>
+          <p className="mt-2 text-lg md:text-xl font-medium leading-snug">
+            AgroSight gives guidance, not a guarantee. Always read the product label, follow local rules, and check with your agriculture officer before spraying.
           </p>
         </div>
 
-        <div className="p-6 rounded-3xl bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-emerald-500/20 shadow-sm space-y-2">
-          <div className="w-10 h-10 rounded-xl bg-ai-cyan/10 text-ai-cyan flex items-center justify-center mb-3">
-            <Cpu className="w-5 h-5" />
-          </div>
-          <h3 className="text-base font-bold text-zinc-900 dark:text-white">Our AI Technological Approach</h3>
-          <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            We utilize hybrid convolutional neural networks (EfficientNet-B4) paired with vision transformer
-            attention mechanisms. The model isolates minute lesion colorations, necrotic concentric rings, and
-            chlorosis borders while enforcing a strict 60% confidence gate to eliminate false positives.
-          </p>
-        </div>
+        <ul className="grid md:grid-cols-2 border-2 border-ink bg-card divide-y-2 md:divide-y-0 divide-ink">
+          {POINTS.map((p, i) => (
+            <li key={p.n} className={`p-6 md:p-8 ${i % 2 === 0 ? "md:border-r-2" : ""} ${i > 1 ? "md:border-t-2" : ""} border-ink`}>
+              <span className="font-mono text-5xl font-medium tracking-tighter">{p.n}</span>
+              <h2 className="mt-4 font-display font-extrabold text-3xl leading-none">{p.t}</h2>
+              <p className="mt-3 text-muted leading-relaxed">{p.d}</p>
+            </li>
+          ))}
+        </ul>
 
-        <div className="p-6 rounded-3xl bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-emerald-500/20 shadow-sm space-y-2">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3">
-            <Leaf className="w-5 h-5" />
+        <div className="bg-forest text-[#eaf0e6] border-2 border-ink p-8 md:p-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <h2 className="font-display font-extrabold text-4xl md:text-6xl leading-[0.9] max-w-xl">Try it on a leaf.</h2>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link href="/diagnose" className="btn btn-accent !shadow-[4px_4px_0_0_#eaf0e6] !border-[#eaf0e6]"><ScanLine className="w-5 h-5" /> Scan a leaf</Link>
+            <Link href="/architecture" className="btn btn-paper !shadow-[4px_4px_0_0_#eaf0e6] !border-[#eaf0e6]">How it works <ArrowUpRight className="w-5 h-5" /></Link>
           </div>
-          <h3 className="text-base font-bold text-zinc-900 dark:text-white">Ecological & Sustainable Solutions</h3>
-          <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Unlike generic diagnostic tools that recommend aggressive chemicals indiscriminately, AgroSight
-            prioritizes bio-fungicides, neem botanicals, antagonistic Trichoderma strains, and soil amendment
-            practices before escalating to targeted synthetic chemistry.
-          </p>
-        </div>
-
-        <div className="p-6 rounded-3xl bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-emerald-500/20 shadow-sm space-y-2">
-          <div className="w-10 h-10 rounded-xl bg-forest-light/20 text-emerald-500 flex items-center justify-center mb-3">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <h3 className="text-base font-bold text-zinc-900 dark:text-white">Exhibition & Future Deployment</h3>
-          <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            The platform frontend is decoupled from inference via an abstract API gateway layer. It supports
-            instant transition to a production FastAPI + PyTorch backend without modifying UI components, enabling
-            frictionless deployment to offline edge tablets and drone payloads.
-          </p>
-        </div>
-      </div>
-
-      {/* CTA Callout */}
-      <div className="p-8 rounded-3xl bg-gradient-to-r from-forest-dark via-emerald-950 to-forest-dark text-white text-center space-y-4">
-        <h3 className="text-xl sm:text-2xl font-black">Ready to Experience AgroSight Live?</h3>
-        <p className="text-xs sm:text-sm text-emerald-200/80 max-w-md mx-auto leading-relaxed">
-          Launch our optical camera viewfinder or upload a sample leaf photograph to evaluate real-time neural
-          inference.
-        </p>
-        <div className="pt-2">
-          <Link
-            href="/live-scan"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-lg transition"
-          >
-            <span>Launch Live Scanner</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
         </div>
       </div>
     </div>
   );
 }
-

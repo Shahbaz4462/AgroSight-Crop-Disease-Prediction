@@ -1,41 +1,38 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "../context/AppContext";
 import { Navbar } from "../components/layout/Navbar";
+import { BottomNav } from "../components/layout/BottomNav";
 import { Footer } from "../components/layout/Footer";
-import { ExpoDemoBanner } from "../components/layout/ExpoDemoBanner";
+
+const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-display", display: "swap" });
+const body = Instrument_Sans({ subsets: ["latin"], variable: "--font-body", display: "swap" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "AgroSight | AI-Based Crop Disease Identification & Treatment Guidance",
+  title: "AgroSight | Crop disease check from a photo",
   description:
-    "International university & exhibition platform for real-time computer vision foliar crop pathology identification, treatment guidance, and regional agricultural epidemiology.",
-  keywords: [
-    "Crop Disease Detection",
-    "Computer Vision",
-    "Deep Learning",
-    "Smart Agriculture",
-    "FastAPI",
-    "EfficientNet",
-    "Pakistan Agriculture",
-  ],
+    "Photograph a wheat, cotton or other crop leaf. Get an instant disease check and clear steps on what to do next.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0b1a12",
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="antialiased min-h-screen flex flex-col bg-[#f8faf8] dark:bg-[#06110c] text-zinc-900 dark:text-zinc-100 selection:bg-emerald-500 selection:text-white">
+    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+      <body className="min-h-screen flex flex-col">
         <AppProvider>
-          <ExpoDemoBanner />
           <Navbar />
-          <div className="flex-1 flex flex-col">{children}</div>
+          <main className="flex-1 flex flex-col pb-safe-nav">{children}</main>
           <Footer />
+          <BottomNav />
         </AppProvider>
       </body>
     </html>
   );
 }
-
