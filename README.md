@@ -126,3 +126,4 @@ AgroSight provides AI-assisted diagnostic decision support. Chemical and organic
 - **Author / Developer:** Muhammad Shahbaz
 - **Repository:** [AgroSight-Crop-Disease-Prediction](https://github.com/Shahbaz4462/AgroSight-Crop-Disease-Prediction.git)
 - **Year:** © 2026 AgroSight
+
