@@ -1,59 +1,37 @@
 "use client";
 
 import React from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
 
 const DATA = [
-  { crop: "Rice", healthy: 68, diseased: 32 },
-  { crop: "Wheat", healthy: 78, diseased: 22 },
-  { crop: "Cotton", healthy: 58, diseased: 42 },
-  { crop: "Tomato", healthy: 64, diseased: 36 },
-  { crop: "Potato", healthy: 70, diseased: 30 },
-  { crop: "Apple", healthy: 65, diseased: 35 },
-  { crop: "Citrus", healthy: 72, diseased: 28 },
-];
+  { crop: "Wheat", healthy: 78 },
+  { crop: "Potato", healthy: 70 },
+  { crop: "Citrus", healthy: 72 },
+  { crop: "Rice", healthy: 68 },
+  { crop: "Apple", healthy: 65 },
+  { crop: "Tomato", healthy: 64 },
+  { crop: "Cotton", healthy: 58 },
+].sort((a, b) => b.healthy - a.healthy);
 
-export const CropYieldDistributionChart: React.FC = () => {
-  return (
-    <div className="w-full bg-white dark:bg-zinc-900/60 rounded-3xl p-6 border border-zinc-200 dark:border-emerald-500/20 shadow-md">
-      <div className="mb-4">
-        <h4 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
-          Crop Foliar Health Ratio
-        </h4>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          Healthy vs diseased foliar specimen percentages across major supported crops
-        </p>
-      </div>
+export const CropYieldDistributionChart: React.FC = () => (
+  <div className="border-2 border-ink bg-card p-5 sm:p-8 h-full">
+    <p className="label text-muted">Share of leaves found healthy</p>
+    <h3 className="mt-2 font-display font-extrabold text-3xl leading-none">Health by crop</h3>
 
-      <div className="h-64 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#22c55e20" />
-            <XAxis dataKey="crop" tick={{ fontSize: 11, fill: "#888" }} />
-            <YAxis tick={{ fontSize: 11, fill: "#888" }} unit="%" />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#081a13",
-                borderColor: "#10b981",
-                borderRadius: "12px",
-                fontSize: "12px",
-                color: "#fff",
-              }}
-            />
-            <Bar dataKey="healthy" name="Healthy Leaf %" fill="#10b981" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="diseased" name="Pathology Detected %" fill="#f43f5e" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
-  );
-};
-
+    <ul className="mt-6 space-y-4">
+      {DATA.map((d) => (
+        <li key={d.crop} className="grid grid-cols-[4.5rem_1fr_3rem] items-center gap-3">
+          <span className="font-bold text-sm">{d.crop}</span>
+          <div className="h-6 border-2 border-ink flex" role="img" aria-label={`${d.crop}: ${d.healthy}% healthy`}>
+            <div className="h-full bg-accent border-r-2 border-ink" style={{ width: `${d.healthy}%` }} />
+            <div className="h-full flex-1 bg-danger/80" />
+          </div>
+          <span className="font-mono text-sm text-right">{d.healthy}%</span>
+        </li>
+      ))}
+    </ul>
+    <p className="mt-5 flex items-center gap-4 label !text-[10px] text-muted">
+      <span className="flex items-center gap-1.5"><span className="w-3 h-3 bg-accent border-2 border-ink" /> Healthy</span>
+      <span className="flex items-center gap-1.5"><span className="w-3 h-3 bg-danger/80 border-2 border-ink" /> Diseased</span>
+    </p>
+  </div>
+);

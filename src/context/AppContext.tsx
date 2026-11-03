@@ -20,8 +20,8 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<"light" | "dark">("dark"); // Default dark mode gives premium AI tech feel
-  const [expoMode, setExpoMode] = useState<boolean>(true); // Enabled by default for university expo showcase!
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [expoMode, setExpoMode] = useState<boolean>(false);
   const [language, setLanguage] = useState<"en" | "ur">("en");
   const [aiProvider, setAiProviderState] = useState<AIProvider>("mock");
   const [lastDiagnosis, setLastDiagnosis] = useState<PredictionResult | null>(null);

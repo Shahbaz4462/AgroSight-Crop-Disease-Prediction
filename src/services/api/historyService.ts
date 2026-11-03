@@ -1,20 +1,15 @@
 import { DiagnosisHistoryItem } from "../../types";
-import { INITIAL_DIAGNOSIS_HISTORY } from "../../data/mockHistoryData";
 
 const STORAGE_KEY = "agrosight_diagnosis_history";
 
 export const historyService = {
   getHistory(): DiagnosisHistoryItem[] {
-    if (typeof window === "undefined") return INITIAL_DIAGNOSIS_HISTORY;
+    if (typeof window === "undefined") return [];
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (!saved) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_DIAGNOSIS_HISTORY));
-        return INITIAL_DIAGNOSIS_HISTORY;
-      }
-      return JSON.parse(saved);
+      return saved ? JSON.parse(saved) : [];
     } catch {
-      return INITIAL_DIAGNOSIS_HISTORY;
+      return [];
     }
   },
 

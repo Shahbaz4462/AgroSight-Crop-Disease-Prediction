@@ -1,68 +1,36 @@
 "use client";
 
 import React from "react";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts";
 
 const DATA = [
-  { name: "Fungal (Blights, Rusts, Spots)", value: 48, color: "#10b981" },
-  { name: "Bacterial (Cankers, Wilts)", value: 24, color: "#06b6d4" },
-  { name: "Viral (Leaf Curls, Mosaics)", value: 16, color: "#f59e0b" },
-  { name: "Physiological / Nutrient Stress", value: 12, color: "#8b5cf6" },
+  { name: "Fungal", note: "Blights, rusts, spots", value: 48 },
+  { name: "Bacterial", note: "Cankers, wilts", value: 24 },
+  { name: "Viral", note: "Leaf curls, mosaics", value: 16 },
+  { name: "Nutrient / stress", note: "Physiological", value: 12 },
 ];
 
-export const DiseaseDistributionChart: React.FC = () => {
-  return (
-    <div className="w-full bg-white dark:bg-zinc-900/60 rounded-3xl p-6 border border-zinc-200 dark:border-emerald-500/20 shadow-md">
-      <div className="mb-4">
-        <h4 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
-          Pathogen Category Distribution
-        </h4>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          Proportion of foliar diagnoses grouped by biological pathogen classification
-        </p>
-      </div>
+export const DiseaseDistributionChart: React.FC = () => (
+  <div className="border-2 border-ink bg-card p-5 sm:p-8 h-full">
+    <p className="label text-muted">What causes the disease</p>
+    <h3 className="mt-2 font-display font-extrabold text-3xl leading-none">Disease types</h3>
 
-      <div className="h-64 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={DATA}
-              cx="50%"
-              cy="50%"
-              innerRadius={55}
-              outerRadius={80}
-              paddingAngle={4}
-              dataKey="value"
-            >
-              {DATA.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#081a13",
-                borderColor: "#10b981",
-                borderRadius: "12px",
-                fontSize: "12px",
-                color: "#fff",
-              }}
-              formatter={(value: number) => [`${value}%`, "Prevalence"]}
-            />
-            <Legend
-              wrapperStyle={{ fontSize: "11px", paddingTop: "10px" }}
-              formatter={(value) => <span className="text-zinc-700 dark:text-zinc-300">{value}</span>}
-            />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+    <div className="mt-6 flex h-10 border-2 border-ink" role="img" aria-label="Share of disease types">
+      {DATA.map((d, i) => (
+        <div key={d.name} style={{ width: `${d.value}%` }} className={`${["bg-ink", "bg-accent", "bg-warn", "bg-card"][i]} ${i ? "border-l-2 border-ink" : ""}`} />
+      ))}
     </div>
-  );
-};
 
+    <ul className="mt-6 divide-y-2 divide-ink/15">
+      {DATA.map((d, i) => (
+        <li key={d.name} className="flex items-center gap-4 py-3">
+          <span className={`w-4 h-4 border-2 border-ink shrink-0 ${["bg-ink", "bg-accent", "bg-warn", "bg-card"][i]}`} />
+          <span className="flex-1">
+            <span className="block font-bold">{d.name}</span>
+            <span className="block text-sm text-muted">{d.note}</span>
+          </span>
+          <span className="font-mono text-2xl font-medium">{d.value}%</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
