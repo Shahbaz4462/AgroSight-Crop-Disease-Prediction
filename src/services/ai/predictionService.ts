@@ -4,15 +4,18 @@ import { modelApiService, ModelApiService } from "./modelApiService";
 
 export type AIProvider = "mock" | "api";
 
+/**
+ * Chooses between the real model server ("api") and the offline demo ("mock").
+ * Set NEXT_PUBLIC_AI_PROVIDER=api in .env.local to use the real model.
+ * In "api" mode a failure is thrown to the UI. It never falls back to fake results.
+ */
 class UnifiedPredictionService implements PredictionServiceInterface {
   private activeProvider: AIProvider;
   private mockService: MockPredictionService;
   private apiService: ModelApiService;
 
   constructor() {
-    // Default to mock for offline Expo presentation unless explicitly configured
-    const configured = process.env.NEXT_PUBLIC_AI_PROVIDER as AIProvider;
-    this.activeProvider = configured === "api" ? "api" : "mock";
+    this.activeProvider = process.env.NEXT_PUBLIC_AI_PROVIDER === "api" ? "api" : "mock";
     this.mockService = mockPredictionService;
     this.apiService = modelApiService;
   }
@@ -26,15 +29,8 @@ class UnifiedPredictionService implements PredictionServiceInterface {
   }
 
   public async predictLeaf(image: File | Blob | string): Promise<PredictionResult> {
-    if (this.activeProvider === "api") {
-      try {
-        return await this.apiService.predictLeaf(image);
-      } catch (err) {
-        console.warn("Live API inference failed. Falling back to mock prediction for continuous demo experience.", err);
-        return await this.mockService.predictLeaf(image);
-      }
-    }
-    return await this.mockService.predictLeaf(image);
+    if (this.activeProvider === "api") return this.apiService.predictLeaf(image);
+    return this.mockService.predictLeaf(image);
   }
 
   public async predictLeafWithProgress(
@@ -42,17 +38,17 @@ class UnifiedPredictionService implements PredictionServiceInterface {
     onProgress?: (stage: ScanningStage) => void
   ): Promise<PredictionResult> {
     if (this.activeProvider === "api") {
-      onProgress?.({ stage: "Connecting to FastAPI inference gateway...", progress: 30, detail: "Transmitting image buffer" });
+      onProgress?.({ stage: "Sending your photo", progress: 25, detail: "Uploading image" });
+      const tick = window.setTimeout(() => onProgress?.({ stage: "Checking the leaf", progress: 65, detail: "Running the model" }), 500);
       try {
         const result = await this.apiService.predictLeaf(image);
-        onProgress?.({ stage: "Analysis complete", progress: 100, detail: "Inference response parsed" });
+        onProgress?.({ stage: "Done", progress: 100, detail: "Result ready" });
         return result;
-      } catch (err) {
-        console.warn("Live API unavailable. Falling back to simulated pipeline.", err);
-        return await this.mockService.predictLeafWithProgress(image, onProgress);
+      } finally {
+        window.clearTimeout(tick);
       }
     }
-    return await this.mockService.predictLeafWithProgress(image, onProgress);
+    return this.mockService.predictLeafWithProgress(image, onProgress);
   }
 
   public cancelPrediction(): void {
@@ -61,4 +57,3 @@ class UnifiedPredictionService implements PredictionServiceInterface {
 }
 
 export const predictionService = new UnifiedPredictionService();
-

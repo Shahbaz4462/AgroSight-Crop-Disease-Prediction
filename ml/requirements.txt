@@ -1,0 +1,11 @@
+torch
+torchvision
+pillow
+pandas
+pyarrow
+huggingface_hub
+fastapi
+uvicorn[standard]
+python-multipart
+numpy
+scikit-learn

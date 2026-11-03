@@ -85,7 +85,12 @@ export const ScanFlow: React.FC = () => {
       router.push(`/results?id=${saved.id}`);
     } catch (e) {
       console.error(e);
-      setError("Something went wrong while checking the leaf. Please try again.");
+      const offline = e instanceof TypeError;
+      setError(
+        offline
+          ? "We can't reach the checking server right now. Check your connection and try again."
+          : "Something went wrong while checking the leaf. Please try again."
+      );
       setBusy(false);
       setStage(null);
     }
