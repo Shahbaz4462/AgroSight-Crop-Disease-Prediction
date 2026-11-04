@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import { GLOBAL_REGIONS_DATA } from "../../data/globalRegionsData";
+import { useApp } from "../../context/AppContext";
 
 export const GlobalInsightsVisualizer: React.FC = () => {
+  const { t } = useApp();
   const [active, setActive] = useState(GLOBAL_REGIONS_DATA[0]);
 
   return (
@@ -25,17 +27,17 @@ export const GlobalInsightsVisualizer: React.FC = () => {
       <div className="grid md:grid-cols-12">
         <div className="md:col-span-4 p-5 sm:p-8 border-b-2 md:border-b-0 md:border-r-2 border-ink space-y-6">
           <div>
-            <p className="label text-muted">Scans in sample</p>
+            <p className="label text-muted">{t("scans_sample")}</p>
             <p className="mt-2 font-mono text-4xl font-medium">{active.totalDiagnosesSample.toLocaleString()}</p>
           </div>
           <div>
-            <p className="label text-muted">Climate risk · {active.climateImpactIndex}/100</p>
+            <p className="label text-muted">{t("climate_risk")} · {active.climateImpactIndex}/100</p>
             <div className="mt-2 h-4 border-2 border-ink">
               <div className="h-full bg-danger" style={{ width: `${active.climateImpactIndex}%` }} />
             </div>
           </div>
           <div>
-            <p className="label text-muted mb-2">Main threats</p>
+            <p className="label text-muted mb-2">{t("main_threats")}</p>
             <div className="flex flex-wrap gap-1.5">
               {active.primaryCropThreats.map((t) => (
                 <span key={t} className="label !text-[10px] border-2 border-ink bg-paper px-2 py-1.5">{t}</span>
@@ -45,7 +47,7 @@ export const GlobalInsightsVisualizer: React.FC = () => {
         </div>
 
         <div className="md:col-span-8 p-5 sm:p-8">
-          <p className="label text-muted mb-4">Most common diseases in {active.region}</p>
+          <p className="label text-muted mb-4">{t("most_common")} {active.region}</p>
           <ul className="space-y-5">
             {active.prevalentDiseases.map((d) => (
               <li key={d.disease}>

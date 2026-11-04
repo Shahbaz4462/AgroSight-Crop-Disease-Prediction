@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Camera, FlipHorizontal2, ImagePlus, Loader2, VideoOff, Zap, ZapOff } from "lucide-react";
+import { useApp } from "../../context/AppContext";
 
 /**
  * Live leaf scanner.
@@ -20,7 +21,7 @@ const MAX_MOTION = 9; // mean luminance change between analysed frames
 const HOLD_MS = 1200; // how long everything must be good before auto capture
 
 type Status = "starting" | "live" | "denied" | "nocamera" | "insecure" | "error";
-type Hint = { text: string; ok: boolean };
+type Hint = { key: string; ok: boolean };
 
 interface Props {
   onCapture: (file: File) => void;
@@ -40,7 +41,8 @@ export const LiveCamera: React.FC<Props> = ({ onCapture, onGallery }) => {
   const [facing, setFacing] = useState<"environment" | "user">("environment");
   const [canFlip, setCanFlip] = useState(false);
   const [auto, setAuto] = useState(true);
-  const [hint, setHint] = useState<Hint>({ text: "Starting camera", ok: false });
+  const { t } = useApp();
+  const [hint, setHint] = useState<Hint>({ key: "cam_starting", ok: false });
   const [progress, setProgress] = useState(0);
   const [flash, setFlash] = useState(false);
 
@@ -55,7 +57,7 @@ export const LiveCamera: React.FC<Props> = ({ onCapture, onGallery }) => {
   useEffect(() => {
     let cancelled = false;
     setStatus("starting");
-    setHint({ text: "Starting camera", ok: false });
+    setHint({ key: "cam_starting", ok: false });
 
     (async () => {
       if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
@@ -181,13 +183,13 @@ export const LiveCamera: React.FC<Props> = ({ onCapture, onGallery }) => {
       prevLum.current = lum;
 
       let h: Hint;
-      if (light < MIN_LIGHT) h = { text: "Too dark. Move into the light", ok: false };
-      else if (light > MAX_LIGHT) h = { text: "Too bright. Avoid glare", ok: false };
-      else if (leafRatio < MIN_LEAF_RATIO) h = { text: "Point at a leaf and fill the frame", ok: false };
-      else if (motion > MAX_MOTION) h = { text: "Hold steady", ok: false };
-      else if (sharp < MIN_SHARPNESS) h = { text: "Blurry. Move a little back", ok: false };
-      else h = { text: autoRef.current ? "Leaf found. Hold still" : "Leaf found. Tap the shutter", ok: true };
-      setHint((old) => (old.text === h.text ? old : h));
+      if (light < MIN_LIGHT) h = { key: "cam_dark", ok: false };
+      else if (light > MAX_LIGHT) h = { key: "cam_bright", ok: false };
+      else if (leafRatio < MIN_LEAF_RATIO) h = { key: "cam_leaf", ok: false };
+      else if (motion > MAX_MOTION) h = { key: "cam_steady", ok: false };
+      else if (sharp < MIN_SHARPNESS) h = { key: "cam_blurry", ok: false };
+      else h = { key: autoRef.current ? "cam_hold" : "cam_tap", ok: true };
+      setHint((old) => (old.key === h.key ? old : h));
 
       if (h.ok) {
         if (okSince.current === null) okSince.current = performance.now();
@@ -213,18 +215,18 @@ export const LiveCamera: React.FC<Props> = ({ onCapture, onGallery }) => {
   if (status === "denied" || status === "nocamera" || status === "insecure" || status === "error") {
     const msg =
       status === "denied"
-        ? "Camera access is blocked. Allow the camera in your browser's site settings, then reload."
+        ? t("camera_blocked")
         : status === "nocamera"
-        ? "No camera was found on this device."
+        ? t("camera_nocamera")
         : status === "insecure"
-        ? "Live camera needs a secure (https) connection. Open the site over https, or use a photo instead."
-        : "The camera couldn't start. Close other apps using it and try again.";
+        ? t("camera_https")
+        : t("camera_error");
     return (
       <div className="panel shadow-hard-lg p-6 sm:p-8 text-center space-y-5">
         <VideoOff className="w-12 h-12 mx-auto" strokeWidth={1.75} />
-        <p className="font-display font-extrabold text-2xl leading-tight">Camera unavailable</p>
+        <p className="font-display font-extrabold text-2xl leading-tight">{t("camera_unavailable")}</p>
         <p className="text-muted">{msg}</p>
-        <button onClick={onGallery} className="btn btn-accent w-full"><ImagePlus className="w-5 h-5" /> Use a photo instead</button>
+        <button onClick={onGallery} className="btn btn-accent w-full"><ImagePlus className="w-5 h-5" /> {t("use_photo")}</button>
       </div>
     );
   }
@@ -258,7 +260,7 @@ export const LiveCamera: React.FC<Props> = ({ onCapture, onGallery }) => {
         {/* status chip */}
         <div className="absolute top-3 inset-x-3 flex items-start justify-between gap-2">
           <span className={`label !text-[11px] px-2.5 py-2 border-2 border-ink max-w-[75%] ${ok ? "bg-accent text-[#0b1a12]" : "bg-paper text-ink"}`} role="status" aria-live="polite">
-            {live ? hint.text : <span className="flex items-center gap-2"><Loader2 className="w-3.5 h-3.5 animate-spin" /> Starting camera</span>}
+            {live ? t(hint.key) : <span className="flex items-center gap-2"><Loader2 className="w-3.5 h-3.5 animate-spin" /> {t("cam_starting")}</span>}
           </span>
           <button
             onClick={() => setAuto((a) => !a)}
@@ -284,7 +286,7 @@ export const LiveCamera: React.FC<Props> = ({ onCapture, onGallery }) => {
           <ImagePlus className="w-6 h-6" />
         </button>
         <button onClick={capture} disabled={!live} aria-label="Take photo" className="btn btn-accent !min-h-[4rem] disabled:opacity-50">
-          <Camera className="w-6 h-6" strokeWidth={2.5} /> Scan now
+          <Camera className="w-6 h-6" strokeWidth={2.5} /> {t("scan_now")}
         </button>
         <button
           onClick={() => setFacing((f) => (f === "environment" ? "user" : "environment"))}

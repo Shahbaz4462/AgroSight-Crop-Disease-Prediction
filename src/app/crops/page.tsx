@@ -8,6 +8,7 @@ import { CropInfo, KnowledgeBaseEntry } from "../../types";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { CROP_CALENDAR } from "../../data/cropCalendar";
 import { useApp } from "../../context/AppContext";
+import { guideText } from "../../lib/guideText";
 import { Search, X, ScanLine, Droplets, Thermometer, CalendarDays, ArrowUpRight } from "lucide-react";
 
 const CATEGORIES = [
@@ -33,7 +34,7 @@ function findGuide(disease: string, crop?: string): KnowledgeBaseEntry | undefin
 }
 
 export default function CropsPage() {
-  const { t } = useApp();
+  const { t, language } = useApp();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [crop, setCrop] = useState<CropInfo | null>(null);
@@ -56,6 +57,7 @@ export default function CropsPage() {
     };
   }, [guide]);
 
+  const displayGuide = guide?.entry ? guideText(guide.entry, language) : undefined;
   return (
     <div className="w-full">
       <PageHeader label={t("crops_label")} title={t("crops_title")} sub={t("crops_sub")} />
@@ -133,7 +135,7 @@ export default function CropsPage() {
                         )}
                       </div>
                       <div>
-                        <p className="label text-muted mb-3">Common diseases</p>
+                        <p className="label text-muted mb-3">{t("common_diseases")}</p>
                         <ul className="border-2 border-ink divide-y-2 divide-ink">
                           {c.commonDiseases.map((d) => (
                             <li key={d}>
@@ -175,24 +177,24 @@ export default function CropsPage() {
           <button className="absolute inset-0 bg-ink/60" onClick={() => setGuide(null)} aria-label="Close guide" />
           <aside className="relative w-full sm:max-w-xl h-full bg-paper border-l-2 border-ink overflow-y-auto fade-up">
             <div className="sticky top-0 bg-paper border-b-2 border-ink px-5 py-4 flex items-center justify-between z-10">
-              <span className="label">{guide.entry ? `${guide.entry.crop} · ${guide.entry.pathogenType}` : "Disease guide"}</span>
+              <span className="label">{guide.entry ? `${guide.entry.crop} · ${guide.entry.pathogenType}` : t("disease_guide")}</span>
               <button onClick={() => setGuide(null)} aria-label="Close" className="w-10 h-10 border-2 border-ink flex items-center justify-center hover:bg-danger hover:text-white"><X className="w-5 h-5" /></button>
             </div>
             <div className="p-5 sm:p-8 space-y-8">
               <div>
-                <h2 className="font-display font-extrabold text-4xl leading-none">{guide.entry?.disease ?? guide.name}</h2>
-                {guide.entry && <p className="mt-2 italic text-muted">{guide.entry.scientificName}</p>}
+                <h2 className="font-display font-extrabold text-4xl leading-none">{displayGuide?.disease ?? guide.name}</h2>
+                {displayGuide && <p className="mt-2 italic text-muted">{displayGuide.scientificName}</p>}
               </div>
-              {guide.entry ? (
+              {displayGuide ? (
                 <>
-                  <Block title="Cause"><p className="leading-relaxed">{guide.entry.cause}</p></Block>
-                  <Block title="What to look for" list={guide.entry.symptoms} />
-                  <Block title="Natural treatment" list={guide.entry.organicSolution} />
-                  <Block title="Spray treatment" list={guide.entry.chemicalSolution} />
-                  <Block title="Prevention" list={guide.entry.prevention} />
+                  <Block title={t("guide_block_cause")}><p className="leading-relaxed">{displayGuide.cause}</p></Block>
+                  <Block title={t("guide_block_symptoms")} list={displayGuide.symptoms} />
+                  <Block title={t("guide_block_natural")} list={displayGuide.organicSolution} />
+                  <Block title={t("guide_block_spray")} list={displayGuide.chemicalSolution} />
+                  <Block title={t("guide_block_prevention")} list={displayGuide.prevention} />
                 </>
               ) : (
-                <p className="border-2 border-dashed border-ink p-5">We don&apos;t have a detailed guide for this disease yet. Scan an affected leaf, or ask your local agriculture officer.</p>
+                <p className="border-2 border-dashed border-ink p-5">{t("guide_no_detail")}</p>
               )}
             </div>
           </aside>

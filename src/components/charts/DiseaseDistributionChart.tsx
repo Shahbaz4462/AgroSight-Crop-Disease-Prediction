@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useApp } from "../../context/AppContext";
 
 const DATA = [
   { name: "Fungal", note: "Blights, rusts, spots", value: 48 },
@@ -9,10 +10,12 @@ const DATA = [
   { name: "Nutrient / stress", note: "Physiological", value: 12 },
 ];
 
-export const DiseaseDistributionChart: React.FC = () => (
+export const DiseaseDistributionChart: React.FC = () => {
+  const { t } = useApp();
+  return (
   <div className="border-2 border-ink bg-card p-5 sm:p-8 h-full">
-    <p className="label text-muted">What causes the disease</p>
-    <h3 className="mt-2 font-display font-extrabold text-3xl leading-none">Disease types</h3>
+    <p className="label text-muted">{t("disease_cause_label")}</p>
+    <h3 className="mt-2 font-display font-extrabold text-3xl leading-none">{t("disease_types")}</h3>
 
     <div className="mt-6 flex h-10 border-2 border-ink" role="img" aria-label="Share of disease types">
       {DATA.map((d, i) => (
@@ -33,4 +36,5 @@ export const DiseaseDistributionChart: React.FC = () => (
       ))}
     </ul>
   </div>
-);
+  );
+};

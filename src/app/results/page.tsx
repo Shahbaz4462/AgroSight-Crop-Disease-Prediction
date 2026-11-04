@@ -4,11 +4,15 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useApp } from "../../context/AppContext";
-import { speak, stopSpeaking } from "../../lib/speak";
+import { speak, stopSpeaking, urduVoiceAvailable } from "../../lib/speak";
+import { spokenResult } from "../../lib/resultSpeech";
+import { DISEASES_KNOWLEDGE_BASE } from "../../data/diseasesData";
+import { CHEMICALS_BY_CLASS, STORES, classForDisplay } from "../../data/treatmentChemicals";
+import { guideText } from "../../lib/guideText";
 import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 import { historyService } from "../../services/api/historyService";
 import { PredictionResult } from "../../services/ai/types";
-import { ArrowLeft, ScanLine, Share2, Printer, Check, ShieldAlert, Info, Volume2, VolumeX, MessageCircle } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, ScanLine, Share2, Printer, Check, ShieldAlert, Info, Volume2, VolumeX, MessageCircle } from "lucide-react";
 
 type Tab = "organic" | "chemical" | "prevent";
 
@@ -120,13 +124,32 @@ function ResultContent() {
       setSpeaking(false);
       return;
     }
-    const text = uncertain
-      ? t("result_not_sure_sub")
-      : `${result.crop}, ${result.disease}, ${pct} percent. ${(result.organic_solution?.[0] ?? "")} ${(result.chemical_solution?.[0] ?? "")}`;
-    if (!speak(text, language)) {
+    // The spoken text is built in the selected language. In Urdu
+    // and Roman Urdu mode the treatment is a short translated
+    // summary, because the full treatment paragraphs are English.
+    const className =
+      result.topPredictions?.[0]?.className ?? classForDisplay(result.crop, result.disease);
+    const text = spokenResult({
+      lang: language,
+      crop: result.crop,
+      disease: result.disease,
+      confidence: pct,
+      uncertain,
+      className,
+      organic: result.organic_solution?.[0],
+      chemical: result.chemical_solution?.[0],
+    });
+    if (!speak(text, language, () => setSpeaking(false))) {
       setVoiceNote(t("voice_unavailable"));
     } else {
-      setVoiceNote("");
+      // If the phone has no Urdu voice, the browser may still read
+      // with an English-sounding voice. Tell the user why, instead
+      // of silently sounding English.
+      if (language !== "en" && !urduVoiceAvailable()) {
+        setVoiceNote(t("voice_no_urdu"));
+      } else {
+        setVoiceNote("");
+      }
       setSpeaking(true);
     }
   };
@@ -266,20 +289,85 @@ function ResultContent() {
             </>
           )}
 
-          {!!result.topPredictions?.length && (
-            <section>
-              <h2 className="font-display font-extrabold text-3xl mb-3">{t("top3_title")}</h2>
-              <p className="text-sm text-muted mb-4">{t("top3_note")}</p>
-              <ol className="border-2 border-ink bg-card divide-y-2 divide-ink/15">
-                {result.topPredictions.map((p, i) => (
-                  <li key={`${p.crop}-${p.disease}`} className="flex items-center justify-between gap-3 p-4">
-                    <span className="font-bold">{i + 1}. {p.crop} · {p.disease}</span>
-                    <span className="font-mono">{Math.round(p.confidence)}%</span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          )}
+          {/* Close guess: only guesses for the SAME crop as the
+              main result. A cotton result never shows a rice or
+              wheat guess here, even if the model ranked one high. */}
+          {(() => {
+            const sameCrop = (result.topPredictions ?? []).filter(
+              (p) => p.crop === result.crop && !(p.crop === result.crop && p.disease === result.disease)
+            );
+            if (sameCrop.length === 0) return null;
+            return (
+              <section>
+                <h2 className="font-display font-extrabold text-3xl mb-3">{t("close_guess_title")}</h2>
+                <p className="text-sm text-muted mb-4">{t("close_guess_note")}</p>
+                <ol className="space-y-5">
+                  {sameCrop.map((p) => {
+                    const foundGuide = DISEASES_KNOWLEDGE_BASE.find(
+                      (g) =>
+                        g.crop === p.crop &&
+                        (g.disease.toLowerCase().includes(p.disease.toLowerCase()) ||
+                          p.disease.toLowerCase().includes(g.disease.toLowerCase()))
+                    );
+                    const guide = foundGuide ? guideText(foundGuide, language) : undefined;
+                    return (
+                      <li key={`${p.crop}-${p.disease}`} className="border-2 border-ink bg-card p-5">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="font-display font-bold text-xl">{p.crop} · {p.disease}</span>
+                          <span className="font-mono text-lg">{Math.round(p.confidence)}%</span>
+                        </div>
+                        {guide && (
+                          <div className="mt-3 space-y-2 text-sm leading-relaxed">
+                            <p><span className="label text-muted block">{t("guide_cause")}</span>{guide.cause}</p>
+                            {guide.chemicalSolution.length > 0 && p.disease.toLowerCase() !== "healthy" && (
+                              <p><span className="label text-muted block">{t("guide_treatment")}</span>{guide.chemicalSolution[0]}</p>
+                            )}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ol>
+              </section>
+            );
+          })()}
+
+          {/* Treatment chemicals + stores: diseased, confident only.
+              Healthy results and unspecified diseased rice get none,
+              because a chemical there would be a guess. */}
+          {diseased && (() => {
+            const cls = result.topPredictions?.[0]?.className ?? classForDisplay(result.crop, result.disease);
+            const chemicals = cls ? CHEMICALS_BY_CLASS[cls] : undefined;
+            if (!chemicals) return null;
+            return (
+              <section>
+                <h2 className="font-display font-extrabold text-3xl mb-3">{t("chemicals_title")}</h2>
+                <p className="text-sm text-muted mb-4">{t("chemicals_note")}</p>
+                <div className="space-y-5">
+                  {chemicals.map((chem) => (
+                    <article key={chem.name} className="border-2 border-ink bg-card p-5">
+                      <div className="flex items-center justify-between gap-3">
+                        <h3 className="font-display font-bold text-xl">{chem.name}</h3>
+                        <span className="label !text-[10px] border-2 border-ink px-2 py-1">{chem.type}</span>
+                      </div>
+                      <p className="mt-2 text-sm leading-relaxed">{chem.detail}</p>
+                      <p className="label text-muted mt-4 mb-2">{t("buy_from")}</p>
+                      <ul className="space-y-3">
+                        {STORES.map((store) => (
+                          <li key={store.name} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                            <a href={store.urlFor(chem.name)} target="_blank" rel="noreferrer" className="btn btn-paper !min-h-[2.75rem] !text-sm shrink-0">
+                              {store.name} <ArrowUpRight className="w-4 h-4" />
+                            </a>
+                            <span className="text-sm text-muted">{store.detail} {t("store_check")}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            );
+          })()}
 
           <p className="text-xs text-muted border-t-2 border-ink pt-4">{t("guidance_note")}</p>
         </div>

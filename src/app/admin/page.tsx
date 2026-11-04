@@ -6,14 +6,15 @@ import { DISEASES_KNOWLEDGE_BASE } from "../../data/diseasesData";
 import { ExpertReviewCase, KnowledgeBaseEntry } from "../../types";
 import { PageHeader, SampleDataNote } from "../../components/layout/PageHeader";
 import { Trash2, Check, X, Flag } from "lucide-react";
+import { useApp } from "../../context/AppContext";
 
 type Tab = "reviews" | "models" | "knowledge";
 type Action = "Confirmed" | "Overridden" | "Retrain Flagged";
 
-const TABS: { key: Tab; label: string }[] = [
-  { key: "reviews", label: "Review queue" },
-  { key: "models", label: "Models" },
-  { key: "knowledge", label: "Knowledge base" },
+const TABS: { key: Tab; labelKey: string }[] = [
+  { key: "reviews", labelKey: "admin_tab_reviews" },
+  { key: "models", labelKey: "admin_tab_models" },
+  { key: "knowledge", labelKey: "admin_tab_knowledge" },
 ];
 
 const statusBg: Record<string, string> = {
@@ -24,6 +25,7 @@ const statusBg: Record<string, string> = {
 };
 
 export default function AdminPortalPage() {
+  const { t } = useApp();
   const [tab, setTab] = useState<Tab>("reviews");
   const [cases, setCases] = useState<ExpertReviewCase[]>(MOCK_EXPERT_REVIEWS);
   const [kb, setKb] = useState<KnowledgeBaseEntry[]>(DISEASES_KNOWLEDGE_BASE);
@@ -33,29 +35,29 @@ export default function AdminPortalPage() {
 
   return (
     <div className="w-full">
-      <PageHeader label="Expert portal" title="Review & curate." sub="For agronomists: check uncertain scans, compare models and maintain the treatment library.">
+      <PageHeader label={t("admin_label")} title={t("admin_title")} sub={t("admin_sub")}>
         <SampleDataNote text="Prototype. Sample cases, no sign-in yet." />
       </PageHeader>
 
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-8 md:py-12 space-y-8">
         <div role="tablist" className="grid grid-cols-3 border-2 border-ink">
-          {TABS.map((t) => (
+          {TABS.map((tabItem) => (
             <button
-              key={t.key}
+              key={tabItem.key}
               role="tab"
-              aria-selected={tab === t.key}
-              onClick={() => setTab(t.key)}
-              className={`h-14 label !text-[10px] sm:!text-[11px] border-r-2 last:border-r-0 border-ink ${tab === t.key ? "bg-ink text-paper" : "bg-card hover:bg-accent hover:text-[#0b1a12]"}`}
+              aria-selected={tab === tabItem.key}
+              onClick={() => setTab(tabItem.key)}
+              className={`h-14 label !text-[10px] sm:!text-[11px] border-r-2 last:border-r-0 border-ink ${tab === tabItem.key ? "bg-ink text-paper" : "bg-card hover:bg-accent hover:text-[#0b1a12]"}`}
             >
-              {t.label}
-              {t.key === "reviews" && pending > 0 ? ` · ${pending}` : ""}
+              {t(tabItem.labelKey)}
+              {tabItem.key === "reviews" && pending > 0 ? ` · ${pending}` : ""}
             </button>
           ))}
         </div>
 
         {tab === "reviews" && (
           <section className="space-y-4">
-            <p className="label text-muted">Scans under 60% confidence or outside known crops</p>
+            <p className="label text-muted">{t("admin_reviews_note")}</p>
             <ul className="grid md:grid-cols-2 gap-5">
               {cases.map((c) => (
                 <li key={c.id} className="border-2 border-ink bg-card flex flex-col">
@@ -114,14 +116,14 @@ export default function AdminPortalPage() {
 
         {tab === "knowledge" && (
           <section className="space-y-4">
-            <p className="label text-muted">{kb.length} entries</p>
+            <p className="label text-muted">{kb.length} {t("admin_entries")}</p>
             <ul className="border-2 border-ink bg-card divide-y-2 divide-ink">
               {kb.map((e) => (
                 <li key={e.id} className="flex items-stretch">
                   <div className="flex-1 min-w-0 p-4">
                     <p className="font-display font-bold text-xl leading-tight truncate">{e.crop} · {e.disease}</p>
                     <p className="text-sm text-muted italic truncate">{e.scientificName}</p>
-                    <p className="label !text-[10px] text-muted mt-2">{e.pathogenType} · Verified by {e.verifiedBy}</p>
+                    <p className="label !text-[10px] text-muted mt-2">{e.pathogenType} · {t("admin_verified")} {e.verifiedBy}</p>
                   </div>
                   <button onClick={() => setKb((p) => p.filter((k) => k.id !== e.id))} aria-label={`Remove ${e.disease}`} className="w-14 border-l-2 border-ink flex items-center justify-center text-muted hover:bg-danger hover:text-white">
                     <Trash2 className="w-5 h-5" />

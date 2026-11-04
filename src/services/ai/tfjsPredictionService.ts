@@ -280,7 +280,7 @@ export class TfjsPredictionService implements PredictionServiceInterface {
     const status = confidence < CONFIDENT ? "uncertain" : disease === "Healthy" ? "healthy" : "diseased";
     const topPredictions = order.slice(0, 3).map(({ i, p }) => {
       const [c, d] = DISPLAY[names[i]] ?? [names[i], names[i]];
-      return { crop: c, disease: d, confidence: Math.round(p * 10000) / 100 };
+      return { className: names[i], crop: c, disease: d, confidence: Math.round(p * 10000) / 100 };
     });
     onProgress?.({ stage: "Analysis complete", progress: 100, detail: "Result ready" });
 

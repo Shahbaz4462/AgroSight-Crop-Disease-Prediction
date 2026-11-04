@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import { PAKISTAN_REGIONS_DATA } from "../../data/pakistanRegionsData";
 import { PAKISTAN_BOUNDARIES } from "../../data/pakistanBoundaries";
 import { ProvinceStatistic } from "../../types";
+import { useApp } from "../../context/AppContext";
 
 // Real boundaries, not hand-drawn shapes.
 // PAKISTAN_BOUNDARIES is generated from geoBoundaries gbOpen, Pakistan
@@ -114,6 +115,7 @@ function project(features: typeof PAKISTAN_BOUNDARIES.features): Projected[] {
 const riskBg: Record<string, string> = { Low: "bg-ok", Medium: "bg-warn", High: "bg-danger", Alert: "bg-danger" };
 
 export const PakistanMapInteractive: React.FC = () => {
+  const { t } = useApp();
   const [sel, setSel] = useState<ProvinceStatistic>(PAKISTAN_REGIONS_DATA[0]);
   const shapes = useMemo(() => project(PAKISTAN_BOUNDARIES.features), []);
 
@@ -146,7 +148,7 @@ export const PakistanMapInteractive: React.FC = () => {
             );
           })}
         </svg>
-        <p className="mt-2 text-center text-xs text-muted">Real provincial boundaries: geoBoundaries gbOpen, Pakistan ADM1 (simplified).</p>
+        <p className="mt-2 text-center text-xs text-muted">{t("map_attribution")}</p>
         <div className="mt-4 grid grid-cols-3 sm:grid-cols-6 border-2 border-ink">
           {PAKISTAN_REGIONS_DATA.map((p) => (
             <button
@@ -166,14 +168,14 @@ export const PakistanMapInteractive: React.FC = () => {
             <p className="label text-muted">{sel.capital}</p>
             <h3 className="mt-2 font-display font-extrabold text-4xl leading-none">{sel.name}</h3>
           </div>
-          <span className={`label !text-[10px] px-2 py-1.5 border-2 border-ink text-[#0b1a12] ${riskBg[sel.riskLevel] ?? "bg-warn"}`}>{sel.riskLevel} risk</span>
+          <span className={`label !text-[10px] px-2 py-1.5 border-2 border-ink text-[#0b1a12] ${riskBg[sel.riskLevel] ?? "bg-warn"}`}>{sel.riskLevel} {t("risk_label")}</span>
         </div>
 
         <dl className="grid grid-cols-3 border-2 border-ink divide-x-2 divide-ink text-center">
           {[
-            ["Scans", sel.totalDiagnoses.toLocaleString()],
-            ["Healthy", `${sel.healthyPercentage}%`],
-            ["Output", `${sel.cropProductionShare}%`],
+            [t("province_scans"), sel.totalDiagnoses.toLocaleString()],
+            [t("province_healthy"), `${sel.healthyPercentage}%`],
+            [t("province_output"), `${sel.cropProductionShare}%`],
           ].map(([k, v]) => (
             <div key={k} className="py-3">
               <dt className="label !text-[10px] text-muted">{k}</dt>
@@ -183,7 +185,7 @@ export const PakistanMapInteractive: React.FC = () => {
         </dl>
 
         <div>
-          <p className="label text-muted mb-2">Main crops</p>
+          <p className="label text-muted mb-2">{t("province_crops")}</p>
           <div className="flex flex-wrap gap-1.5">
             {sel.majorCrops.map((c) => (
               <span key={c} className="label !text-[10px] border-2 border-ink px-2 py-1.5 bg-paper">{c}</span>
@@ -192,7 +194,7 @@ export const PakistanMapInteractive: React.FC = () => {
         </div>
 
         <div>
-          <p className="label text-muted mb-3">Most common diseases</p>
+          <p className="label text-muted mb-3">{t("province_diseases")}</p>
           <ul className="space-y-3.5">
             {sel.topDiseases.map((d) => (
               <li key={d.name}>
