@@ -237,9 +237,9 @@ export class TfjsPredictionService implements PredictionServiceInterface {
     image: File | Blob | string,
     onProgress?: (stage: ScanningStage) => void
   ): Promise<PredictionResult> {
-    onProgress?.({ stage: "Loading model in your browser...", progress: 20, detail: "First scan downloads the model once" });
+    onProgress?.({ stage: "stage_loading", progress: 20, detail: "stage_loading_detail" });
     const { model, classNames: names, solutions: sols } = await loadModelData();
-    onProgress?.({ stage: "Checking your leaf...", progress: 70, detail: "Resizing and analysing the photo" });
+    onProgress?.({ stage: "stage_checking", progress: 70, detail: "stage_checking_detail" });
 
     const blob = await resolveToBlob(image);
     const img = await blobToImage(blob);
@@ -282,7 +282,7 @@ export class TfjsPredictionService implements PredictionServiceInterface {
       const [c, d] = DISPLAY[names[i]] ?? [names[i], names[i]];
       return { className: names[i], crop: c, disease: d, confidence: Math.round(p * 10000) / 100 };
     });
-    onProgress?.({ stage: "Analysis complete", progress: 100, detail: "Result ready" });
+    onProgress?.({ stage: "stage_done", progress: 100, detail: "stage_done_detail" });
 
     return {
       id: `pred-${Date.now()}`,

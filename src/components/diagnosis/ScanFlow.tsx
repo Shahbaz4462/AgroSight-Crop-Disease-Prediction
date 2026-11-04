@@ -40,11 +40,11 @@ export const ScanFlow: React.FC = () => {
     if (!f) return;
     setError("");
     if (!VALID.includes(f.type)) {
-      setError("This file type isn't supported. Please use a JPG or PNG photo.");
+      setError(t("err_file_type"));
       return;
     }
     if (f.size > MAX_MB * 1024 * 1024) {
-      setError(`This photo is too large (over ${MAX_MB} MB). Try a smaller one.`);
+      setError(t("err_too_large"));
       return;
     }
     setFile(f);
@@ -53,7 +53,7 @@ export const ScanFlow: React.FC = () => {
       setPreview(thumb);
       setQualityWarnings(await assessImageQuality(thumb));
     } catch {
-      setError("We couldn't open that photo. Please try another.");
+      setError(t("err_open_photo"));
       setFile(null);
     }
   };
@@ -100,7 +100,7 @@ export const ScanFlow: React.FC = () => {
       router.push(`/results?id=${saved.id}`);
     } catch (e) {
       console.error(e);
-      setError("Something went wrong while checking the leaf. Please try again.");
+      setError(t("err_scan"));
       setBusy(false);
       setStage(null);
     }
@@ -114,7 +114,7 @@ export const ScanFlow: React.FC = () => {
       setPreview(thumb);
       analyze(f, thumb);
     } catch {
-      setError("We couldn't read that frame. Please try again.");
+      setError(t("err_frame"));
     }
   };
 
@@ -143,7 +143,7 @@ export const ScanFlow: React.FC = () => {
               <span key={i} className={`h-3 border-2 border-ink ${i < Math.round(pct / 10) ? "bg-accent" : "bg-transparent"}`} />
             ))}
           </div>
-          <p className="label text-muted min-h-[1rem]">{stage?.stage ?? "Getting ready"}</p>
+          <p className="label text-muted min-h-[1rem]">{stage?.stage ? t(stage.stage) : t("checking")}</p>
         </div>
       </div>
     );
@@ -192,7 +192,7 @@ export const ScanFlow: React.FC = () => {
         onClick={() => cameraRef.current?.click()}
         className="w-full label py-3 text-muted hover:text-ink underline underline-offset-4"
       >
-        Or use your phone&apos;s camera app
+        {t("use_phone_camera")}
       </button>
 
       {error && <ErrorNote msg={error} />}
