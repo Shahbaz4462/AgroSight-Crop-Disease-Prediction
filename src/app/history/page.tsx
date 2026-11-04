@@ -22,7 +22,15 @@ export default function HistoryPage() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]["key"]>("all");
 
-  useEffect(() => setHistory(historyService.getHistory()), []);
+  // Uncertain scans must not show in My scans at all — not even as
+  // a "Not sure" entry. Remove any previously saved uncertain entries
+  // from this device, then show only confident diagnoses.
+  useEffect(() => {
+    const all = historyService.getHistory();
+    const uncertain = all.filter((h) => h.status === "uncertain");
+    uncertain.forEach((h) => historyService.deleteDiagnosis(h.id));
+    setHistory(all.filter((h) => h.status !== "uncertain"));
+  }, []);
 
   const remove = (id: string) => {
     historyService.deleteDiagnosis(id);

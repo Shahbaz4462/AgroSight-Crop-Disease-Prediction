@@ -21,7 +21,11 @@ const word = { healthy: "Healthy", diseased: "Disease", uncertain: "Unsure" } as
 
 export default function HomePage() {
   const [recent, setRecent] = useState<DiagnosisHistoryItem[]>([]);
-  useEffect(() => setRecent(historyService.getHistory().slice(0, 3)), []);
+  // Uncertain scans are not diagnoses, so they never appear here either.
+  useEffect(
+    () => setRecent(historyService.getHistory().filter((h) => h.status !== "uncertain").slice(0, 3)),
+    []
+  );
 
   return (
     <div className="w-full">
