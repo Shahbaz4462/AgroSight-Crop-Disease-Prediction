@@ -68,6 +68,15 @@ export const ScanFlow: React.FC = () => {
     try {
       const result: PredictionResult = await predictionService.predictLeafWithProgress(target, setStage);
       const small = typeof target === "string" ? result.imageUrl || thumb || "" : thumb ? await shrink(thumb) : "";
+      // An uncertain result is NOT a diagnosis, so it must never be
+      // saved in My scans as if it were a crop/disease. Show it once
+      // from memory (results page, no id) and do not store it.
+      const uncertain = result.status === "uncertain" || result.confidence < 60;
+      if (uncertain) {
+        setLastDiagnosis({ ...result, imageUrl: small || result.imageUrl });
+        router.push("/results");
+        return;
+      }
       const saved = historyService.addDiagnosis({
         crop: result.crop,
         disease: result.disease,

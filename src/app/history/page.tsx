@@ -35,11 +35,18 @@ export default function HistoryPage() {
     }
   };
 
+  // An uncertain entry is not a diagnosis: never show its stored
+  // top-guess crop/disease as if it were one, even for entries saved
+  // before this fix. It is shown only as "Not sure / No diagnosis".
+  const displayCrop = (h: DiagnosisHistoryItem) => (h.status === "uncertain" ? "Not sure" : h.crop);
+  const displayDisease = (h: DiagnosisHistoryItem) =>
+    h.status === "uncertain" ? "No diagnosis — retake a clearer photo" : h.disease;
+
   const q = query.trim().toLowerCase();
   const items = history.filter(
     (h) =>
       (filter === "all" || h.status === filter) &&
-      (!q || h.crop.toLowerCase().includes(q) || h.disease.toLowerCase().includes(q) || (h.location ?? "").toLowerCase().includes(q))
+      (!q || displayCrop(h).toLowerCase().includes(q) || displayDisease(h).toLowerCase().includes(q) || (h.location ?? "").toLowerCase().includes(q))
   );
 
   return (
@@ -95,14 +102,14 @@ export default function HistoryPage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={h.thumbnail} alt="" className="w-16 h-16 object-cover border-2 border-ink bg-paper shrink-0" />
                 <div className="min-w-0 flex-1">
-                  <p className="font-display font-bold text-xl leading-tight truncate">{h.crop}</p>
-                  <p className="text-sm opacity-70 truncate">{h.disease}</p>
+                  <p className="font-display font-bold text-xl leading-tight truncate">{displayCrop(h)}</p>
+                  <p className="text-sm opacity-70 truncate">{displayDisease(h)}</p>
                   <p className="label !text-[10px] opacity-60 mt-1.5">{formatDate(h.date)}{h.location ? ` · ${h.location}` : ""}</p>
                 </div>
                 <span className="label flex items-center gap-2 shrink-0"><span className={`w-2.5 h-2.5 rounded-full ${dot[h.status]}`} />{word[h.status]}</span>
                 <ArrowUpRight className="w-5 h-5 shrink-0 hidden sm:block" />
               </Link>
-              <button onClick={() => remove(h.id)} aria-label={`Delete scan of ${h.crop}`} className="w-14 border-l-2 border-ink flex items-center justify-center text-muted hover:bg-danger hover:text-white transition-colors">
+              <button onClick={() => remove(h.id)} aria-label={`Delete scan: ${displayCrop(h)}`} className="w-14 border-l-2 border-ink flex items-center justify-center text-muted hover:bg-danger hover:text-white transition-colors">
                 <Trash2 className="w-5 h-5" />
               </button>
             </li>

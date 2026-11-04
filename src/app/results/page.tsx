@@ -91,7 +91,10 @@ function ResultContent() {
   const items = tabs.find((t) => t.key === tab)?.items ?? [];
 
   const share = async () => {
-    const text = `AgroSight: ${result.crop} · ${result.disease} (${Math.round(result.confidence)}% sure).`;
+    // Never share an uncertain top guess as a diagnosis.
+    const text = uncertain
+      ? "AgroSight: result was not sure — please retake a clearer photo of a single leaf."
+      : `AgroSight: ${result.crop} · ${result.disease} (${Math.round(result.confidence)}% sure).`;
     try {
       if (navigator.share) await navigator.share({ title: "AgroSight result", text, url: window.location.href });
       else {
@@ -127,7 +130,7 @@ function ResultContent() {
           <div className="relative panel shadow-hard overflow-hidden aspect-[4/3] lg:aspect-square bg-ink">
             {result.imageUrl && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={result.imageUrl} alt={`${result.crop} leaf you scanned`} className="absolute inset-0 w-full h-full object-cover" />
+              <img src={result.imageUrl} alt={uncertain ? "Your photo" : `${result.crop} leaf you scanned`} className="absolute inset-0 w-full h-full object-cover" />
             )}
             <span className="absolute top-2 left-2 bg-ink text-paper label !text-[10px] px-2 py-1">Your photo</span>
           </div>
