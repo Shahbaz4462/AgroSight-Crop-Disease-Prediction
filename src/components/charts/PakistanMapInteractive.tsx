@@ -1,48 +1,152 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { PAKISTAN_REGIONS_DATA } from "../../data/pakistanRegionsData";
+import { PAKISTAN_BOUNDARIES } from "../../data/pakistanBoundaries";
 import { ProvinceStatistic } from "../../types";
 
-const SHAPES: { id: string; d: string; label: string; lx: number; ly: number }[] = [
-  { id: "balochistan", d: "M 50 180 L 190 190 L 220 280 L 160 370 L 60 350 L 30 250 Z", label: "Balochistan", lx: 80, ly: 275 },
-  { id: "sindh", d: "M 160 370 L 220 280 L 290 290 L 260 410 L 180 410 Z", label: "Sindh", lx: 200, ly: 360 },
-  { id: "punjab", d: "M 190 190 L 280 150 L 340 190 L 320 290 L 220 280 Z", label: "Punjab", lx: 235, ly: 235 },
-  { id: "kpk", d: "M 180 100 L 250 80 L 280 150 L 190 190 Z", label: "KPK", lx: 205, ly: 145 },
-  { id: "gilgit-baltistan", d: "M 250 80 L 320 30 L 370 70 L 310 110 L 270 90 Z", label: "GB", lx: 300, ly: 75 },
-  { id: "ajk", d: "M 280 110 L 310 110 L 300 160 L 275 145 Z", label: "AJK", lx: 283, ly: 140 },
-];
+// Real boundaries, not hand-drawn shapes.
+// PAKISTAN_BOUNDARIES is generated from geoBoundaries gbOpen, Pakistan
+// ADM1 (simplified), by scripts/generate_pakistan_boundaries.py — see
+// src/data/pakistanBoundaries.ts for the source note. Coordinates are
+// longitude/latitude, projected here with a simple equirectangular
+// projection fitted to Pakistan's bounding box, so the outline, the
+// province shapes and their relative sizes are the real ones.
+const VIEW_W = 400;
+const VIEW_H = 440;
+
+const SHAPE_TO_REGION: Record<string, string> = {
+  Balochistan: "balochistan",
+  Sindh: "sindh",
+  Punjab: "punjab",
+  "Khyber Pakhtunkhwa": "kpk",
+  "Gilgit-Baltistan": "gilgit-baltistan",
+  "Azad Kashmir": "ajk",
+  // Islamabad Capital Territory has no regional statistics entry, so it
+  // is drawn as part of the real map but is not a selectable province.
+};
+
+const LABELS: Record<string, string> = {
+  Balochistan: "Balochistan",
+  Sindh: "Sindh",
+  Punjab: "Punjab",
+  "Khyber Pakhtunkhwa": "KPK",
+  "Gilgit-Baltistan": "GB",
+  "Azad Kashmir": "AJK",
+};
+
+type Projected = {
+  shapeName: string;
+  regionId: string | null;
+  d: string;
+  lx: number;
+  ly: number;
+};
+
+function project(features: typeof PAKISTAN_BOUNDARIES.features): Projected[] {
+  let minLon = Infinity;
+  let maxLon = -Infinity;
+  let minLat = Infinity;
+  let maxLat = -Infinity;
+  for (const f of features) {
+    for (const poly of f.geometry.coordinates) {
+      for (const ring of poly) {
+        for (const [lon, lat] of ring) {
+          if (lon < minLon) minLon = lon;
+          if (lon > maxLon) maxLon = lon;
+          if (lat < minLat) minLat = lat;
+          if (lat > maxLat) maxLat = lat;
+        }
+      }
+    }
+  }
+  const midLat = ((minLat + maxLat) / 2) * (Math.PI / 180);
+  const kx = Math.cos(midLat);
+  const spanLon = (maxLon - minLon) * kx;
+  const spanLat = maxLat - minLat;
+  const scale = Math.min((VIEW_W - 20) / spanLon, (VIEW_H - 20) / spanLat);
+  const offsetX = (VIEW_W - spanLon * scale) / 2;
+  const offsetY = (VIEW_H - spanLat * scale) / 2;
+  const px = (lon: number, lat: number): [number, number] => [
+    offsetX + (lon - minLon) * kx * scale,
+    offsetY + (maxLat - lat) * scale,
+  ];
+
+  return features.map((f) => {
+    let d = "";
+    let area = 0;
+    let cx = 0;
+    let cy = 0;
+    for (const poly of f.geometry.coordinates) {
+      for (const ring of poly) {
+        const pts = ring.map(([lon, lat]) => px(lon, lat));
+        d += pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" ") + " Z ";
+        // Signed area centroid of the outer ring only, for the label.
+        if (ring === poly[0]) {
+          let a = 0;
+          let sx = 0;
+          let sy = 0;
+          for (let i = 0; i < pts.length - 1; i++) {
+            const cross = pts[i][0] * pts[i + 1][1] - pts[i + 1][0] * pts[i][1];
+            a += cross;
+            sx += (pts[i][0] + pts[i + 1][0]) * cross;
+            sy += (pts[i][1] + pts[i + 1][1]) * cross;
+          }
+          if (a !== 0) {
+            area += a / 2;
+            cx += (sx / (3 * a)) * (a / 2);
+            cy += (sy / (3 * a)) * (a / 2);
+          }
+        }
+      }
+    }
+    const label = area !== 0 ? [cx / area, cy / area] : [VIEW_W / 2, VIEW_H / 2];
+    return {
+      shapeName: f.properties.shapeName,
+      regionId: SHAPE_TO_REGION[f.properties.shapeName] ?? null,
+      d: d.trim(),
+      lx: label[0],
+      ly: label[1],
+    };
+  });
+}
 
 const riskBg: Record<string, string> = { Low: "bg-ok", Medium: "bg-warn", High: "bg-danger", Alert: "bg-danger" };
 
 export const PakistanMapInteractive: React.FC = () => {
   const [sel, setSel] = useState<ProvinceStatistic>(PAKISTAN_REGIONS_DATA[0]);
+  const shapes = useMemo(() => project(PAKISTAN_BOUNDARIES.features), []);
 
   return (
     <div className="grid lg:grid-cols-12 border-2 border-ink bg-card">
       <div className="lg:col-span-7 p-4 sm:p-6 border-b-2 lg:border-b-0 lg:border-r-2 border-ink grid-bg">
-        <svg viewBox="0 0 400 440" className="w-full max-w-lg mx-auto h-auto" role="group" aria-label="Map of Pakistan provinces">
-          {SHAPES.map((s) => {
-            const on = sel.id === s.id;
+        <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} className="w-full max-w-lg mx-auto h-auto" role="group" aria-label="Map of Pakistan provinces">
+          {shapes.map((s) => {
+            const region = s.regionId ? PAKISTAN_REGIONS_DATA.find((p) => p.id === s.regionId) : undefined;
+            const on = region ? sel.id === region.id : false;
+            const label = LABELS[s.shapeName];
             return (
               <g
-                key={s.id}
-                tabIndex={0}
-                role="button"
-                aria-label={s.label}
-                aria-pressed={on}
-                className="cursor-pointer outline-none"
-                onClick={() => setSel(PAKISTAN_REGIONS_DATA.find((p) => p.id === s.id) ?? sel)}
-                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setSel(PAKISTAN_REGIONS_DATA.find((p) => p.id === s.id) ?? sel)}
+                key={s.shapeName}
+                tabIndex={region ? 0 : undefined}
+                role={region ? "button" : undefined}
+                aria-label={region ? label : `${s.shapeName} (no regional statistics)`}
+                aria-pressed={region ? on : undefined}
+                className={region ? "cursor-pointer outline-none" : ""}
+                onClick={region ? () => setSel(region) : undefined}
+                onKeyDown={region ? (e) => (e.key === "Enter" || e.key === " ") && setSel(region) : undefined}
               >
-                <path d={s.d} strokeWidth="3" strokeLinejoin="round" className={`transition-colors ${on ? "fill-accent stroke-ink" : "fill-card stroke-ink hover:fill-ink/10"}`} />
-                <text x={s.lx} y={s.ly} className="fill-ink pointer-events-none" style={{ font: "600 11px var(--font-mono), monospace", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                  {s.label}
-                </text>
+                <path d={s.d} fillRule="evenodd" strokeWidth="2" strokeLinejoin="round" className={`transition-colors ${on ? "fill-accent stroke-ink" : "fill-card stroke-ink hover:fill-ink/10"}`} />
+                {label && (
+                  <text x={s.lx} y={s.ly} textAnchor="middle" className="fill-ink pointer-events-none" style={{ font: "600 11px var(--font-mono), monospace", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                    {label}
+                  </text>
+                )}
               </g>
             );
           })}
         </svg>
+        <p className="mt-2 text-center text-xs text-muted">Real provincial boundaries: geoBoundaries gbOpen, Pakistan ADM1 (simplified).</p>
         <div className="mt-4 grid grid-cols-3 sm:grid-cols-6 border-2 border-ink">
           {PAKISTAN_REGIONS_DATA.map((p) => (
             <button

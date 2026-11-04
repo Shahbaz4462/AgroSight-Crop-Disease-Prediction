@@ -1,43 +1,41 @@
 import { PredictionResult, PredictionServiceInterface, ScanningStage } from "./types";
-import { modelApiService, ModelApiService } from "./modelApiService";
+import { tfjsPredictionService, TfjsPredictionService } from "./tfjsPredictionService";
 
-// v1: the real backend is the only provider. There is no mock fallback.
-// If the backend is unavailable, the scan fails with an error instead of
-// returning a simulated diagnosis, so the site never shows a fake result.
-export type AIProvider = "mock" | "api";
+// Vercel-only v1: the model runs in the browser via TensorFlow.js.
+// There is no external backend and no mock fallback. If the model files
+// in public/model/ are missing, the scan fails with an error instead of
+// returning a simulated diagnosis.
+export type AIProvider = "mock" | "tfjs";
 
 class UnifiedPredictionService implements PredictionServiceInterface {
-  private apiService: ModelApiService;
+  private tfjsService: TfjsPredictionService;
 
   constructor() {
-    this.apiService = modelApiService;
+    this.tfjsService = tfjsPredictionService;
   }
 
   public getActiveProvider(): AIProvider {
-    return "api";
+    return "tfjs";
   }
 
   public setProvider(_provider: AIProvider): void {
-    // Provider switching is kept for the AppContext API, but only "api"
+    // Provider switching is kept for the AppContext API, but only "tfjs"
     // is supported in v1. Any other value is ignored on purpose.
   }
 
   public async predictLeaf(image: File | Blob | string): Promise<PredictionResult> {
-    return await this.apiService.predictLeaf(image);
+    return await this.tfjsService.predictLeaf(image);
   }
 
   public async predictLeafWithProgress(
     image: File | Blob | string,
     onProgress?: (stage: ScanningStage) => void
   ): Promise<PredictionResult> {
-    onProgress?.({ stage: "Connecting to inference service...", progress: 30, detail: "Transmitting image buffer" });
-    const result = await this.apiService.predictLeaf(image);
-    onProgress?.({ stage: "Analysis complete", progress: 100, detail: "Inference response parsed" });
-    return result;
+    return await this.tfjsService.predictLeafWithProgress(image, onProgress);
   }
 
   public cancelPrediction(): void {
-    // No local mock to cancel; a real request cannot be cancelled here.
+    // A browser inference run cannot be cancelled here.
   }
 }
 

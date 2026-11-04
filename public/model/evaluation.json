@@ -1,0 +1,69 @@
+{
+  "cotton_aphids": {
+    "precision": 0.9698795180722891,
+    "recall": 0.9415204678362573,
+    "f1-score": 0.9554896142433235,
+    "support": 342.0
+  },
+  "cotton_army_worm": {
+    "precision": 0.9605633802816902,
+    "recall": 0.9770773638968482,
+    "f1-score": 0.96875,
+    "support": 349.0
+  },
+  "diseased_rice": {
+    "precision": 0.7192982456140351,
+    "recall": 0.7884615384615384,
+    "f1-score": 0.7522935779816514,
+    "support": 52.0
+  },
+  "healthy_cotton": {
+    "precision": 0.9886363636363636,
+    "recall": 0.997134670487106,
+    "f1-score": 0.992867332382311,
+    "support": 349.0
+  },
+  "healthy_rice": {
+    "precision": 0.75,
+    "recall": 0.8235294117647058,
+    "f1-score": 0.7850467289719626,
+    "support": 51.0
+  },
+  "healthy_wheat": {
+    "precision": 0.93,
+    "recall": 0.8857142857142857,
+    "f1-score": 0.9073170731707317,
+    "support": 105.0
+  },
+  "wheat_aphid": {
+    "precision": 0.8863636363636364,
+    "recall": 0.8764044943820225,
+    "f1-score": 0.8813559322033898,
+    "support": 89.0
+  },
+  "wheat_brown_rust": {
+    "precision": 0.9145299145299145,
+    "recall": 0.8699186991869918,
+    "f1-score": 0.8916666666666667,
+    "support": 123.0
+  },
+  "wheat_yellow_rust": {
+    "precision": 0.9496402877697842,
+    "recall": 0.9705882352941176,
+    "f1-score": 0.96,
+    "support": 136.0
+  },
+  "accuracy": 0.9423558897243107,
+  "macro avg": {
+    "precision": 0.896545705140857,
+    "recall": 0.9033721296693193,
+    "f1-score": 0.8994207695133372,
+    "support": 1596.0
+  },
+  "weighted avg": {
+    "precision": 0.9434822285966714,
+    "recall": 0.9423558897243107,
+    "f1-score": 0.9426582186430374,
+    "support": 1596.0
+  }
+}
