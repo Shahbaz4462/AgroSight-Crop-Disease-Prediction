@@ -23,7 +23,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [expoMode, setExpoMode] = useState<boolean>(false);
   const [language, setLanguage] = useState<"en" | "ur">("en");
-  const [aiProvider, setAiProviderState] = useState<AIProvider>("api");
+  const [aiProvider, setAiProviderState] = useState<AIProvider>("tfjs");
   const [lastDiagnosis, setLastDiagnosis] = useState<PredictionResult | null>(null);
 
   useEffect(() => {
