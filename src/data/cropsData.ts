@@ -1,8 +1,11 @@
 import { CropInfo } from "../types";
 
-// v1 scope: only the crops covered by the delivered model
-// (wheat, cotton, rice — 9 classes). Other crops are update 2.0.
-// Common diseases below are exactly the v1 model classes for each crop.
+// Crops in the guide.
+// Scannable (v1 model): wheat, cotton, rice — 9 classes.
+// Guide only: tomato, potato, mango, citrus, apple. Their disease
+// information is educational only; the v1 model does NOT scan them,
+// and the Crop guide must not offer a scan for them. They will become
+// scannable only in a future update when a model covers them.
 
 export const CROPS_DATA: CropInfo[] = [
   {
@@ -25,7 +28,7 @@ export const CROPS_DATA: CropInfo[] = [
     category: "Cereal",
     iconName: "Wheat",
     description: "Core food security cereal crop in Pakistan; grown in Rabi season across irrigated and rainfed zones.",
-    commonDiseases: ["Brown Rust", "Yellow Rust", "Aphid", "Healthy"],
+    commonDiseases: ["Brown Rust", "Yellow Rust", "Wheat Aphid", "Healthy"],
     growthCycleDays: 140,
     optimalTemperature: "15°C - 24°C",
     waterRequirement: "Moderate",
@@ -38,10 +41,80 @@ export const CROPS_DATA: CropInfo[] = [
     category: "Cash Crop",
     iconName: "Flower",
     description: "Major cash crop known as 'white gold', central to textile industrial exports.",
-    commonDiseases: ["Aphids", "Army Worm", "Healthy"],
+    commonDiseases: ["Cotton Aphids", "Army Worm", "Healthy"],
     growthCycleDays: 160,
     optimalTemperature: "26°C - 35°C",
     waterRequirement: "Moderate",
     imageUrl: "https://images.unsplash.com/photo-1594904351111-a072f80b1a71?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: "tomato",
+    name: "Tomato",
+    scientificName: "Solanum lycopersicum",
+    category: "Vegetable",
+    iconName: "Flower",
+    description: "Widely grown vegetable in Pakistan, eaten fresh and cooked, and grown in both winter and summer seasons depending on the region.",
+    commonDiseases: ["Early Blight"],
+    growthCycleDays: 90,
+    optimalTemperature: "20°C - 27°C",
+    waterRequirement: "Moderate",
+    imageUrl: "https://images.unsplash.com/photo-1592841200221-a6898f307baa?auto=format&fit=crop&w=800&q=80",
+    guideOnly: true,
+  },
+  {
+    id: "potato",
+    name: "Potato",
+    scientificName: "Solanum tuberosum",
+    category: "Vegetable",
+    iconName: "Flower",
+    description: "Important winter vegetable and staple in Pakistan, grown mainly in Punjab and stored for year-round use.",
+    commonDiseases: ["Late Blight"],
+    growthCycleDays: 100,
+    optimalTemperature: "15°C - 20°C",
+    waterRequirement: "Moderate",
+    imageUrl: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80",
+    guideOnly: true,
+  },
+  {
+    id: "mango",
+    name: "Mango",
+    scientificName: "Mangifera indica",
+    category: "Fruit",
+    iconName: "Flower",
+    description: "Pakistan's most famous fruit, grown mainly in Punjab and Sindh, with Sindhri, Chaunsa and Anwar Ratol among the best-known varieties.",
+    commonDiseases: ["Anthracnose"],
+    growthCycleDays: 150,
+    optimalTemperature: "24°C - 30°C",
+    waterRequirement: "Moderate",
+    imageUrl: "https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=800&q=80",
+    guideOnly: true,
+  },
+  {
+    id: "citrus",
+    name: "Citrus",
+    scientificName: "Citrus reticulata (Kinnow)",
+    category: "Fruit",
+    iconName: "Flower",
+    description: "Kinnow is Pakistan's main citrus fruit, grown chiefly in Sargodha and surrounding districts of Punjab, and exported in large quantities.",
+    commonDiseases: ["Canker"],
+    growthCycleDays: 270,
+    optimalTemperature: "22°C - 30°C",
+    waterRequirement: "Moderate",
+    imageUrl: "https://images.unsplash.com/photo-1557800636-894a64c1696f?auto=format&fit=crop&w=800&q=80",
+    guideOnly: true,
+  },
+  {
+    id: "apple",
+    name: "Apple",
+    scientificName: "Malus domestica",
+    category: "Fruit",
+    iconName: "Flower",
+    description: "Temperate fruit grown in cooler regions of Pakistan, including Balochistan, Murree and northern areas, where cold winters suit the trees.",
+    commonDiseases: ["Scab"],
+    growthCycleDays: 180,
+    optimalTemperature: "15°C - 24°C",
+    waterRequirement: "Moderate",
+    imageUrl: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=800&q=80",
+    guideOnly: true,
   },
 ];

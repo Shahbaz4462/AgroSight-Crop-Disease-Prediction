@@ -7,16 +7,16 @@ import { useApp } from "../../context/AppContext";
 import { Leaf, Sun, Moon, ArrowUpRight } from "lucide-react";
 
 const links = [
-  { href: "/diagnose", label: "Scan" },
-  { href: "/history", label: "My scans" },
-  { href: "/crops", label: "Crop guide" },
-  { href: "/insights", label: "Disease map" },
-  { href: "/about", label: "About" },
+  { href: "/diagnose", key: "nav_scan" },
+  { href: "/history", key: "nav_scans" },
+  { href: "/crops", key: "nav_crops" },
+  { href: "/insights", key: "nav_map" },
+  { href: "/about", key: "nav_about" },
 ];
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
-  const { theme, toggleTheme } = useApp();
+  const { theme, toggleTheme, language, setLanguage, t } = useApp();
   const isActive = (p: string) => pathname.startsWith(p);
 
   return (
@@ -38,12 +38,23 @@ export const Navbar: React.FC = () => {
                 isActive(l.href) ? "border-ink" : "border-transparent text-muted hover:text-ink"
               }`}
             >
-              {l.label}
+              {t(l.key)}
             </Link>
           ))}
         </nav>
 
         <div className="flex items-center gap-3">
+          <label className="sr-only" htmlFor="lang-select">Language</label>
+          <select
+            id="lang-select"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value as "en" | "ur" | "roman")}
+            className="h-10 px-2 border-2 border-ink bg-paper label !text-[11px] outline-none"
+          >
+            <option value="en">English</option>
+            <option value="ur">اردو</option>
+            <option value="roman">Roman Urdu</option>
+          </select>
           <button
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
@@ -52,7 +63,7 @@ export const Navbar: React.FC = () => {
             {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
           <Link href="/diagnose" className="hidden md:inline-flex items-center gap-1.5 h-10 px-4 bg-ink text-paper label hover:bg-accent hover:text-[#0b1a12] transition-colors">
-            Scan a leaf <ArrowUpRight className="w-4 h-4" />
+            {t("nav_scan_leaf")} <ArrowUpRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

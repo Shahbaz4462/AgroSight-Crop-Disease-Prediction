@@ -256,16 +256,32 @@ export class TfjsPredictionService implements PredictionServiceInterface {
     const probs = (await output.data()) as Float32Array;
     tf.dispose([input, output]);
 
-    let best = 0;
-    for (let i = 1; i < probs.length; i++) {
-      if (probs[i] > probs[best]) best = i;
-    }
+    const order = Array.from(probs)
+      .map((p, i) => ({ i, p }))
+      .sort((a, b) => b.p - a.p);
+    const best = order[0].i;
     const label = names[best];
     const confidence = probs[best] * 100;
     const [crop, disease] = DISPLAY[label] ?? [label, label];
     const sol = sols[label] ?? {};
 
-    const status = confidence < 60 ? "uncertain" : disease === "Healthy" ? "healthy" : "diseased";
+    // Confident threshold is 75%, not 60%. Measured on the 1,596
+    // test images: at 60%, 61 wrong answers still looked confident;
+    // at 75%, 91% of real leaves stay confident while the three
+    // non-leaf / blurred sample images (top scores 65%, 68%, 51%)
+    // all become "uncertain" instead of a wrong crop name.
+    // A green-colour check was tried and rejected: real diseased
+    // leaves are often yellow/brown, so it threw away more than
+    // half of real leaves. This threshold is a trade-off, not a
+    // guarantee — a confident answer can still be wrong, which is
+    // why the top 3 are shown and serious outbreaks should be
+    // confirmed with a local agriculture officer.
+    const CONFIDENT = 75;
+    const status = confidence < CONFIDENT ? "uncertain" : disease === "Healthy" ? "healthy" : "diseased";
+    const topPredictions = order.slice(0, 3).map(({ i, p }) => {
+      const [c, d] = DISPLAY[names[i]] ?? [names[i], names[i]];
+      return { crop: c, disease: d, confidence: Math.round(p * 10000) / 100 };
+    });
     onProgress?.({ stage: "Analysis complete", progress: 100, detail: "Result ready" });
 
     return {
@@ -274,12 +290,13 @@ export class TfjsPredictionService implements PredictionServiceInterface {
       disease,
       confidence: Math.round(confidence * 100) / 100,
       status,
+      topPredictions,
       organic_solution: sol.immediate_steps ? [sol.immediate_steps] : [],
       chemical_solution: sol.treatment ? [sol.treatment] : [],
       prevention: [sol.prevention, sol.note].filter(Boolean) as string[],
       message:
-        confidence < 60
-          ? "Photo is not clear enough for a reliable answer. Take a closer, well-lit photo of a single leaf."
+        confidence < CONFIDENT
+          ? "The model is not sure enough about this photo, so no crop or disease is named as a confident answer. Take a closer, well-lit photo of a single leaf."
           : undefined,
       timestamp: new Date().toISOString(),
     };

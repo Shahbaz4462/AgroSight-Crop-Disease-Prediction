@@ -8,26 +8,29 @@ import { PredictionResult, ScanningStage } from "../../services/ai/types";
 import { historyService } from "../../services/api/historyService";
 import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 import { downscaleImage } from "../../lib/image";
+import { assessImageQuality, QualityWarning } from "../../lib/imageQuality";
 import { useApp } from "../../context/AppContext";
 import { LiveCamera } from "../scanner/LiveCamera";
 
 const MAX_MB = 12;
 const VALID = ["image/jpeg", "image/png", "image/webp"];
 
+// Tips are translated at render time, so changing language updates them.
 const TIPS = [
-  { icon: Sun, text: "Use daylight, avoid shadows" },
-  { icon: Leaf, text: "One leaf, filling the frame" },
-  { icon: Focus, text: "Keep it sharp, not blurry" },
+  { icon: Sun, key: "tip1" },
+  { icon: Leaf, key: "tip2" },
+  { icon: Focus, key: "tip3" },
 ];
 
 export const ScanFlow: React.FC = () => {
   const router = useRouter();
-  const { setLastDiagnosis } = useApp();
+  const { setLastDiagnosis, t } = useApp();
   const cameraRef = useRef<HTMLInputElement>(null);
   const galleryRef = useRef<HTMLInputElement>(null);
 
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [qualityWarnings, setQualityWarnings] = useState<QualityWarning[]>([]);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [stage, setStage] = useState<ScanningStage | null>(null);
@@ -46,7 +49,9 @@ export const ScanFlow: React.FC = () => {
     }
     setFile(f);
     try {
-      setPreview(await downscaleImage(f, 900, 0.85));
+      const thumb = await downscaleImage(f, 900, 0.85);
+      setPreview(thumb);
+      setQualityWarnings(await assessImageQuality(thumb));
     } catch {
       setError("We couldn't open that photo. Please try another.");
       setFile(null);
@@ -56,6 +61,7 @@ export const ScanFlow: React.FC = () => {
   const reset = () => {
     setFile(null);
     setPreview(null);
+    setQualityWarnings([]);
     setError("");
     setStage(null);
     if (cameraRef.current) cameraRef.current.value = "";
@@ -71,7 +77,7 @@ export const ScanFlow: React.FC = () => {
       // An uncertain result is NOT a diagnosis, so it must never be
       // saved in My scans as if it were a crop/disease. Show it once
       // from memory (results page, no id) and do not store it.
-      const uncertain = result.status === "uncertain" || result.confidence < 60;
+      const uncertain = result.status === "uncertain" || result.confidence < 75;
       if (uncertain) {
         setLastDiagnosis({ ...result, imageUrl: small || result.imageUrl });
         router.push("/results");
@@ -125,11 +131,11 @@ export const ScanFlow: React.FC = () => {
           {["top-3 left-3 border-t-4 border-l-4", "top-3 right-3 border-t-4 border-r-4", "bottom-3 left-3 border-b-4 border-l-4", "bottom-3 right-3 border-b-4 border-r-4"].map((c) => (
             <span key={c} className={`absolute w-9 h-9 border-accent ${c}`} />
           ))}
-          <span className="absolute top-3 left-1/2 -translate-x-1/2 bg-accent text-[#0b1a12] label !text-[10px] px-2 py-1">Analysing</span>
+          <span className="absolute top-3 left-1/2 -translate-x-1/2 bg-accent text-[#0b1a12] label !text-[10px] px-2 py-1">{t("analysing")}</span>
         </div>
         <div role="status" aria-live="polite" className="space-y-3">
           <div className="flex items-end justify-between">
-            <p className="font-display font-extrabold text-2xl leading-none">Checking your leaf</p>
+            <p className="font-display font-extrabold text-2xl leading-none">{t("checking")}</p>
             <p className="font-mono text-2xl font-medium leading-none">{pct}%</p>
           </div>
           <div className="grid grid-cols-10 gap-1" aria-hidden="true">
@@ -150,14 +156,25 @@ export const ScanFlow: React.FC = () => {
         <div className="relative aspect-[4/5] panel shadow-hard-lg overflow-hidden bg-ink">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={preview} alt="Selected leaf preview" className="absolute inset-0 w-full h-full object-contain" />
-          <span className="absolute top-3 left-3 bg-ink text-paper label !text-[10px] px-2 py-1">Preview</span>
+          <span className="absolute top-3 left-3 bg-ink text-paper label !text-[10px] px-2 py-1">{t("preview")}</span>
         </div>
         {error && <ErrorNote msg={error} />}
+        {qualityWarnings.length > 0 && (
+          <div className="border-2 border-dashed border-ink p-4 text-sm space-y-2">
+            <p className="font-bold">{t("quality_title")}</p>
+            <ul className="space-y-1">
+              {qualityWarnings.map((w) => (
+                <li key={w.code}>• {t(`quality_${w.code}`)}</li>
+              ))}
+            </ul>
+            <p className="text-muted">{t("quality_note")}</p>
+          </div>
+        )}
         <button onClick={() => file && analyze(file, preview)} className="btn btn-accent w-full min-h-[4rem] text-xl">
-          <ScanLine className="w-6 h-6" strokeWidth={2.5} /> Check this leaf
+          <ScanLine className="w-6 h-6" strokeWidth={2.5} /> {t("check_leaf")}
         </button>
         <button onClick={reset} className="w-full h-12 label flex items-center justify-center gap-2 hover:text-muted transition">
-          <RefreshCw className="w-4 h-4" /> Use a different photo
+          <RefreshCw className="w-4 h-4" /> {t("different_photo")}
         </button>
       </div>
     );
@@ -181,12 +198,12 @@ export const ScanFlow: React.FC = () => {
       {error && <ErrorNote msg={error} />}
 
       <div className="panel p-5">
-        <p className="label mb-4">For a sharp result</p>
+        <p className="label mb-4">{t("tips_title")}</p>
         <ul className="divide-y-2 divide-ink/15">
-          {TIPS.map(({ icon: Icon, text }, i) => (
-            <li key={text} className="flex items-center gap-4 py-3 first:pt-0 last:pb-0">
+          {TIPS.map(({ icon: Icon, key }, i) => (
+            <li key={key} className="flex items-center gap-4 py-3 first:pt-0 last:pb-0">
               <span className="font-mono text-sm text-muted w-6">0{i + 1}</span>
-              <span className="flex-1 font-medium">{text}</span>
+              <span className="flex-1 font-medium">{t(key)}</span>
               <Icon className="w-5 h-5" />
             </li>
           ))}
@@ -195,7 +212,7 @@ export const ScanFlow: React.FC = () => {
 
       <div>
         <button onClick={() => setShowSamples((v) => !v)} aria-expanded={showSamples} className="w-full flex items-center justify-between label py-3 border-y-2 border-ink">
-          No leaf nearby? Try a sample
+          {t("sample_title")}
           <ChevronDown className={`w-4 h-4 transition-transform ${showSamples ? "rotate-180" : ""}`} />
         </button>
         {showSamples && (

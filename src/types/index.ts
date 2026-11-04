@@ -38,6 +38,9 @@ export interface CropInfo {
   optimalTemperature: string;
   waterRequirement: "Low" | "Moderate" | "High";
   imageUrl: string;
+  // False (or omitted) means the v1 model scans this crop. True means
+  // guide only: the Crop guide shows information, but no scan is offered.
+  guideOnly?: boolean;
 }
 
 export interface DiagnosisHistoryItem {
@@ -117,7 +120,7 @@ export interface KnowledgeBaseEntry {
   crop: string;
   disease: string;
   scientificName: string;
-  pathogenType: "Fungal" | "Bacterial" | "Viral" | "Oomycete" | "Physiological" | "Nematode";
+  pathogenType: "Fungal" | "Bacterial" | "Viral" | "Oomycete" | "Physiological" | "Nematode" | "Pest" | "Healthy" | "Unknown" | "Fungal-like (oomycete)";
   cause: string;
   symptoms: string[];
   organicSolution: string[];

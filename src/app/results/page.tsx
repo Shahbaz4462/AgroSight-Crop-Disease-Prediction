@@ -4,17 +4,18 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useApp } from "../../context/AppContext";
+import { speak, stopSpeaking } from "../../lib/speak";
 import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 import { historyService } from "../../services/api/historyService";
 import { PredictionResult } from "../../services/ai/types";
-import { ArrowLeft, ScanLine, Share2, Printer, Check, ShieldAlert, Info } from "lucide-react";
+import { ArrowLeft, ScanLine, Share2, Printer, Check, ShieldAlert, Info, Volume2, VolumeX, MessageCircle } from "lucide-react";
 
 type Tab = "organic" | "chemical" | "prevent";
 
-function confidenceLabel(c: number) {
-  if (c >= 85) return "Very sure";
-  if (c >= 60) return "Fairly sure";
-  return "Not sure";
+function confidenceLabel(c: number, t: (k: string) => string) {
+  if (c >= 85) return t("very_sure");
+  if (c >= 75) return t("fairly_sure");
+  return t("not_sure");
 }
 
 function resolveResult(id: string | null, last: PredictionResult | null): PredictionResult | null {
@@ -50,11 +51,15 @@ const Step: React.FC<{ n: number; text: string }> = ({ n, text }) => (
 
 function ResultContent() {
   const params = useSearchParams();
-  const { lastDiagnosis, aiProvider } = useApp();
+  const { lastDiagnosis, aiProvider, language, t } = useApp();
   const [result, setResult] = useState<PredictionResult | null>(null);
   const [ready, setReady] = useState(false);
   const [tab, setTab] = useState<Tab>("organic");
   const [copied, setCopied] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const [voiceNote, setVoiceNote] = useState("");
+
+  useEffect(() => () => stopSpeaking(), []);
 
   useEffect(() => {
     setResult(resolveResult(params.get("id"), lastDiagnosis));
@@ -73,20 +78,20 @@ function ResultContent() {
     );
   }
 
-  const uncertain = result.status === "uncertain" || result.confidence < 60;
+  const uncertain = result.status === "uncertain" || result.confidence < 75;
   const healthy = !uncertain && (result.status === "healthy" || result.disease.toLowerCase().includes("healthy"));
   const diseased = !uncertain && !healthy;
 
   const verdict = uncertain
-    ? { word: "Not sure.", bg: "bg-warn", fg: "text-[#0b1a12]", sub: "The photo wasn't clear enough for a reliable answer." }
+    ? { word: t("result_not_sure"), bg: "bg-warn", fg: "text-[#0b1a12]", sub: t("result_not_sure_sub") }
     : healthy
-    ? { word: "Healthy.", bg: "bg-ok", fg: "text-[#0b1a12]", sub: `No signs of disease on this ${result.crop} leaf.` }
-    : { word: "Disease found.", bg: "bg-danger", fg: "text-white", sub: `${result.crop} · ${result.disease}` };
+    ? { word: t("result_healthy"), bg: "bg-ok", fg: "text-[#0b1a12]", sub: `No signs of disease on this ${result.crop} leaf.` }
+    : { word: t("result_disease"), bg: "bg-danger", fg: "text-white", sub: `${result.crop} · ${result.disease}` };
 
   const tabs: { key: Tab; label: string; items?: string[] }[] = [
-    { key: "organic", label: "Natural", items: result.organic_solution },
-    { key: "chemical", label: "Spray", items: result.chemical_solution },
-    { key: "prevent", label: "Prevent", items: result.prevention },
+    { key: "organic", label: t("natural"), items: result.organic_solution },
+    { key: "chemical", label: t("spray"), items: result.chemical_solution },
+    { key: "prevent", label: t("prevent"), items: result.prevention },
   ];
   const items = tabs.find((t) => t.key === tab)?.items ?? [];
 
@@ -108,6 +113,31 @@ function ResultContent() {
   };
 
   const pct = Math.round(result.confidence);
+
+  const listen = () => {
+    if (speaking) {
+      stopSpeaking();
+      setSpeaking(false);
+      return;
+    }
+    const text = uncertain
+      ? t("result_not_sure_sub")
+      : `${result.crop}, ${result.disease}, ${pct} percent. ${(result.organic_solution?.[0] ?? "")} ${(result.chemical_solution?.[0] ?? "")}`;
+    if (!speak(text, language)) {
+      setVoiceNote(t("voice_unavailable"));
+    } else {
+      setVoiceNote("");
+      setSpeaking(true);
+    }
+  };
+
+  // WhatsApp share: only a link is built, nothing is sent by the
+  // site. The user picks a contact and presses Send in WhatsApp.
+  // An uncertain result is never shared as a diagnosis.
+  const whatsappText = uncertain
+    ? "AgroSight: result was not sure — please retake a clearer photo of a single leaf."
+    : `AgroSight: ${result.crop} · ${result.disease} (${pct}% sure).`;
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(whatsappText)}`;
 
   return (
     <div className="w-full">
@@ -137,7 +167,7 @@ function ResultContent() {
 
           <div className="panel p-5">
             <div className="flex items-end justify-between">
-              <span className="label">{confidenceLabel(result.confidence)}</span>
+              <span className="label">{confidenceLabel(result.confidence, t)}</span>
               <span className="font-mono text-4xl font-medium leading-none">{pct}%</span>
             </div>
             <div className="mt-4 grid grid-cols-20 gap-[3px]" style={{ gridTemplateColumns: "repeat(20, minmax(0, 1fr))" }} role="meter" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="How sure the check is">
@@ -148,9 +178,12 @@ function ResultContent() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 print:hidden">
-            <button onClick={share} className="btn btn-ink !min-h-[3rem] !text-base">{copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />} {copied ? "Copied" : "Share"}</button>
-            <button onClick={() => window.print()} className="btn btn-paper !min-h-[3rem] !text-base"><Printer className="w-4 h-4" /> Print</button>
+            <button onClick={share} className="btn btn-ink !min-h-[3rem] !text-base">{copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />} {copied ? "Copied" : t("share")}</button>
+            <button onClick={() => window.print()} className="btn btn-paper !min-h-[3rem] !text-base"><Printer className="w-4 h-4" /> {t("print")}</button>
+            <button onClick={listen} className="btn btn-paper !min-h-[3rem] !text-base">{speaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />} {speaking ? t("stop_listen") : t("listen")}</button>
+            <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn btn-paper !min-h-[3rem] !text-base"><MessageCircle className="w-4 h-4" /> {t("whatsapp")}</a>
           </div>
+          {voiceNote && <p className="text-sm text-muted">{voiceNote}</p>}
         </aside>
 
         {/* Right column */}
@@ -164,18 +197,18 @@ function ResultContent() {
 
           {uncertain && (
             <section>
-              <h2 className="font-display font-extrabold text-3xl mb-5">Try again like this</h2>
+              <h2 className="font-display font-extrabold text-3xl mb-5">{t("try_again")}</h2>
               <ol className="space-y-4">
                 {["Take it in daylight, without shadow", "Fill the frame with a single leaf", "Hold steady so it isn't blurry", "Still failing? Show the plant to a local agriculture officer"].map((t, i) => <Step key={i} n={i + 1} text={t} />)}
               </ol>
               {result.message && <p className="mt-4 text-sm text-muted">{result.message}</p>}
-              <Link href="/diagnose" className="btn btn-accent mt-6"><ScanLine className="w-5 h-5" /> Scan again</Link>
+              <Link href="/diagnose" className="btn btn-accent mt-6"><ScanLine className="w-5 h-5" /> {t("scan_again")}</Link>
             </section>
           )}
 
           {healthy && (
             <section>
-              <h2 className="font-display font-extrabold text-3xl mb-5">Keep it that way</h2>
+              <h2 className="font-display font-extrabold text-3xl mb-5">{t("keep_that_way")}</h2>
               <ol className="space-y-4">
                 {(result.prevention?.length ? result.prevention : ["Check your crop every week", "Avoid standing water around plants"]).map((p, i) => <Step key={i} n={i + 1} text={p} />)}
               </ol>
@@ -206,7 +239,7 @@ function ResultContent() {
               )}
 
               <section>
-                <h2 className="font-display font-extrabold text-3xl mb-5">What to do</h2>
+                <h2 className="font-display font-extrabold text-3xl mb-5">{t("what_to_do")}</h2>
                 <div role="tablist" className="grid grid-cols-3 border-2 border-ink mb-6">
                   {tabs.map(({ key, label }) => (
                     <button
@@ -233,7 +266,22 @@ function ResultContent() {
             </>
           )}
 
-          <p className="text-xs text-muted border-t-2 border-ink pt-4">Guidance only. For a serious outbreak, confirm with a local agriculture officer.</p>
+          {!!result.topPredictions?.length && (
+            <section>
+              <h2 className="font-display font-extrabold text-3xl mb-3">{t("top3_title")}</h2>
+              <p className="text-sm text-muted mb-4">{t("top3_note")}</p>
+              <ol className="border-2 border-ink bg-card divide-y-2 divide-ink/15">
+                {result.topPredictions.map((p, i) => (
+                  <li key={`${p.crop}-${p.disease}`} className="flex items-center justify-between gap-3 p-4">
+                    <span className="font-bold">{i + 1}. {p.crop} · {p.disease}</span>
+                    <span className="font-mono">{Math.round(p.confidence)}%</span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
+
+          <p className="text-xs text-muted border-t-2 border-ink pt-4">{t("guidance_note")}</p>
         </div>
       </div>
     </div>

@@ -6,16 +6,34 @@ import { CROPS_DATA } from "../../data/cropsData";
 import { DISEASES_KNOWLEDGE_BASE } from "../../data/diseasesData";
 import { CropInfo, KnowledgeBaseEntry } from "../../types";
 import { PageHeader } from "../../components/layout/PageHeader";
+import { CROP_CALENDAR } from "../../data/cropCalendar";
+import { useApp } from "../../context/AppContext";
 import { Search, X, ScanLine, Droplets, Thermometer, CalendarDays, ArrowUpRight } from "lucide-react";
 
-const CATEGORIES = ["All", "Cereal", "Cash Crop", "Fruit", "Vegetable"];
+const CATEGORIES = [
+  { value: "All", labelKey: "cat_all" },
+  { value: "Cereal", labelKey: "cat_cereal" },
+  { value: "Cash Crop", labelKey: "cat_cash" },
+  { value: "Fruit", labelKey: "cat_fruit" },
+  { value: "Vegetable", labelKey: "cat_veg" },
+];
 
-function findGuide(disease: string): KnowledgeBaseEntry | undefined {
+function findGuide(disease: string, crop?: string): KnowledgeBaseEntry | undefined {
   const q = disease.toLowerCase();
-  return DISEASES_KNOWLEDGE_BASE.find((d) => d.disease.toLowerCase().includes(q) || q.includes(d.disease.toLowerCase()));
+  const matches = DISEASES_KNOWLEDGE_BASE.filter(
+    (d) => d.disease.toLowerCase().includes(q) || q.includes(d.disease.toLowerCase())
+  );
+  // Prefer the guide for the crop the user actually opened, so
+  // "Aphid" under Wheat does not return the cotton aphid guide.
+  if (crop) {
+    const sameCrop = matches.find((d) => d.crop.toLowerCase() === crop.toLowerCase());
+    if (sameCrop) return sameCrop;
+  }
+  return matches[0];
 }
 
 export default function CropsPage() {
+  const { t } = useApp();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [crop, setCrop] = useState<CropInfo | null>(null);
@@ -40,7 +58,7 @@ export default function CropsPage() {
 
   return (
     <div className="w-full">
-      <PageHeader label="Crop guide" title="Know your crop." sub="Common diseases, growing conditions and treatment for each crop we can check." />
+      <PageHeader label={t("crops_label")} title={t("crops_title")} sub={t("crops_sub")} />
 
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-8 md:py-12 space-y-6">
         <div className="grid md:grid-cols-12 gap-4">
@@ -50,7 +68,7 @@ export default function CropsPage() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search crop or disease"
+              placeholder={t("search_crop")}
               aria-label="Search crops"
               className="w-full h-14 pl-12 pr-4 bg-card border-2 border-ink placeholder:text-muted outline-none focus:shadow-hard-sm"
             />
@@ -58,13 +76,13 @@ export default function CropsPage() {
           <div role="tablist" className="md:col-span-7 grid grid-cols-5 border-2 border-ink">
             {CATEGORIES.map((c) => (
               <button
-                key={c}
+                key={c.value}
                 role="tab"
-                aria-selected={category === c}
-                onClick={() => setCategory(c)}
-                className={`h-14 label !text-[10px] sm:!text-[11px] border-r-2 last:border-r-0 border-ink ${category === c ? "bg-ink text-paper" : "bg-card hover:bg-accent hover:text-[#0b1a12]"}`}
+                aria-selected={category === c.value}
+                onClick={() => setCategory(c.value)}
+                className={`h-14 label !text-[10px] sm:!text-[11px] border-r-2 last:border-r-0 border-ink ${category === c.value ? "bg-ink text-paper" : "bg-card hover:bg-accent hover:text-[#0b1a12]"}`}
               >
-                {c === "Cash Crop" ? "Cash" : c}
+                {t(c.labelKey)}
               </button>
             ))}
           </div>
@@ -108,14 +126,18 @@ export default function CropsPage() {
                             );
                           })}
                         </dl>
-                        <Link href="/diagnose" className="btn btn-accent w-full sm:w-auto"><ScanLine className="w-5 h-5" /> Scan a {c.name.toLowerCase()} leaf</Link>
+                        {c.guideOnly ? (
+                          <p className="border-2 border-dashed border-ink p-4 text-sm">{t("guide_only")}</p>
+                        ) : (
+                          <Link href="/diagnose" className="btn btn-accent w-full sm:w-auto"><ScanLine className="w-5 h-5" /> Scan a {c.name.toLowerCase()} leaf</Link>
+                        )}
                       </div>
                       <div>
                         <p className="label text-muted mb-3">Common diseases</p>
                         <ul className="border-2 border-ink divide-y-2 divide-ink">
                           {c.commonDiseases.map((d) => (
                             <li key={d}>
-                              <button onClick={() => setGuide({ name: d, entry: findGuide(d) })} className="w-full flex items-center justify-between gap-3 p-4 text-left font-bold hover:bg-accent hover:text-[#0b1a12] transition-colors">
+                              <button onClick={() => setGuide({ name: d, entry: findGuide(d, c.name) })} className="w-full flex items-center justify-between gap-3 p-4 text-left font-bold hover:bg-accent hover:text-[#0b1a12] transition-colors">
                                 {d} <ArrowUpRight className="w-5 h-5 shrink-0" />
                               </button>
                             </li>
@@ -130,6 +152,22 @@ export default function CropsPage() {
           </ul>
         )}
       </div>
+
+      {/* Crop calendar — wheat, cotton, rice only, static data */}
+      <section className="max-w-7xl mx-auto w-full px-4 sm:px-8 pb-12 md:pb-16">
+        <h2 className="font-display font-extrabold text-3xl md:text-4xl">{t("calendar_title")}</h2>
+        <p className="mt-3 text-muted max-w-2xl">{t("calendar_sub")}</p>
+        <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {CROP_CALENDAR.map((r) => (
+            <article key={`${r.crop}-${r.months}`} className="border-2 border-ink bg-card p-5">
+              <p className="label text-muted">{r.crop}</p>
+              <h3 className="mt-2 font-display font-bold text-xl">{r.months}</h3>
+              <p className="mt-3 leading-relaxed">{r.work}</p>
+              <p className="mt-3 text-sm"><span className="label text-muted block mb-1">{t("calendar_watch")}</span>{r.watch}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
       {/* Disease guide drawer */}
       {guide && (

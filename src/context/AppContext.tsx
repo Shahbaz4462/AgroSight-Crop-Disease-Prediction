@@ -3,14 +3,16 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { AIProvider, predictionService } from "../services/ai/predictionService";
 import { PredictionResult } from "../types";
+import { Lang, translate } from "../lib/i18n";
 
 interface AppContextType {
   theme: "light" | "dark";
   toggleTheme: () => void;
   expoMode: boolean;
   toggleExpoMode: () => void;
-  language: "en" | "ur";
-  setLanguage: (lang: "en" | "ur") => void;
+  language: Lang;
+  setLanguage: (lang: Lang) => void;
+  t: (key: string) => string;
   aiProvider: AIProvider;
   setAiProvider: (provider: AIProvider) => void;
   lastDiagnosis: PredictionResult | null;
@@ -22,7 +24,25 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [expoMode, setExpoMode] = useState<boolean>(false);
-  const [language, setLanguage] = useState<"en" | "ur">("en");
+  const [language, setLanguageState] = useState<Lang>("en");
+  // Language is saved on this device only, like scan history.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("agrosight-lang");
+      if (saved === "ur" || saved === "roman" || saved === "en") setLanguageState(saved);
+    } catch {
+      // Ignore.
+    }
+  }, []);
+  const setLanguage = (lang: Lang) => {
+    setLanguageState(lang);
+    try {
+      localStorage.setItem("agrosight-lang", lang);
+    } catch {
+      // Ignore.
+    }
+  };
+  const t = (key: string) => translate(language, key);
   const [aiProvider, setAiProviderState] = useState<AIProvider>("tfjs");
   const [lastDiagnosis, setLastDiagnosis] = useState<PredictionResult | null>(null);
 
@@ -57,6 +77,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         toggleExpoMode,
         language,
         setLanguage,
+        t,
         aiProvider,
         setAiProvider,
         lastDiagnosis,

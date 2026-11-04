@@ -5,19 +5,21 @@ import Link from "next/link";
 import { historyService } from "../../services/api/historyService";
 import { DiagnosisHistoryItem } from "../../types";
 import { formatDate } from "../../lib/utils";
+import { useApp } from "../../context/AppContext";
 import { ScanLine, Search, Trash2, ArrowUpRight } from "lucide-react";
 
 const FILTERS = [
-  { key: "all", label: "All" },
-  { key: "diseased", label: "Disease" },
-  { key: "healthy", label: "Healthy" },
-  { key: "uncertain", label: "Unsure" },
+  { key: "all", labelKey: "filter_all" },
+  { key: "diseased", labelKey: "filter_disease" },
+  { key: "healthy", labelKey: "filter_healthy" },
+  { key: "uncertain", labelKey: "filter_unsure" },
 ] as const;
 
 const dot = { healthy: "bg-ok", diseased: "bg-danger", uncertain: "bg-warn" } as const;
 const word = { healthy: "Healthy", diseased: "Disease", uncertain: "Unsure" } as const;
 
 export default function HistoryPage() {
+  const { t } = useApp();
   const [history, setHistory] = useState<DiagnosisHistoryItem[]>([]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]["key"]>("all");
@@ -61,12 +63,12 @@ export default function HistoryPage() {
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-8 py-8 md:py-14 space-y-6">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <p className="label text-muted">{history.length} saved on this device</p>
-          <h1 className="mt-2 font-display font-extrabold text-5xl md:text-6xl leading-[0.9]">My scans.</h1>
+          <p className="label text-muted">{history.length} {t("saved_device")}</p>
+          <h1 className="mt-2 font-display font-extrabold text-5xl md:text-6xl leading-[0.9]">{t("my_scans")}</h1>
         </div>
         {history.length > 0 && (
           <button onClick={clearAll} className="label flex items-center gap-1.5 text-danger hover:underline underline-offset-4 pb-1">
-            <Trash2 className="w-4 h-4" /> Clear all
+            <Trash2 className="w-4 h-4" /> {t("clear_all")}
           </button>
         )}
       </div>
@@ -77,7 +79,7 @@ export default function HistoryPage() {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search crop or disease"
+          placeholder={t("search_scans")}
           aria-label="Search scans"
           className="w-full h-14 pl-12 pr-4 bg-card border-2 border-ink text-base placeholder:text-muted focus:shadow-hard-sm outline-none"
         />
@@ -92,15 +94,15 @@ export default function HistoryPage() {
             onClick={() => setFilter(f.key)}
             className={`h-12 label !text-[11px] border-r-2 last:border-r-0 border-ink transition-colors ${filter === f.key ? "bg-ink text-paper" : "bg-card hover:bg-accent hover:text-[#0b1a12]"}`}
           >
-            {f.label}
+            {t(f.labelKey)}
           </button>
         ))}
       </div>
 
       {items.length === 0 ? (
         <div className="border-2 border-dashed border-ink py-16 px-6 text-center space-y-5">
-          <p className="font-display font-extrabold text-3xl">{history.length === 0 ? "No scans yet." : "No match."}</p>
-          <Link href="/diagnose" className="btn btn-accent"><ScanLine className="w-5 h-5" /> Scan a leaf</Link>
+          <p className="font-display font-extrabold text-3xl">{history.length === 0 ? t("no_scans") : t("no_match")}</p>
+          <Link href="/diagnose" className="btn btn-accent"><ScanLine className="w-5 h-5" /> {t("nav_scan_leaf")}</Link>
         </div>
       ) : (
         <ul className="border-2 border-ink bg-card divide-y-2 divide-ink">

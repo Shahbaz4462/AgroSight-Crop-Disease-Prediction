@@ -18,6 +18,9 @@ export interface PredictionResult {
   chemical_solution?: string[];
   prevention?: string[];
   message?: string;
+  // Top 3 model outputs, highest first. Shown on the results page so
+  // a farmer can see how close the next guess was.
+  topPredictions?: { crop: string; disease: string; confidence: number }[];
   timestamp?: string;
   imageUrl?: string;
   severity?: "Low" | "Moderate" | "High" | "Critical";
