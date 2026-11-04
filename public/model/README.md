@@ -9,26 +9,24 @@ The browser model lives here, served by Vercel itself as static files:
 - `solutions.json` — already in this folder, solutions for the 9 v1 classes
 - `evaluation.json` — already in this folder, test results
 
-## Why model.json and the shards are not in this pull request
+## Why the weights are stored as base64
 
-They are binary files, and the GitHub tool used for this branch cannot
-push binary files. The owner adds them with a normal git push, for example:
+The original shards (`group1-shard*.bin`) are binary files, and the
+GitHub tool used for this repo cannot push binary files. So the weights
+are stored here as base64 text instead (`group1-shard*.bin.b64`), which
+is plain UTF-8 and can be pushed normally. The frontend loader in
+`src/services/ai/tfjsPredictionService.ts` decodes each `.b64` file back
+to the exact original bytes before handing them to TensorFlow.js, so
+predictions are identical to the binary-shard model.
 
-```bash
-# From the converted model folder (see below):
-cp model.json group1-shard*.bin public/model/
-git add public/model/
-git commit -m "Add TFJS v1 model files"
-git push origin feat/v1-wheat-cotton-rice
-```
+If you ever replace the model with a normal git push, you can put the
+binary shards here instead — but then the loader must be changed back
+to `tf.loadGraphModel("/model/model.json")`, because that loader reads
+the `.b64` files, not the binary shards.
 
-Or upload the same files through the GitHub web interface into
-`public/model/` on this branch. Each shard is about 4 MB, under GitHub's
-web upload limit.
-
-Until those files are present, scans fail with an error instead of a
-fake result — by design. Do not merge this branch for live use until
-the model files are in place and a real scan has been tested on Vercel.
+Until the model files are present, scans fail with an error instead of
+a fake result — by design. Do not merge for live use until the model
+files are in place and a real scan has been tested on Vercel.
 
 ## How the model was converted
 

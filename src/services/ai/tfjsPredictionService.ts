@@ -4,7 +4,7 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 
 // Vercel-only prediction: the model runs in the visitor's browser.
 // Model files live in public/model/ and are served by Vercel itself:
-//   public/model/model.json + group1-shard*.bin  (added by the owner, see README)
+//   public/model/model.json + group1-shard*.bin.b64 (base64 weights, see README)
 //   public/model/class_names.json
 //   public/model/solutions.json
 // There is no external backend and no mock fallback. If the model files
@@ -13,6 +13,10 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 // Note: this is a TensorFlow.js *graph* model, not a layers model.
 // The layers conversion failed on the Keras 3 topology (InputLayer
 // batch_shape), while the graph conversion loads and predicts correctly.
+// Weights are stored as base64 text (.b64) because the GitHub tool used
+// for this repo cannot push binary files. The loader below decodes them
+// back to the exact original bytes before handing them to TensorFlow.js,
+// so predictions are identical to the binary-shard model.
 
 const DISPLAY: Record<string, [string, string]> = {
   cotton_aphids: ["Cotton", "Aphids"],
@@ -37,9 +41,67 @@ let modelPromise: Promise<tf.GraphModel> | null = null;
 let classNames: string[] | null = null;
 let solutions: Record<string, Solution> | null = null;
 
+function base64ToArrayBuffer(b64: string): ArrayBuffer {
+  const binary = atob(b64.replace(/\s/g, ""));
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+
 async function loadModelData() {
   if (!modelPromise) {
-    modelPromise = tf.loadGraphModel("/model/model.json");
+    const handler: tf.io.IOHandler = {
+      load: async () => {
+        const modelJson = (await (await fetch("/model/model.json")).json()) as {
+          modelTopology: unknown;
+          weightsManifest: { paths: string[]; weights: unknown[] }[];
+          format: string;
+          generatedBy: string;
+          convertedBy: string;
+          signature: unknown;
+        };
+        const buffers: ArrayBuffer[] = [];
+        for (const group of modelJson.weightsManifest) {
+          for (const file of group.paths) {
+            // Weights are base64 text. Large shards are split into
+            // ~500 KB parts because a single large push is rejected;
+            // try the single file first, then its parts in order.
+            const single = await fetch(`/model/${file}.b64`);
+            let b64: string;
+            if (single.ok) {
+              b64 = await single.text();
+            } else {
+              const parts: string[] = [];
+              for (let i = 0; ; i++) {
+                const part = await fetch(`/model/${file}.b64.part${String(i).padStart(2, "0")}`);
+                if (!part.ok) break;
+                parts.push(await part.text());
+              }
+              if (parts.length === 0) throw new Error(`Model weights not found for ${file}`);
+              b64 = parts.join("");
+            }
+            buffers.push(base64ToArrayBuffer(b64));
+          }
+        }
+        const total = buffers.reduce((n, b) => n + b.byteLength, 0);
+        const weightData = new Uint8Array(total);
+        let offset = 0;
+        for (const b of buffers) {
+          weightData.set(new Uint8Array(b), offset);
+          offset += b.byteLength;
+        }
+        return {
+          modelTopology: modelJson.modelTopology,
+          weightSpecs: modelJson.weightsManifest.flatMap((g) => g.weights) as tf.io.WeightsManifestEntry[],
+          weightData: weightData.buffer,
+          format: modelJson.format,
+          generatedBy: modelJson.generatedBy,
+          convertedBy: modelJson.convertedBy,
+          signature: modelJson.signature,
+        } as tf.io.ModelArtifacts;
+      },
+    };
+    modelPromise = tf.loadGraphModel(handler);
   }
   if (!classNames) {
     classNames = (await (await fetch("/model/class_names.json")).json()) as string[];
