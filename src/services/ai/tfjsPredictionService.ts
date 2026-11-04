@@ -3,13 +3,22 @@ import { PredictionResult, PredictionServiceInterface, ScanningStage } from "./t
 import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 
 // Vercel-only prediction: the model runs in the visitor's browser.
-// Model files live in public/model/ and are served by Vercel itself:
-//   public/model/model.json + group1-shard*.bin.b64 (base64 weights, see README)
-//   public/model/class_names.json
-//   public/model/solutions.json
+// Model files live in public/model/ and are served by Vercel itself,
+// with the free jsDelivr CDN (which mirrors this GitHub repo) as the
+// first source and the local /model/ files as fallback:
+//   model.json + group1-shard*.bin.b64 (base64 weights, see README)
+//   class_names.json, solutions.json (always local, they are tiny)
 // There is no external backend and no mock fallback. If the model files
 // are missing, the scan fails with an error instead of a fake result.
 //
+// Speed: three things together make scans feel fast.
+//  1. Preload: preloadTfjsModel() is called when the Diagnose page
+//     opens, so the model downloads while the user picks a photo,
+//     instead of only after they press Scan.
+//  2. CDN: weights come from jsDelivr's edge servers first.
+//  3. Browser cache: after the first successful load, the decoded
+//     weights + model topology are stored in IndexedDB, so later
+//     visits skip the download entirely.
 // Note: this is a TensorFlow.js *graph* model, not a layers model.
 // The layers conversion failed on the Keras 3 topology (InputLayer
 // batch_shape), while the graph conversion loads and predicts correctly.
@@ -17,6 +26,11 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 // for this repo cannot push binary files. The loader below decodes them
 // back to the exact original bytes before handing them to TensorFlow.js,
 // so predictions are identical to the binary-shard model.
+
+const CDN_BASE =
+  "https://cdn.jsdelivr.net/gh/Shahbaz4462/AgroSight-Crop-Disease-Prediction@main/public/model";
+const LOCAL_BASE = "/model";
+const CACHE_KEY = "v1";
 
 const DISPLAY: Record<string, [string, string]> = {
   cotton_aphids: ["Cotton", "Aphids"],
@@ -48,34 +62,111 @@ function base64ToArrayBuffer(b64: string): ArrayBuffer {
   return bytes.buffer;
 }
 
+// Fetch a model file from the CDN first, then from the local /model/
+// copy if the CDN fails. Returns null when neither has it.
+async function fetchModelText(relative: string): Promise<string | null> {
+  for (const base of [CDN_BASE, LOCAL_BASE]) {
+    try {
+      const res = await fetch(`${base}/${relative}`);
+      if (res.ok) return await res.text();
+    } catch {
+      // Try the next source.
+    }
+  }
+  return null;
+}
+
+type CachedModel = { modelJsonText: string; weightData: ArrayBuffer };
+
+function openModelCache(): Promise<IDBDatabase | null> {
+  return new Promise((resolve) => {
+    try {
+      if (typeof indexedDB === "undefined") return resolve(null);
+      const req = indexedDB.open("agrosight-model", 1);
+      req.onupgradeneeded = () => {
+        req.result.createObjectStore("artifacts");
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => resolve(null);
+    } catch {
+      resolve(null);
+    }
+  });
+}
+
+async function readModelCache(): Promise<CachedModel | null> {
+  const db = await openModelCache();
+  if (!db) return null;
+  return new Promise((resolve) => {
+    try {
+      const tx = db.transaction("artifacts", "readonly");
+      const req = tx.objectStore("artifacts").get(CACHE_KEY);
+      req.onsuccess = () => resolve((req.result as CachedModel) ?? null);
+      req.onerror = () => resolve(null);
+    } catch {
+      resolve(null);
+    }
+  });
+}
+
+async function writeModelCache(entry: CachedModel): Promise<void> {
+  const db = await openModelCache();
+  if (!db) return;
+  try {
+    const tx = db.transaction("artifacts", "readwrite");
+    tx.objectStore("artifacts").put(entry, CACHE_KEY);
+  } catch {
+    // Cache failure must never break a scan.
+  }
+}
+
+type ModelJson = {
+  modelTopology: unknown;
+  weightsManifest: { paths: string[]; weights: unknown[] }[];
+  format: string;
+  generatedBy: string;
+  convertedBy: string;
+  signature: unknown;
+};
+
+function artifactsFrom(modelJson: ModelJson, weightData: ArrayBuffer): tf.io.ModelArtifacts {
+  return {
+    modelTopology: modelJson.modelTopology,
+    weightSpecs: modelJson.weightsManifest.flatMap((g) => g.weights) as tf.io.WeightsManifestEntry[],
+    weightData,
+    format: modelJson.format,
+    generatedBy: modelJson.generatedBy,
+    convertedBy: modelJson.convertedBy,
+    signature: modelJson.signature,
+  } as tf.io.ModelArtifacts;
+}
+
 async function loadModelData() {
   if (!modelPromise) {
     const handler: tf.io.IOHandler = {
       load: async () => {
-        const modelJson = (await (await fetch("/model/model.json")).json()) as {
-          modelTopology: unknown;
-          weightsManifest: { paths: string[]; weights: unknown[] }[];
-          format: string;
-          generatedBy: string;
-          convertedBy: string;
-          signature: unknown;
-        };
+        const cached = await readModelCache();
+        if (cached) {
+          return artifactsFrom(JSON.parse(cached.modelJsonText) as ModelJson, cached.weightData);
+        }
+        const modelJsonText = await fetchModelText("model.json");
+        if (!modelJsonText) throw new Error("Model file not found (model.json)");
+        const modelJson = JSON.parse(modelJsonText) as ModelJson;
         const buffers: ArrayBuffer[] = [];
         for (const group of modelJson.weightsManifest) {
           for (const file of group.paths) {
             // Weights are base64 text. Large shards are split into
             // ~500 KB parts because a single large push is rejected;
             // try the single file first, then its parts in order.
-            const single = await fetch(`/model/${file}.b64`);
-            let b64: string;
-            if (single.ok) {
-              b64 = await single.text();
-            } else {
+            let b64 = await fetchModelText(`${file}.b64`);
+            if (b64 === null) {
               const parts: string[] = [];
               for (let i = 0; ; i++) {
-                const part = await fetch(`/model/${file}.b64.part${String(i).padStart(2, "0")}`);
-                if (!part.ok) break;
-                parts.push(await part.text());
+                const part = await fetchModelText(
+                  `${file}.b64.part${String(i).padStart(2, "0")}`
+                );
+                if (part === null) break;
+                parts.push(part);
               }
               if (parts.length === 0) throw new Error(`Model weights not found for ${file}`);
               b64 = parts.join("");
@@ -90,15 +181,8 @@ async function loadModelData() {
           weightData.set(new Uint8Array(b), offset);
           offset += b.byteLength;
         }
-        return {
-          modelTopology: modelJson.modelTopology,
-          weightSpecs: modelJson.weightsManifest.flatMap((g) => g.weights) as tf.io.WeightsManifestEntry[],
-          weightData: weightData.buffer,
-          format: modelJson.format,
-          generatedBy: modelJson.generatedBy,
-          convertedBy: modelJson.convertedBy,
-          signature: modelJson.signature,
-        } as tf.io.ModelArtifacts;
+        await writeModelCache({ modelJsonText, weightData: weightData.buffer });
+        return artifactsFrom(modelJson, weightData.buffer);
       },
     };
     modelPromise = tf.loadGraphModel(handler);
@@ -203,3 +287,14 @@ export class TfjsPredictionService implements PredictionServiceInterface {
 }
 
 export const tfjsPredictionService = new TfjsPredictionService();
+
+// Start loading the model in the background (Diagnose page mount).
+// Failures are ignored here on purpose: a real scan will retry and
+// show its normal error if the model still cannot load.
+export async function preloadTfjsModel(): Promise<void> {
+  try {
+    await loadModelData();
+  } catch {
+    // The scan itself will surface any load failure.
+  }
+}

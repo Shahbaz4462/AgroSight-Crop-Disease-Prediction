@@ -1,9 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { ScanFlow } from "../../components/diagnosis/ScanFlow";
+import { preloadTfjsModel } from "../../services/ai/predictionService";
 
 export default function DiagnosePage() {
+  // Preload the model as soon as this page opens, so it downloads
+  // while the user picks a photo instead of only after they press Scan.
+  useEffect(() => {
+    preloadTfjsModel();
+  }, []);
   return (
     <div className="flex-1 w-full px-4 sm:px-8 py-8 md:py-14">
       <div className="max-w-xl mx-auto mb-6">

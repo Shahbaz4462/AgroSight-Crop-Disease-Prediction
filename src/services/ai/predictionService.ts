@@ -1,5 +1,7 @@
 import { PredictionResult, PredictionServiceInterface, ScanningStage } from "./types";
-import { tfjsPredictionService, TfjsPredictionService } from "./tfjsPredictionService";
+import { tfjsPredictionService, TfjsPredictionService, preloadTfjsModel } from "./tfjsPredictionService";
+
+export { preloadTfjsModel };
 
 // Vercel-only v1: the model runs in the browser via TensorFlow.js.
 // There is no external backend and no mock fallback. If the model files
