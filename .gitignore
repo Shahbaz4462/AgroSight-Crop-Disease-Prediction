@@ -32,3 +32,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+
+# v1 model binary (21 MB) - place manually, see backend/README.md
+backend/model/leaf_disease_subset_model.keras
