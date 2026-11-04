@@ -160,14 +160,21 @@ export default function CropsPage() {
         <h2 className="font-display font-extrabold text-3xl md:text-4xl">{t("calendar_title")}</h2>
         <p className="mt-3 text-muted max-w-2xl">{t("calendar_sub")}</p>
         <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {CROP_CALENDAR.map((r) => (
-            <article key={`${r.crop}-${r.months}`} className="border-2 border-ink bg-card p-5">
-              <p className="label text-muted">{r.crop}</p>
-              <h3 className="mt-2 font-display font-bold text-xl">{r.months}</h3>
-              <p className="mt-3 leading-relaxed">{r.work}</p>
-              <p className="mt-3 text-sm"><span className="label text-muted block mb-1">{t("calendar_watch")}</span>{r.watch}</p>
-            </article>
-          ))}
+          {CROP_CALENDAR.map((r) => {
+            // In Urdu / Roman Urdu, show the translated row, with
+            // the English crop name in brackets so it can still be
+            // asked for at a shop. English mode is unchanged.
+            const row = language === "en" ? r : r[language];
+            const cropLabel = language === "en" ? r.crop : `${row.crop} (${r.crop})`;
+            return (
+              <article key={`${r.crop}-${r.months}`} className="border-2 border-ink bg-card p-5">
+                <p className="label text-muted">{cropLabel}</p>
+                <h3 className="mt-2 font-display font-bold text-xl">{row.months}</h3>
+                <p className="mt-3 leading-relaxed">{row.work}</p>
+                <p className="mt-3 text-sm"><span className="label text-muted block mb-1">{t("calendar_watch")}</span>{row.watch}</p>
+              </article>
+            );
+          })}
         </div>
       </section>
 

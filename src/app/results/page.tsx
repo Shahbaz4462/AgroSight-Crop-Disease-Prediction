@@ -6,9 +6,7 @@ import Link from "next/link";
 import { useApp } from "../../context/AppContext";
 import { speak, stopSpeaking, urduVoiceAvailable } from "../../lib/speak";
 import { spokenResult } from "../../lib/resultSpeech";
-import { DISEASES_KNOWLEDGE_BASE } from "../../data/diseasesData";
 import { CHEMICALS_BY_CLASS, STORES, classForDisplay } from "../../data/treatmentChemicals";
-import { guideText } from "../../lib/guideText";
 import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 import { historyService } from "../../services/api/historyService";
 import { PredictionResult } from "../../services/ai/types";
@@ -288,49 +286,6 @@ function ResultContent() {
               </section>
             </>
           )}
-
-          {/* Close guess: only guesses for the SAME crop as the
-              main result. A cotton result never shows a rice or
-              wheat guess here, even if the model ranked one high. */}
-          {(() => {
-            const sameCrop = (result.topPredictions ?? []).filter(
-              (p) => p.crop === result.crop && !(p.crop === result.crop && p.disease === result.disease)
-            );
-            if (sameCrop.length === 0) return null;
-            return (
-              <section>
-                <h2 className="font-display font-extrabold text-3xl mb-3">{t("close_guess_title")}</h2>
-                <p className="text-sm text-muted mb-4">{t("close_guess_note")}</p>
-                <ol className="space-y-5">
-                  {sameCrop.map((p) => {
-                    const foundGuide = DISEASES_KNOWLEDGE_BASE.find(
-                      (g) =>
-                        g.crop === p.crop &&
-                        (g.disease.toLowerCase().includes(p.disease.toLowerCase()) ||
-                          p.disease.toLowerCase().includes(g.disease.toLowerCase()))
-                    );
-                    const guide = foundGuide ? guideText(foundGuide, language) : undefined;
-                    return (
-                      <li key={`${p.crop}-${p.disease}`} className="border-2 border-ink bg-card p-5">
-                        <div className="flex items-center justify-between gap-3">
-                          <span className="font-display font-bold text-xl">{p.crop} · {p.disease}</span>
-                          <span className="font-mono text-lg">{Math.round(p.confidence)}%</span>
-                        </div>
-                        {guide && (
-                          <div className="mt-3 space-y-2 text-sm leading-relaxed">
-                            <p><span className="label text-muted block">{t("guide_cause")}</span>{guide.cause}</p>
-                            {guide.chemicalSolution.length > 0 && p.disease.toLowerCase() !== "healthy" && (
-                              <p><span className="label text-muted block">{t("guide_treatment")}</span>{guide.chemicalSolution[0]}</p>
-                            )}
-                          </div>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ol>
-              </section>
-            );
-          })()}
 
           {/* Treatment chemicals + stores: diseased, confident only.
               Healthy results and unspecified diseased rice get none,
