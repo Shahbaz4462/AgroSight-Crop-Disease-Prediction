@@ -107,6 +107,29 @@ const SUMMARIES: Record<string, { ur: string; roman: string }> = {
   },
 };
 
+// Short spoken summary for a disease family, used only when an
+// uncertain scan's top two guesses fall in the same family. The
+// family name stays in English (disease names always do); the rest
+// is in the selected language. No chemical is ever named for a
+// family — the exact disease is still uncertain.
+const FAMILY_SUMMARIES: Record<string, { en: string; ur: string; roman: string }> = {
+  wheat_leaf_spot: {
+    en: "The leaf most likely has a wheat leaf spot disease — tan spot, leaf blight or septoria. Remove affected leaves, keep leaves dry when watering, and confirm the exact disease with a local agriculture officer before spraying.",
+    ur: "پتے پر غالباً گندم کی پتوں کے دھبوں والی بیماری ہے — ٹین اسپاٹ، لیف بلائٹ یا سیپٹوریا۔ متاثرہ پتے ہٹا دیں، پانی دیتے وقت پتے گیلے نہ کریں، اور اسپرے سے پہلے مقامی زرعی افسر سے صحیح بیماری کی تصدیق کریں۔",
+    roman: "Patte par ghaliban gandum ki patton ke dhabbon wali bimari hai — tan spot, leaf blight ya septoria. Mutasira patte hata dein, pani dete waqt patte geele na karein, aur spray se pehle maqami zarae afsar se sahi bimari ki tasdeeq karein.",
+  },
+  wheat_rust: {
+    en: "The leaf most likely has wheat rust — brown rust, yellow rust or black rust. Remove heavily infected leaves, improve airflow, and confirm the exact rust with a local agriculture officer before spraying.",
+    ur: "پتے پر غالباً گندم کا رسٹ ہے — براؤن رسٹ، یلو رسٹ یا بلیک رسٹ۔ شدید متاثرہ پتے ہٹا دیں، ہوا کی گزر بہتر کریں، اور اسپرے سے پہلے مقامی زرعی افسر سے صحیح رسٹ کی تصدیق کریں۔",
+    roman: "Patte par ghaliban gandum ka rust hai — brown rust, yellow rust ya black rust. Shadeed mutasira patte hata dein, hawa ki guzar behtar karein, aur spray se pehle maqami zarae afsar se sahi rust ki tasdeeq karein.",
+  },
+  cotton_spot: {
+    en: "The leaf most likely has a cotton leaf spot disease — bacterial blight, target spot or powdery mildew. Remove affected leaves, keep leaves dry when watering, and confirm the exact disease with a local agriculture officer before spraying, because these need different treatment.",
+    ur: "پتے پر غالباً کپاس کے پتوں کے دھبوں والی بیماری ہے — بیکٹیریل بلائٹ، ٹارگٹ اسپاٹ یا پاؤڈری ملڈیو۔ متاثرہ پتے ہٹا دیں، پانی دیتے وقت پتے گیلے نہ کریں، اور اسپرے سے پہلے مقامی زرعی افسر سے صحیح بیماری کی تصدیق کریں، کیونکہ ان کا علاج الگ ہے۔",
+    roman: "Patte par ghaliban kapas ke patton ke dhabbon wali bimari hai — bacterial blight, target spot ya powdery mildew. Mutasira patte hata dein, pani dete waqt patte geele na karein, aur spray se pehle maqami zarae afsar se sahi bimari ki tasdeeq karein, kyunke in ka ilaaj alag hai.",
+  },
+};
+
 export function spokenResult(args: {
   lang: Lang;
   crop: string;
@@ -116,13 +139,20 @@ export function spokenResult(args: {
   className: string | null;
   organic?: string;
   chemical?: string;
+  familyId?: string | null;
 }): string {
   const { lang, crop, disease, confidence, uncertain, className } = args;
   if (lang === "en") {
-    if (uncertain) return "The model is not sure enough about this photo, so no crop or disease is named as a confident answer. Take a closer, well-lit photo of a single leaf.";
+    if (uncertain) {
+      const fam = args.familyId ? FAMILY_SUMMARIES[args.familyId] : undefined;
+      if (fam) return fam.en;
+      return "The model is not sure enough about this photo, so no crop or disease is named as a confident answer. Take a closer, well-lit photo of a single leaf.";
+    }
     return `${crop}, ${disease}, ${confidence} percent sure. ${args.organic ?? ""} ${args.chemical ?? ""}`.trim();
   }
   if (uncertain) {
+    const fam = args.familyId ? FAMILY_SUMMARIES[args.familyId] : undefined;
+    if (fam) return fam[lang];
     return lang === "ur"
       ? "ماڈل کو اس تصویر کے بارے میں یقین نہیں ہے، اس لیے کوئی فصل یا بیماری اعتماد سے نہیں بتائی جا رہی۔ ایک پتے کی قریبی، صاف تصویر دوبارہ لیں۔"
       : "Model ko is photo ke baare mein yaqeen nahi hai, is liye koi fasal ya bimari aitmaad se nahi batayi ja rahi. Aik patte ki qareebi, saaf photo dobara lein.";

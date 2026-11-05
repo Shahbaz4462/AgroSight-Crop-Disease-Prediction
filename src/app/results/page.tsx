@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useApp } from "../../context/AppContext";
 import { speak, stopSpeaking, urduVoiceAvailable, preloadVoices } from "../../lib/speak";
 import { spokenResult } from "../../lib/resultSpeech";
+import { detectDiseaseFamily, DISEASE_FAMILIES } from "../../lib/diseaseGroups";
 import { CHEMICALS_BY_CLASS, STORES, classForDisplay } from "../../data/treatmentChemicals";
 import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 import { historyService } from "../../services/api/historyService";
@@ -91,6 +92,13 @@ function ResultContent() {
   const healthy = !uncertain && (result.status === "healthy" || result.disease.toLowerCase().includes("healthy"));
   const diseased = !uncertain && !healthy;
 
+  // Disease family for uncertain scans only: fires when the top two
+  // guesses are both in the same family and together reach 75%.
+  // Returns null for confident scans and for results without
+  // topPredictions (old history / sample entries), so nothing
+  // changes for those. The verdict stays "Not sure" either way.
+  const family = detectDiseaseFamily(result.topPredictions);
+
   const verdict = uncertain
     ? { word: t("result_not_sure"), bg: "bg-warn", fg: "text-[#0b1a12]", sub: t("result_not_sure_sub") }
     : healthy
@@ -152,6 +160,7 @@ function ResultContent() {
       className,
       organic: result.organic_solution?.[0],
       chemical: result.chemical_solution?.[0],
+      familyId: family?.id ?? null,
     });
     if (!speak(text, speakLang, () => setSpeaking(false))) {
       setVoiceNote(t("voice_unavailable"));
@@ -223,6 +232,49 @@ function ResultContent() {
               <Info className="w-5 h-5 shrink-0" />
               <span><strong>Demo mode.</strong> The disease model isn&apos;t connected yet, so this is an example result and not a real diagnosis of your photo.</span>
             </div>
+          )}
+
+          {/* Uncertain scan, family rule fired: name the likely
+              disease family — still "Not sure", not a diagnosis.
+              No chemicals here: the exact disease is uncertain. */}
+          {uncertain && family && (
+            <section>
+              <p className="label text-muted mb-2">{t("family_title")}</p>
+              <h2 className="font-display font-extrabold text-3xl mb-2">{family.name}</h2>
+              <p className="text-sm text-muted mb-5">{t("family_likely")}</p>
+              <p className="text-xl md:text-2xl leading-snug font-medium mb-5">{t(DISEASE_FAMILIES[family.id].descKey)}</p>
+              <p className="label text-muted mb-2">{t("family_candidates")}</p>
+              <ul className="border-2 border-ink bg-card divide-y-2 divide-ink/15 mb-6">
+                {family.candidates.map((p) => (
+                  <li key={p.className ?? p.disease} className="flex items-center justify-between gap-4 p-4">
+                    <span>{p.crop} · {p.disease}</span>
+                    <span className="font-mono">{Math.round(p.confidence)}%</span>
+                  </li>
+                ))}
+              </ul>
+              <ol className="space-y-4">
+                {DISEASE_FAMILIES[family.id].stepKeys.map((k, i) => <Step key={k} n={i + 1} text={t(k)} />)}
+              </ol>
+            </section>
+          )}
+
+          {/* Uncertain scan, no family: show the top 3 guesses,
+              labelled as guesses, never as a diagnosis. Results
+              without topPredictions (old history / samples) show
+              nothing extra. */}
+          {uncertain && !family && result.topPredictions && result.topPredictions.length > 0 && (
+            <section>
+              <h2 className="font-display font-extrabold text-3xl mb-3">{t("top3_title")}</h2>
+              <p className="text-sm text-muted mb-4">{t("top3_note")}</p>
+              <ul className="border-2 border-ink bg-card divide-y-2 divide-ink/15">
+                {result.topPredictions.map((p) => (
+                  <li key={p.className ?? p.disease} className="flex items-center justify-between gap-4 p-4">
+                    <span>{p.crop} · {p.disease}</span>
+                    <span className="font-mono">{Math.round(p.confidence)}%</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
 
           {uncertain && (
