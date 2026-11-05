@@ -1,7 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { AIProvider, predictionService } from "../services/ai/predictionService";
+import { AIProvider, predictionService, preloadTfjsModel } from "../services/ai/predictionService";
+import { preloadVoices } from "../lib/speak";
 import { PredictionResult } from "../types";
 import { Lang, translate } from "../lib/i18n";
 
@@ -45,6 +46,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const t = (key: string) => translate(language, key);
   const [aiProvider, setAiProviderState] = useState<AIProvider>("tfjs");
   const [lastDiagnosis, setLastDiagnosis] = useState<PredictionResult | null>(null);
+
+  // Start the model download and the voice list the moment the app
+  // opens — on every page, not only when the Diagnose page opens.
+  // Before this, the model only started loading on Diagnose mount,
+  // so a user who opened the site and tapped Scan within seconds
+  // still waited for the whole download at scan time. Now it
+  // downloads while they are still on the home page, and on repeat
+  // visits the saved model in the browser cache makes it ready even
+  // sooner. Same for voices: the list is ready long before the
+  // first Listen tap, instead of loading when Results opens. Both
+  // preloads are singletons, so the Diagnose/Results calls stay as
+  // harmless backups. First-ever visit still needs one download
+  // (about 9 MB) — that cannot be zero — but it happens in the
+  // background from the moment the site opens.
+  useEffect(() => {
+    preloadTfjsModel();
+    void preloadVoices();
+  }, []);
 
   useEffect(() => {
     // Sync theme class to document

@@ -16,9 +16,10 @@
 //     one by one, with a short pause between them.
 //  4. The first tap was slow because the browser loads its voice
 //     list lazily; the first Listen had to wait for it (up to
-//     800 ms). Now preloadVoices() is called when the Diagnose
-//     and Results pages open, so the list is already ready when
-//     the user taps Listen.
+//     800 ms). Now preloadVoices() is called when the app opens
+//     (AppProvider mount), so the list is already ready when the
+//     user taps Listen. The Diagnose and Results pages call it
+//     too, as a backup for direct links.
 
 export type Lang = "en" | "ur" | "roman";
 
