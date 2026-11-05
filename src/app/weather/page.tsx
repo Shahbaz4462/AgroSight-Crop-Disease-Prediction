@@ -13,6 +13,11 @@ import { buildAdvice, weatherCodeKey, WEATHER_CROPS, type WeatherCrop, type Weat
 // always shown under the weather.
 const FORECAST_URL = "https://api.open-meteo.com/v1/forecast";
 const GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search";
+// Free reverse geocoding, no API key, browser fetch works (CORS
+// enabled). Turns GPS coordinates into the nearest named place
+// (city / locality), so "Use my location" shows which place the
+// weather is actually for instead of just "My location".
+const REVERSE_GEOCODE_URL = "https://api.bigdatacloud.net/data/reverse-geocode-client";
 const SAVED_LOCATION_KEY = "agrosight-weather-location";
 
 const CROP_NAMES: Record<WeatherCrop, string> = {
@@ -29,6 +34,9 @@ interface SavedLocation {
   name: string;
   lat: number;
   lon: number;
+  // True when the location came from the phone's GPS. GPS places
+  // need a reverse-geocode lookup to get a real place name.
+  gps?: boolean;
 }
 
 interface ForecastResponse {
@@ -127,6 +135,30 @@ export default function WeatherPage() {
     void fetchWeather(loc);
   }, [fetchWeather]);
 
+  // Nearest named place for GPS coordinates ("Lahore, Punjab,
+  // Pakistan"). Returns null when the lookup fails, so the caller
+  // can fall back to the generic name plus coordinates.
+  const resolvePlaceName = useCallback(async (lat: number, lon: number): Promise<string | null> => {
+    try {
+      const res = await fetch(
+        `${REVERSE_GEOCODE_URL}?latitude=${lat}&longitude=${lon}&localityLanguage=en`,
+      );
+      if (!res.ok) return null;
+      const data = (await res.json()) as {
+        city?: string;
+        locality?: string;
+        principalSubdivision?: string;
+        countryName?: string;
+      };
+      const place = data.city || data.locality || "";
+      const region = [data.principalSubdivision, data.countryName].filter(Boolean).join(", ");
+      const full = [place, region].filter(Boolean).join(", ");
+      return full || null;
+    } catch {
+      return null;
+    }
+  }, []);
+
   // Reopen the page with the last location: show its weather at once.
   useEffect(() => {
     try {
@@ -136,6 +168,24 @@ export default function WeatherPage() {
       if (typeof saved.lat === "number" && typeof saved.lon === "number" && typeof saved.name === "string") {
         setLocation(saved);
         void fetchWeather(saved);
+        // A GPS location saved before place names existed only says
+        // "My location": resolve its real nearest place in the
+        // background and update the name when it arrives.
+        if (saved.gps) {
+          void resolvePlaceName(saved.lat, saved.lon).then((name) => {
+            if (!name) return;
+            setLocation((prev) => {
+              if (!prev || prev.lat !== saved.lat || prev.lon !== saved.lon) return prev;
+              const next = { ...prev, name };
+              try {
+                localStorage.setItem(SAVED_LOCATION_KEY, JSON.stringify(next));
+              } catch {
+                // Ignore.
+              }
+              return next;
+            });
+          });
+        }
       }
     } catch {
       // Ignore a bad saved value.
@@ -182,8 +232,27 @@ export default function WeatherPage() {
     setLocStatus(t("weather_locating"));
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setLocStatus(null);
-        chooseLocation({ name: t("weather_my_location"), lat: pos.coords.latitude, lon: pos.coords.longitude });
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        // Find the nearest named place first, so the page says
+        // which place the weather is for. Weather loads at once
+        // with the generic name if the lookup is slow or fails.
+        setLocStatus(t("weather_loc_resolving"));
+        chooseLocation({ name: t("weather_my_location"), lat, lon, gps: true });
+        void resolvePlaceName(lat, lon).then((name) => {
+          setLocStatus(null);
+          if (!name) return;
+          setLocation((prev) => {
+            if (!prev || prev.lat !== lat || prev.lon !== lon) return prev;
+            const next = { ...prev, name };
+            try {
+              localStorage.setItem(SAVED_LOCATION_KEY, JSON.stringify(next));
+            } catch {
+              // Ignore.
+            }
+            return next;
+          });
+        });
       },
       (err) => {
         // Denied, unavailable or timed out: say so plainly and
@@ -207,9 +276,16 @@ export default function WeatherPage() {
         <section className="panel p-5 md:p-6 space-y-4 fade-up">
           <p className="label text-muted">{t("weather_location")}</p>
           {location && (
-            <p className="font-display font-extrabold text-2xl flex items-center gap-2">
-              <MapPin className="w-5 h-5 shrink-0" /> {location.name}
-            </p>
+            <>
+              <p className="font-display font-extrabold text-2xl flex items-center gap-2">
+                <MapPin className="w-5 h-5 shrink-0" /> {location.name}
+              </p>
+              {location.gps && (
+                <p className="text-sm text-muted">
+                  {location.lat.toFixed(4)}, {location.lon.toFixed(4)}
+                </p>
+              )}
+            </>
           )}
           <div className="relative">
             <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-muted pointer-events-none" />

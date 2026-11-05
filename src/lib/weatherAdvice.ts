@@ -43,58 +43,77 @@ const HEAT = 38;
 const WIND_HIGH = 20;
 const FROST = 2;
 
-const CROP_TIP_KEY: Record<WeatherCrop, string> = {
-  // One always-on, crop-specific watch-out. These are general,
-  // well-known agronomy facts, not a diagnosis of any field.
-  wheat: "adv_crop_wheat",
-  cotton: "adv_crop_cotton",
-  rice: "adv_crop_rice",
+// Per-crop always-on advice pools: 5 Do and 5 Don't for each crop.
+// These are general, well-known agronomy facts, not a diagnosis of
+// any field. buildAdvice puts weather-rule items first, then fills
+// from the pool, so the panel ALWAYS shows exactly 5 Do and 5 Don't
+// for the selected crop in the current weather.
+const CROP_POOLS: Record<WeatherCrop, { do: string[]; dont: string[] }> = {
+  wheat: {
+    do: ["adv_wheat_do1", "adv_wheat_do2", "adv_wheat_do3", "adv_wheat_do4", "adv_wheat_do5"],
+    dont: ["adv_wheat_dont1", "adv_wheat_dont2", "adv_wheat_dont3", "adv_wheat_dont4", "adv_wheat_dont5"],
+  },
+  cotton: {
+    do: ["adv_cotton_do1", "adv_cotton_do2", "adv_cotton_do3", "adv_cotton_do4", "adv_cotton_do5"],
+    dont: ["adv_cotton_dont1", "adv_cotton_dont2", "adv_cotton_dont3", "adv_cotton_dont4", "adv_cotton_dont5"],
+  },
+  rice: {
+    do: ["adv_rice_do1", "adv_rice_do2", "adv_rice_do3", "adv_rice_do4", "adv_rice_do5"],
+    dont: ["adv_rice_dont1", "adv_rice_dont2", "adv_rice_dont3", "adv_rice_dont4", "adv_rice_dont5"],
+  },
 };
 
-/** Build the Do / Don't list for this weather and crop. */
+/** Build the Do / Don't list for this weather and crop: exactly 5 Do and 5 Don't. */
 export function buildAdvice(w: WeatherSummary, crop: WeatherCrop): AdviceItem[] {
-  const items: AdviceItem[] = [];
+  const dos: string[] = [];
+  const donts: string[] = [];
   const prob = (i: number) => w.precipProb[i] ?? 0;
 
   // Rain expected in the next 24–48 h: spraying is wasted.
   if (prob(0) >= RAIN_HIGH || prob(1) >= RAIN_HIGH) {
-    items.push({ kind: "dont", key: "adv_rain_dont" });
-    items.push({ kind: "do", key: "adv_rain_do" });
+    donts.push("adv_rain_dont");
+    dos.push("adv_rain_do");
   }
 
   // Humid and warm: fungal and rust conditions.
   if (w.currentHumidity >= HUMID_HIGH && w.currentTemp >= WARM) {
-    items.push({ kind: "do", key: "adv_fungal_do" });
-    items.push({ kind: "dont", key: "adv_fungal_dont" });
+    dos.push("adv_fungal_do");
+    donts.push("adv_fungal_dont");
   }
 
   // Extreme heat: irrigate early, never spray at midday.
   if (w.tempMax[0] !== undefined && w.tempMax[0] >= HEAT) {
-    items.push({ kind: "do", key: "adv_heat_do" });
-    items.push({ kind: "dont", key: "adv_heat_dont" });
+    dos.push("adv_heat_do");
+    donts.push("adv_heat_dont");
   }
 
   // Strong wind: spray drifts off the crop.
   if (w.currentWind > WIND_HIGH) {
-    items.push({ kind: "dont", key: "adv_wind_dont" });
-    items.push({ kind: "do", key: "adv_wind_do" });
+    donts.push("adv_wind_dont");
+    dos.push("adv_wind_do");
   }
 
   // Frost risk tonight or tomorrow night: protect young plants.
   if ((w.tempMin[0] !== undefined && w.tempMin[0] <= FROST) || (w.tempMin[1] !== undefined && w.tempMin[1] <= FROST)) {
-    items.push({ kind: "do", key: "adv_frost_do" });
-    items.push({ kind: "dont", key: "adv_frost_dont" });
+    dos.push("adv_frost_do");
+    donts.push("adv_frost_dont");
   }
 
-  // Nothing fired: conditions look fair for normal field work.
-  if (items.length === 0) {
-    items.push({ kind: "do", key: "adv_fair_do" });
+  // Fill up to exactly 5 each from the crop's always-on pool.
+  // Weather rules come first, so the most relevant advice is on top.
+  for (const key of CROP_POOLS[crop].do) {
+    if (dos.length >= 5) break;
+    if (!dos.includes(key)) dos.push(key);
+  }
+  for (const key of CROP_POOLS[crop].dont) {
+    if (donts.length >= 5) break;
+    if (!donts.includes(key)) donts.push(key);
   }
 
-  // The crop-specific watch-out always shows, after the weather rules.
-  items.push({ kind: "do", key: CROP_TIP_KEY[crop] });
-
-  return items;
+  return [
+    ...dos.map((key) => ({ kind: "do" as const, key })),
+    ...donts.map((key) => ({ kind: "dont" as const, key })),
+  ];
 }
 
 /** Short word for a WMO weather code (i18n key). */
