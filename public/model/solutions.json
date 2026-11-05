@@ -19,13 +19,43 @@
     "prevention": "Inspect leaves regularly, keep plants healthy, and avoid broad-spectrum sprays that kill beneficial insects.",
     "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
   },
+  "cotton_bacterial_blight": {
+    "class": "cotton_bacterial_blight",
+    "crop": "cotton",
+    "disease": "bacterial blight",
+    "type": "bacterial",
+    "immediate_steps": "Remove infected leaves carefully, do not compost them, and clean tools after handling the plant.",
+    "treatment": "Improve drainage and avoid overhead watering. A copper-based bactericide labelled for this crop may help — always follow the product label and local agricultural advice.",
+    "prevention": "Rotate crops, use clean seed/plants, space plants for airflow, and avoid working with wet plants.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "cotton_powdery_mildew": {
+    "class": "cotton_powdery_mildew",
+    "crop": "cotton",
+    "disease": "powdery mildew",
+    "type": "fungal",
+    "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
+    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "cotton_target_spot": {
+    "class": "cotton_target_spot",
+    "crop": "cotton",
+    "disease": "target spot",
+    "type": "fungal",
+    "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
+    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
   "diseased_rice": {
     "class": "diseased_rice",
     "crop": "rice",
     "disease": "diseased (unspecified)",
     "type": "other",
     "immediate_steps": "Remove affected leaves and monitor whether the problem spreads.",
-    "treatment": "Identify the exact cause first \u2014 treatment depends on whether it is fungal, bacterial, viral or a nutrient issue. Seek local agricultural advice if it spreads quickly.",
+    "treatment": "Identify the exact cause first — treatment depends on whether it is fungal, bacterial, viral or a nutrient issue. Seek local agricultural advice if it spreads quickly.",
     "prevention": "Keep plants well fed and watered, improve airflow, and check leaves regularly.",
     "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
   },
@@ -69,13 +99,123 @@
     "prevention": "Inspect leaves regularly, keep plants healthy, and avoid broad-spectrum sprays that kill beneficial insects.",
     "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
   },
+  "wheat_black_rust": {
+    "class": "wheat_black_rust",
+    "crop": "wheat",
+    "disease": "black rust",
+    "type": "fungal",
+    "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
+    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_blast": {
+    "class": "wheat_blast",
+    "crop": "wheat",
+    "disease": "blast",
+    "type": "other",
+    "immediate_steps": "Remove affected leaves and monitor whether the problem spreads.",
+    "treatment": "Identify the exact cause first — treatment depends on whether it is fungal, bacterial, viral or a nutrient issue. Seek local agricultural advice if it spreads quickly.",
+    "prevention": "Keep plants well fed and watered, improve airflow, and check leaves regularly.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
   "wheat_brown_rust": {
     "class": "wheat_brown_rust",
     "crop": "wheat",
     "disease": "brown rust",
     "type": "fungal",
     "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
-    "treatment": "A fungicide labelled for this crop and disease may help \u2014 always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_common_root_rot": {
+    "class": "wheat_common_root_rot",
+    "crop": "wheat",
+    "disease": "common root rot",
+    "type": "fungal",
+    "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
+    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_fusarium_head_blight": {
+    "class": "wheat_fusarium_head_blight",
+    "crop": "wheat",
+    "disease": "fusarium head blight",
+    "type": "fungal",
+    "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
+    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_leaf_blight": {
+    "class": "wheat_leaf_blight",
+    "crop": "wheat",
+    "disease": "leaf blight",
+    "type": "fungal",
+    "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
+    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_mildew": {
+    "class": "wheat_mildew",
+    "crop": "wheat",
+    "disease": "mildew",
+    "type": "fungal",
+    "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
+    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_mite": {
+    "class": "wheat_mite",
+    "crop": "wheat",
+    "disease": "mite",
+    "type": "pest",
+    "immediate_steps": "Remove visible pests by hand where possible and isolate heavily affected leaves.",
+    "treatment": "Use neem oil or insecticidal soap labelled for this crop/pest, following the label. Encourage natural predators.",
+    "prevention": "Inspect leaves regularly, keep plants healthy, and avoid broad-spectrum sprays that kill beneficial insects.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_septoria": {
+    "class": "wheat_septoria",
+    "crop": "wheat",
+    "disease": "septoria",
+    "type": "other",
+    "immediate_steps": "Remove affected leaves and monitor whether the problem spreads.",
+    "treatment": "Identify the exact cause first — treatment depends on whether it is fungal, bacterial, viral or a nutrient issue. Seek local agricultural advice if it spreads quickly.",
+    "prevention": "Keep plants well fed and watered, improve airflow, and check leaves regularly.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_smut": {
+    "class": "wheat_smut",
+    "crop": "wheat",
+    "disease": "smut",
+    "type": "fungal",
+    "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
+    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_stem_fly": {
+    "class": "wheat_stem_fly",
+    "crop": "wheat",
+    "disease": "stem fly",
+    "type": "other",
+    "immediate_steps": "Remove affected leaves and monitor whether the problem spreads.",
+    "treatment": "Identify the exact cause first — treatment depends on whether it is fungal, bacterial, viral or a nutrient issue. Seek local agricultural advice if it spreads quickly.",
+    "prevention": "Keep plants well fed and watered, improve airflow, and check leaves regularly.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_tan_spot": {
+    "class": "wheat_tan_spot",
+    "crop": "wheat",
+    "disease": "tan spot",
+    "type": "fungal",
+    "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
+    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
     "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
     "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
   },
@@ -83,10 +223,10 @@
     "class": "wheat_yellow_rust",
     "crop": "wheat",
     "disease": "yellow rust",
-    "type": "fungal",
-    "immediate_steps": "Remove severely infected leaves, improve air circulation, and avoid wetting leaves when watering. Check the flag leaf first, as it matters most for yield.",
-    "treatment": "A fungicide labelled for wheat yellow rust may help \u2014 for example propiconazole or tebuconazole, always following the product label and local agricultural advice. Apply at the first sign of yellow stripes.",
-    "prevention": "Use rust-resistant wheat varieties where available, avoid late sowing, scout weekly in early spring, and remove volunteer wheat plants.",
+    "type": "viral",
+    "immediate_steps": "Remove severely infected plants/leaves so the virus does not spread, and control insect vectors.",
+    "treatment": "There is no chemical cure for most plant viruses. Focus on vector control (aphids/whiteflies) and removing infected material.",
+    "prevention": "Use resistant varieties where available, control insect vectors, and keep the area free of weeds that host viruses.",
     "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
   }
 }
