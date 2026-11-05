@@ -48,6 +48,63 @@ const SUMMARIES: Record<string, { ur: string; roman: string }> = {
     ur: "فصل صحت مند ہے۔ کوئی اسپرے کی ضرورت نہیں۔ ہر ہفتے پتوں کی جانچ جاری رکھیں۔",
     roman: "Fasal sehatmand hai. Koi spray ki zaroorat nahi. Har hafte patton ki jaanch jaari rakhein.",
   },
+ 
+  cotton_bacterial_blight: {
+    ur: "بیکٹیریل بلائٹ کے لیے لیبل کے مطابق کاپر آکسی کلورائیڈ استعمال کریں، اور متاثرہ پتے ہٹا دیں۔",
+    roman: "Bacterial blight ke liye label ke mutabiq copper oxychloride istemal karein, aur mutasira patte hata dein.",
+  },
+  cotton_powdery_mildew: {
+    ur: "پاؤڈری ملڈیو کے لیے لیبل کے مطابق سلفر یا ہیکساکونازول استعمال کریں، اور ہوا کی گزر بہتر کریں۔",
+    roman: "Powdery mildew ke liye label ke mutabiq sulphur ya hexaconazole istemal karein, aur hawa ki guzar behtar karein.",
+  },
+  cotton_target_spot: {
+    ur: "ٹارگٹ اسپاٹ کے لیے لیبل کے مطابق ایزوکسٹروبن پلس ڈائفینوکونازول یا مینکوزیب استعمال کریں۔",
+    roman: "Target spot ke liye label ke mutabiq azoxystrobin plus difenoconazole ya mancozeb istemal karein.",
+  },
+  wheat_black_rust: {
+    ur: "بلیک رسٹ کے لیے لیبل کے مطابق پروپیکونازول یا ٹیبوکونازول فنجیسائیڈ استعمال کریں۔",
+    roman: "Black rust ke liye label ke mutabiq propiconazole ya tebuconazole fungicide istemal karein.",
+  },
+  wheat_blast: {
+    ur: "بلاسٹ کی صحیح وجہ معلوم کیے بغیر کوئی مخصوص دوا نہ لگائیں۔ مقامی زرعی افسر سے تصدیق کریں۔",
+    roman: "Blast ki sahi wajah maloom kiye baghair koi makhsoos dawa na lagayein. Maqami zarae afsar se tasdeeq karein.",
+  },
+  wheat_common_root_rot: {
+    ur: "روٹ روٹ کے لیے کاشت سے پہلے بیج پر لیبل کے مطابق ٹیبوکونازول یا کاربوکسن پلس تھیرام لگائیں۔ پتوں پر اسپرے سے فائدہ نہیں ہوگا۔",
+    roman: "Root rot ke liye kasht se pehle beej par label ke mutabiq tebuconazole ya carboxin plus thiram lagayein. Patton par spray se faida nahi hoga.",
+  },
+  wheat_fusarium_head_blight: {
+    ur: "فیوزیریم ہیڈ بلائٹ کے لیے پھول آنے کے وقت لیبل کے مطابق پروتھیوکونازول پلس ٹیبوکونازول اسپرے کریں۔",
+    roman: "Fusarium head blight ke liye phool aane ke waqt label ke mutabiq prothioconazole plus tebuconazole spray karein.",
+  },
+  wheat_leaf_blight: {
+    ur: "لیف بلائٹ کے لیے لیبل کے مطابق پروپیکونازول یا مینکوزیب استعمال کریں، اور صاف بیج لگائیں۔",
+    roman: "Leaf blight ke liye label ke mutabiq propiconazole ya mancozeb istemal karein, aur saaf beej lagayein.",
+  },
+  wheat_mildew: {
+    ur: "ملڈیو کے لیے لیبل کے مطابق پروپیکونازول یا سلفر استعمال کریں۔",
+    roman: "Mildew ke liye label ke mutabiq propiconazole ya sulphur istemal karein.",
+  },
+  wheat_mite: {
+    ur: "مائٹ کے لیے لیبل کے مطابق ایبامیکٹن یا نیم کا تیل استعمال کریں، پتوں کے نیچے اسپرے کریں۔",
+    roman: "Mite ke liye label ke mutabiq abamectin ya neem ka tail istemal karein, patton ke neeche spray karein.",
+  },
+  wheat_septoria: {
+    ur: "سیپٹوریا کی صحیح وجہ معلوم کیے بغیر کوئی مخصوص دوا نہ لگائیں۔ مقامی زرعی افسر سے تصدیق کریں۔",
+    roman: "Septoria ki sahi wajah maloom kiye baghair koi makhsoos dawa na lagayein. Maqami zarae afsar se tasdeeq karein.",
+  },
+  wheat_smut: {
+    ur: "سمٹ کے لیے کاشت سے پہلے بیج پر لیبل کے مطابق کاربوکسن یا ٹیبوکونازول لگائیں۔ پتوں پر اسپرے سے فائدہ نہیں ہوگا۔",
+    roman: "Smut ke liye kasht se pehle beej par label ke mutabiq carboxin ya tebuconazole lagayein. Patton par spray se faida nahi hoga.",
+  },
+  wheat_stem_fly: {
+    ur: "سٹیم فلائی کا صحیح کیڑا معلوم کیے بغیر کوئی مخصوص دوا نہ لگائیں۔ مقامی زرعی افسر سے تصدیق کریں۔",
+    roman: "Stem fly ka sahi keera maloom kiye baghair koi makhsoos dawa na lagayein. Maqami zarae afsar se tasdeeq karein.",
+  },
+  wheat_tan_spot: {
+    ur: "ٹین اسپاٹ کے لیے لیبل کے مطابق پروپیکونازول یا ایزوکسٹروبن پلس ڈائفینوکونازول استعمال کریں، اور سب سے اوپر والے پتے کو بچائیں۔",
+    roman: "Tan spot ke liye label ke mutabiq propiconazole ya azoxystrobin plus difenoconazole istemal karein, aur sab se oopar wale patte ko bachayein.",
+  },
 };
 
 export function spokenResult(args: {

@@ -4,7 +4,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useApp } from "../../context/AppContext";
-import { speak, stopSpeaking, urduVoiceAvailable } from "../../lib/speak";
+import { speak, stopSpeaking, urduVoiceAvailable, preloadVoices } from "../../lib/speak";
 import { spokenResult } from "../../lib/resultSpeech";
 import { CHEMICALS_BY_CLASS, STORES, classForDisplay } from "../../data/treatmentChemicals";
 import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
@@ -62,6 +62,13 @@ function ResultContent() {
   const [voiceNote, setVoiceNote] = useState("");
 
   useEffect(() => () => stopSpeaking(), []);
+
+  // Preload the voice list as soon as this page opens, so the first
+  // Listen tap speaks immediately instead of waiting for the
+  // browser's voice list to load.
+  useEffect(() => {
+    void preloadVoices();
+  }, []);
 
   useEffect(() => {
     setResult(resolveResult(params.get("id"), lastDiagnosis));

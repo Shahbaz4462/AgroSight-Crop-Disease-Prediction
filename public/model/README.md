@@ -1,13 +1,20 @@
-# Vercel-only model files
+# Vercel-only model files — V2 (23 classes)
 
 The browser model lives here, served by Vercel itself as static files:
 
-- `model.json` — TensorFlow.js model topology (owner adds this file)
+- `model.json` — TensorFlow.js model topology
 - `group1-shard*.bin` — TensorFlow.js weights, split into ~4 MB shards
-  (owner adds these files)
-- `class_names.json` — already in this folder, exact output order
-- `solutions.json` — already in this folder, solutions for the 9 v1 classes
-- `evaluation.json` — already in this folder, test results
+- `class_names.json` — exact output order (23 classes)
+- `solutions.json` — solutions for the 23 v2 classes
+- `evaluation.json` — test results (overall 82.35%, cotton 87.2%, rice 85.4%, wheat 73.2%)
+
+## V2 model
+
+Trained 2026-11-05 (MobileNetV2, 224×224): 4 head epochs + 2 fine-tune
+epochs, then 2 continue-training rounds for wheat (class weights, then
+full unfreeze). Final test on 3,275 images: overall 82.35%. Wheat is
+73.2% — below the 80% per-crop gate, accepted by the owner for this
+branch; do not present wheat as 80%+ anywhere.
 
 ## Why the weights are stored as base64
 
