@@ -4,7 +4,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useApp } from "../../context/AppContext";
-import { speak, stopSpeaking, urduVoiceAvailable, preloadVoices } from "../../lib/speak";
+import { speak, stopSpeaking, preloadVoices, resolveSpeakLang } from "../../lib/speak";
 import { spokenResult } from "../../lib/resultSpeech";
 import { detectDiseaseFamily, DISEASE_FAMILIES } from "../../lib/diseaseGroups";
 import { CHEMICALS_BY_CLASS, STORES, classForDisplay } from "../../data/treatmentChemicals";
@@ -143,12 +143,14 @@ function ResultContent() {
     // Wait for the voice list first: checking too early reports
     // "no Urdu voice" even on phones that do have one.
     await preloadVoices();
-    // If Urdu script is selected but this phone has no Urdu voice
-    // installed, an Urdu utterance stays silent. Speak the Roman
-    // Urdu text instead (clear English voice) and say why, rather
-    // than playing nothing at all.
-    const noUrduVoice = language === "ur" && !urduVoiceAvailable();
-    const speakLang = noUrduVoice ? "roman" : language;
+    // Which language is actually spoken is decided from the voice
+    // that can really be picked — not from whether the voice list
+    // merely mentions Urdu. If no usable Urdu voice exists, Roman
+    // Urdu is spoken instead: an English voice reading Urdu script
+    // is what sounds like an Englishman speaking Urdu, so Urdu
+    // script is never handed to an English voice.
+    const speakLang = resolveSpeakLang(language);
+    const noUrduVoice = language === "ur" && speakLang !== "ur";
     const className =
       result.topPredictions?.[0]?.className ?? classForDisplay(result.crop, result.disease);
     const text = spokenResult({

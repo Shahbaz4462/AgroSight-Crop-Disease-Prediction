@@ -6,8 +6,17 @@
 //     phones that is a low-quality voice, and for Roman Urdu it
 //     picked an Urdu-script voice to read Latin letters, which
 //     sounds garbled. Now voices are ranked (Google first, then
-//     Microsoft/Samsung, then any), and Roman Urdu uses an English
-//     voice because its text is written in Latin letters.
+//     Microsoft/Samsung, then any; for Urdu, an exact ur-PK voice
+//     first), and Roman Urdu uses an English voice because its
+//     text is written in Latin letters.
+//     Worse, an Urdu-script result was once spoken by the
+//     phone's default (English) voice when no Urdu voice was
+//     actually usable — that is what sounds like an Englishman
+//     speaking Urdu. Now the choice of language is made from the
+//     voice that can really be picked (resolveSpeakLang), not
+//     from whether the voice list merely mentions Urdu: no
+//     usable Urdu voice means Roman Urdu is spoken instead, and
+//     Urdu script is never read by an English voice.
 //  2. Urdu was read at the same speed as English. Urdu TTS is
 //     much clearer slower, so Urdu now reads at 0.8, Roman Urdu
 //     at 0.9, English at 0.95.
@@ -79,9 +88,20 @@ function pickVoice(lang: Lang): SpeechSynthesisVoice | null {
     const best = (list: SpeechSynthesisVoice[]) =>
       list.slice().sort((a, b) => voiceScore(b) - voiceScore(a))[0] ?? null;
     if (lang === "ur") {
-      // Urdu script: needs a real Urdu voice. Prefer Google Urdu.
+      // Urdu script: needs a real Urdu voice. Prefer an exact
+      // ur-PK voice (the Pakistani accent), then Google Urdu.
+      // A voice merely listed as Urdu but without usable data
+      // must never be picked over this check — pickVoice
+      // returning null is what triggers the Roman Urdu fallback.
       const ur = voices.filter((v) => v.lang.toLowerCase().startsWith("ur"));
-      return best(ur);
+      // Best voice first, exact ur-PK second: a natural Google
+      // voice matters more than the region, but between equal
+      // voices the Pakistani accent wins over ur-IN.
+      const ranked = ur.slice().sort((a, b) => {
+        const exact = (v: SpeechSynthesisVoice) => (v.lang.toLowerCase() === "ur-pk" ? 1 : 0);
+        return voiceScore(b) - voiceScore(a) || exact(b) - exact(a);
+      });
+      return ranked[0] ?? null;
     }
     // English and Roman Urdu are both written in Latin letters, so
     // both use an English voice. An Urdu voice reading Roman Urdu
@@ -94,18 +114,25 @@ function pickVoice(lang: Lang): SpeechSynthesisVoice | null {
 }
 
 function hasUrduVoice(): boolean {
-  try {
-    const voices = cachedVoices.length > 0 ? cachedVoices : loadVoices();
-    return voices.some((v) => v.lang.toLowerCase().startsWith("ur"));
-  } catch {
-    return false;
-  }
+  // Same check as the voice that would actually be used: a list
+  // entry alone is not enough, pickVoice must find one.
+  return pickVoice("ur") !== null;
+}
+
+/** Decide which language to actually speak in. Urdu script is
+ *  only spoken when a real Urdu voice can be picked; otherwise
+ *  Roman Urdu is spoken (with an English voice) so an English
+ *  voice never reads Urdu script. Call after preloadVoices(). */
+export function resolveSpeakLang(lang: Lang): Lang {
+  if (lang === "ur" && !hasUrduVoice()) return "roman";
+  return lang;
 }
 
 function rateFor(lang: Lang): number {
-  // Slower is clearer, especially for Urdu.
+  // Slower is clearer, especially for Urdu. Roman Urdu is Urdu
+  // words read by an English voice, so it reads slower too.
   if (lang === "ur") return 0.8;
-  if (lang === "roman") return 0.9;
+  if (lang === "roman") return 0.85;
   return 0.95;
 }
 
@@ -167,10 +194,6 @@ export function speak(text: string, lang: Lang, onEnd?: () => void): boolean {
   } catch {
     return false;
   }
-}
-
-export function urduVoiceAvailable(): boolean {
-  return hasUrduVoice();
 }
 
 export function stopSpeaking(): void {
