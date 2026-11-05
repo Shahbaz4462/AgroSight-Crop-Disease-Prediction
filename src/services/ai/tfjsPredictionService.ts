@@ -330,8 +330,10 @@ export class TfjsPredictionService implements PredictionServiceInterface {
     // leaves are often yellow/brown, so it threw away more than
     // half of real leaves. This threshold is a trade-off, not a
     // guarantee — a confident answer can still be wrong, which is
-    // why the top 3 are shown and serious outbreaks should be
-    // confirmed with a local agriculture officer.
+    // why, on an uncertain scan, the top 3 guesses are shown (or a
+    // likely disease family when the top two guesses fall in the
+    // same family), and serious outbreaks should be confirmed with
+    // a local agriculture officer.
     const CONFIDENT = 75;
     const status = confidence < CONFIDENT ? "uncertain" : disease === "Healthy" ? "healthy" : "diseased";
     const topPredictions = order.slice(0, 3).map(({ i, p }) => {
