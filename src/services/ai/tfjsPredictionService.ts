@@ -23,9 +23,11 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 // instead of mislabelling if they ever disagree again.
 //
 // Speed: three things together make scans feel fast.
-//  1. Preload: preloadTfjsModel() is called when the Diagnose page
-//     opens, so the model downloads while the user picks a photo,
-//     instead of only after they press Scan.
+//  1. Preload: preloadTfjsModel() is called when the app opens
+//     (AppProvider mount), so the model downloads while the user
+//     is still on the home page, instead of only after they open
+//     Diagnose and press Scan. The Diagnose page calls it too,
+//     as a backup for direct links.
 //  2. Same-origin first: the model files come from the deployment
 //     itself, and the split weight parts are fetched in parallel
 //     instead of one by one (the old sequential fetch kept the
