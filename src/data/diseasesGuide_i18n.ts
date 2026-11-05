@@ -658,4 +658,691 @@ export const GUIDE_TRANSLATIONS: Record<string, Record<GuideLang, GuideTranslati
       ],
     },
   },
+
+  "kb-cotton-bacterial-blight": {
+    ur: {
+      cause: "یہ ایک جراثیم (بیکٹیریا) کی بیماری ہے جو بارش کے چھینٹوں، ہوا اور متاثرہ بیج سے پھیلتی ہے۔ یہ پتوں کے مساموں اور زخموں سے اندر جاتا ہے اور گرم، نم موسم میں تیزی سے پھیلتا ہے۔",
+      symptoms: [
+        "پتوں پر چھوٹے، گہرے، پانی جیسے کونے دار دھبے، اکثر رگوں کے ساتھ",
+        "رگیں کالی ہو جاتی ہیں اور شدید حملے میں پتے جلدی گر جاتے ہیں",
+        "تنوں اور شاخوں پر گہری، دھنسی ہوئی دھاریاں (black arm)",
+        "متاثرہ ٹینڈے سڑ جاتے ہیں اور اچھی طرح نہیں کھلتے، روئی پر داغ پڑ جاتے ہیں",
+      ],
+      organicSolution: [
+        "متاثرہ پتے ہٹا دیں اور کھیت میں کھاد کے طور پر نہ ڈالیں۔",
+        "جب پودے گیلے ہوں تو کھیت میں کام نہ کریں، اور متاثرہ پودوں کو چھونے کے بعد اوزار صاف کریں۔",
+        "نکاسی بہتر کریں اور اوپر سے پانی دینے سے گریز کریں۔",
+      ],
+      chemicalSolution: [
+        "کپاس کی bacterial blight کے لیے لیبل شدہ تانبے والی دوا (جیسے Copper oxychloride)، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "پہلے دھبے نظر آتے ہی اسپرے کریں — تانبہ صحت مند پتوں کو بچاتا ہے لیکن پہلے سے متاثرہ پتوں کو ٹھیک نہیں کر سکتا۔",
+      ],
+      prevention: [
+        "صاف، تصدیق شدہ، بیماری سے پاک بیج اور جہاں ممکن ہو مزاحم اقسام لگائیں۔",
+        "کپاس کو دوسری فصلوں کے ساتھ بدل بدل کر لگائیں اور کٹائی کے بعد متاثرہ باقیات ختم کر دیں۔",
+        "ہوا کی گزر کے لیے پودوں میں فاصلہ رکھیں اور زیادہ نائٹروجن سے گریز کریں۔",
+        "نم موسم میں ہر ہفتے معائنہ کریں، خاص طور پر بارش یا طوفان کے بعد۔",
+      ],
+    },
+    roman: {
+      cause: "Ye aik jaraseem (bacteria) ki bimari hai jo barish ke chheenton, hawa aur mutasira beej se phailti hai. Ye patton ke masaamon aur zakhmon se andar jata hai aur garam, num mausam mein tezi se phailta hai.",
+      symptoms: [
+        "Patton par chhote, gehre, paani jaise kone daar dhabbe, aksar ragon ke saath",
+        "Ragein kaali ho jati hain aur shadeed hamle mein patte jaldi gir jate hain",
+        "Tanon aur shakhon par gehri, dhansi hui dhariyan (black arm)",
+        "Mutasira tinde sar jate hain aur achhi tarah nahi khulte, rooi par daagh par jate hain",
+      ],
+      organicSolution: [
+        "Mutasira patte hata dein aur khet mein khaad ke tor par na daalein.",
+        "Jab poday geelay hon to khet mein kaam na karein, aur mutasira podon ko chhoone ke baad auzaar saaf karein.",
+        "Nikasi behtar karein aur oopar se paani dene se gurez karein.",
+      ],
+      chemicalSolution: [
+        "Kapaas ki bacterial blight ke liye label shuda taanbe wali dawa (jaise Copper oxychloride), sirf label par likhi miqdar ke mutabiq.",
+        "Pehle dhabbe nazar aate hi spray karein — taanba sehatmand patton ko bachata hai lekin pehle se mutasira patton ko theek nahi kar sakta.",
+      ],
+      prevention: [
+        "Saaf, tasdeeq shuda, bimari se paak beej aur jahan mumkin ho muzahim aqsaam lagayein.",
+        "Kapaas ko doosri faslon ke saath badal badal kar lagayein aur katai ke baad mutasira baqiyat khatam kar dein.",
+        "Hawa ki guzar ke liye podon mein faasla rakhein aur zyada nitrogen se gurez karein.",
+        "Num mausam mein har hafte muaina karein, khaas tor par barish ya toofan ke baad.",
+      ],
+    },
+  },
+  "kb-cotton-powdery-mildew": {
+    ur: {
+      cause: "یہ ایک پھپھوندی ہے جو گرم، خشک موسم اور ٹھنڈی راتوں میں پتے کی سطح پر اگتی ہے۔ اس کے بیج ہوا سے پھیلتے ہیں اور بیماری موسم کے آخر میں بڑھتی ہے۔",
+      symptoms: [
+        "پتوں کے نیچے اور پھر اوپر کی طرف سفید، پاؤڈر جیسے دھبے",
+        "شدید حملے میں پتے کناروں سے پیلے اور خشک ہو جاتے ہیں",
+        "پتے وقت سے پہلے گر جاتے ہیں، جس سے ٹینڈے دھوپ سے متاثر ہوتے ہیں",
+        "زیادہ پتے گرنے سے ٹینڈے چھوٹے اور روئی کی کوالٹی خراب ہو جاتی ہے",
+      ],
+      organicSolution: [
+        "زیادہ متاثرہ پتے ہٹا دیں اور ہوا کی گزر بہتر کریں۔",
+        "پاؤڈر والی پھپھوندی کے لیے لیبل شدہ Sulphur یا نیم والی مصنوعات اسپرے کریں، تیز دھوپ میں اسپرے نہ کریں۔",
+        "پانی جڑوں میں دیں اور پتوں کو گیلا کرنے سے گریز کریں۔",
+      ],
+      chemicalSolution: [
+        "کپاس کی powdery mildew کے لیے لیبل شدہ فنجیسائیڈ (جیسے Sulphur یا Hexaconazole جیسی triazole دوا)، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "پہلے سفید دھبے نظر آتے ہی اسپرے کریں — پتے پر پھیل جانے کے بعد اسے روکنا بہت مشکل ہو جاتا ہے۔",
+      ],
+      prevention: [
+        "ہوا کی گزر کے لیے پودوں میں فاصلہ رکھیں اور گھنی، سایہ دار فصل سے گریز کریں۔",
+        "زیادہ نائٹروجن سے گریز کریں، جس سے نرم پتے بنتے ہیں جنہیں پھپھوندی پسند کرتی ہے۔",
+        "فصلیں بدل بدل کر لگائیں اور کٹائی کے بعد گرے ہوئے پتے صاف کر دیں۔",
+        "موسم کے آخر میں ہر ہفتے نیچے والے پتوں کے نیچے کا حصہ چیک کریں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye aik phaphundi hai jo garam, khushk mausam aur thandi raaton mein patte ki satah par ugti hai. Is ke beej hawa se phailte hain aur bimari mausam ke aakhir mein barhti hai.",
+      symptoms: [
+        "Patton ke neeche aur phir oopar ki taraf safed, powder jaise dhabbe",
+        "Shadeed hamle mein patte kinaron se peele aur khushk ho jate hain",
+        "Patte waqt se pehle gir jate hain, jis se tinde dhoop se mutasir hote hain",
+        "Zyada patte girne se tinde chhote aur rooi ki quality kharab ho jati hai",
+      ],
+      organicSolution: [
+        "Zyada mutasira patte hata dein aur hawa ki guzar behtar karein.",
+        "Powder wali phaphundi ke liye label shuda Sulphur ya neem wali masnooaat spray karein, tez dhoop mein spray na karein.",
+        "Paani jaron mein dein aur patton ko geela karne se gurez karein.",
+      ],
+      chemicalSolution: [
+        "Kapaas ki powdery mildew ke liye label shuda fungicide (jaise Sulphur ya Hexaconazole jaisi triazole dawa), sirf label par likhi miqdar ke mutabiq.",
+        "Pehle safed dhabbe nazar aate hi spray karein — patte par phail jaane ke baad isay rokna bohat mushkil ho jata hai.",
+      ],
+      prevention: [
+        "Hawa ki guzar ke liye podon mein faasla rakhein aur ghani, saya daar fasal se gurez karein.",
+        "Zyada nitrogen se gurez karein, jis se naram patte bante hain jinhein phaphundi pasand karti hai.",
+        "Faslein badal badal kar lagayein aur katai ke baad giray hue patte saaf kar dein.",
+        "Mausam ke aakhir mein har hafte neeche wale patton ke neeche ka hissa check karein.",
+      ],
+    },
+  },
+  "kb-cotton-target-spot": {
+    ur: {
+      cause: "یہ ایک پھپھوندی ہے جو فصل کی باقیات میں زندہ رہتی ہے اور گرم، مرطوب موسم میں ہوا اور بارش کے چھینٹوں سے پھیلتی ہے۔ یہ پہلے پتوں، پھر ٹینڈوں کے ڈھکنوں اور ٹینڈوں پر حملہ کرتی ہے۔",
+      symptoms: [
+        "گول بھورے دھبے جن کے درمیان ہلکا اور دائرے بنے ہوں، جیسے نشانہ",
+        "دھبے بڑھ کر مل جاتے ہیں اور پتے کا درمیانی حصہ گر سکتا ہے",
+        "نیچے والے پتوں سے شروع ہو کر شدید پتے گرنا",
+        "شدید حالت میں ٹینڈے سڑ جاتے ہیں اور روئی خراب ہو جاتی ہے",
+      ],
+      organicSolution: [
+        "متاثرہ پتے ہٹا دیں اور کھیت میں نہ چھوڑیں۔",
+        "ہوا کی گزر بہتر کریں اور پانی دیتے وقت پتوں کو گیلا کرنے سے گریز کریں۔",
+        "کٹائی کے بعد فصل کی باقیات کو دفن کریں یا ختم کر دیں تاکہ پھپھوندی زندہ نہ رہے۔",
+      ],
+      chemicalSolution: [
+        "کپاس کے target spot کے لیے لیبل شدہ فنجیسائیڈ (جیسے Azoxystrobin + Difenoconazole، یا Mancozeb)، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "جب نیچے والے پتوں پر پہلے دھبے نظر آئیں تو اسپرے کریں اور صرف لیبل کے مطابق دہرائیں۔",
+      ],
+      prevention: [
+        "کپاس کو کم از کم ایک موسم کے لیے دوسری فصلوں کے ساتھ بدل بدل کر لگائیں۔",
+        "صاف بیج اور جہاں ممکن ہو مزاحم اقسام استعمال کریں۔",
+        "کھاد متوازن رکھیں — زیادہ نائٹروجن سے پتے زیادہ کمزور ہوتے ہیں۔",
+        "گرم، مرطوب موسم میں ہر ہفتے نیچے والے پتے چیک کریں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye aik phaphundi hai jo fasal ki baqiyat mein zinda rehti hai aur garam, martub mausam mein hawa aur barish ke chheenton se phailti hai. Ye pehle patton, phir tindon ke dhaknon aur tindon par hamla karti hai.",
+      symptoms: [
+        "Gol bhoore dhabbe jin ke darmiyan halka aur dairay bane hon, jaise nishana",
+        "Dhabbe barh kar mil jate hain aur patte ka darmiyani hissa gir sakta hai",
+        "Neeche wale patton se shuru ho kar shadeed patte girna",
+        "Shadeed haalat mein tinde sar jate hain aur rooi kharab ho jati hai",
+      ],
+      organicSolution: [
+        "Mutasira patte hata dein aur khet mein na chhorein.",
+        "Hawa ki guzar behtar karein aur paani dete waqt patton ko geela karne se gurez karein.",
+        "Katai ke baad fasal ki baqiyat ko dafan karein ya khatam kar dein taake phaphundi zinda na rahe.",
+      ],
+      chemicalSolution: [
+        "Kapaas ke target spot ke liye label shuda fungicide (jaise Azoxystrobin + Difenoconazole, ya Mancozeb), sirf label par likhi miqdar ke mutabiq.",
+        "Jab neeche wale patton par pehle dhabbe nazar aayein to spray karein aur sirf label ke mutabiq dohrayein.",
+      ],
+      prevention: [
+        "Kapaas ko kam az kam aik mausam ke liye doosri faslon ke saath badal badal kar lagayein.",
+        "Saaf beej aur jahan mumkin ho muzahim aqsaam istemal karein.",
+        "Khaad mutawazan rakhein — zyada nitrogen se patte zyada kamzor hote hain.",
+        "Garam, martub mausam mein har hafte neeche wale patte check karein.",
+      ],
+    },
+  },
+  "kb-wheat-black-rust": {
+    ur: {
+      cause: "یہ ہوا سے پھیلنے والی زنگ کی پھپھوندی (stem rust) ہے جو گرم، مرطوب موسم میں تیزی سے بڑھتی ہے۔ اس کے بیج تنوں اور پتوں پر گرتے ہیں، نمی میں اگتے ہیں اور پودے کی جلد پھاڑ کر گہرے دانے بناتے ہیں۔",
+      symptoms: [
+        "تنوں، پتے کی میان اور پتوں پر گہرے سرخی مائل بھورے، لمبے دانے",
+        "دانے تنے کی جلد پھاڑ کر پاؤڈر چھوڑتے ہیں",
+        "شدید حملے میں تنے کمزور ہو کر گر جاتے ہیں",
+        "دانے سکڑ کر ہلکے ہو جاتے ہیں اور پیداوار میں بھاری نقصان ہوتا ہے، اگر سب سے اوپر والا پتہ اور تنا جلدی متاثر ہو",
+      ],
+      organicSolution: [
+        "زیادہ متاثرہ پودے ہٹا دیں اور کھیت میں نہ چھوڑیں۔",
+        "ہوا کی گزر بہتر کریں اور پتوں کو گیلا کرنے سے گریز کریں۔",
+        "جہاں ممکن ہو black rust سے مزاحم گندم کی اقسام استعمال کریں۔",
+      ],
+      chemicalSolution: [
+        "گندم کے black rust کے لیے لیبل شدہ فنجیسائیڈ (جیسے Propiconazole یا Tebuconazole جیسی triazole دوا)، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "دانے نظر آتے ہی اسپرے کریں اور صرف لیبل کے مطابق دہرائیں۔",
+      ],
+      prevention: [
+        "مزاحم اقسام لگائیں اور دیر سے کاشت نہ کریں۔",
+        "پانی جڑوں میں دیں، پودوں میں فاصلہ رکھیں اور فصلیں بدل بدل کر لگائیں۔",
+        "خود رو گندم کے پودے اور barberry جھاڑیاں ختم کریں، جو موسموں کے درمیان زنگ کو زندہ رکھتے ہیں۔",
+        "بہار میں ہر ہفتے معائنہ کریں، خاص طور پر تنے اور سب سے اوپر والے پتے کا۔",
+      ],
+    },
+    roman: {
+      cause: "Ye hawa se phailne wali zang ki phaphundi (stem rust) hai jo garam, martub mausam mein tezi se barhti hai. Is ke beej tanon aur patton par girte hain, nami mein ugte hain aur poday ki jild phaad kar gehre dane banate hain.",
+      symptoms: [
+        "Tanon, patte ki miyan aur patton par gehre surkhi mael bhoore, lambe dane",
+        "Dane tane ki jild phaad kar powder chhorte hain",
+        "Shadeed hamle mein tane kamzor ho kar gir jate hain",
+        "Dane sikar kar halke ho jate hain aur paidawar mein bhaari nuqsan hota hai, agar sab se oopar wala patta aur tana jaldi mutasir ho",
+      ],
+      organicSolution: [
+        "Zyada mutasira poday hata dein aur khet mein na chhorein.",
+        "Hawa ki guzar behtar karein aur patton ko geela karne se gurez karein.",
+        "Jahan mumkin ho black rust se muzahim gandum ki aqsaam istemal karein.",
+      ],
+      chemicalSolution: [
+        "Gandum ke black rust ke liye label shuda fungicide (jaise Propiconazole ya Tebuconazole jaisi triazole dawa), sirf label par likhi miqdar ke mutabiq.",
+        "Dane nazar aate hi spray karein aur sirf label ke mutabiq dohrayein.",
+      ],
+      prevention: [
+        "Muzahim aqsaam lagayein aur der se kasht na karein.",
+        "Paani jaron mein dein, podon mein faasla rakhein aur faslein badal badal kar lagayein.",
+        "Khud ro gandum ke poday aur barberry jhariyan khatam karein, jo mausamon ke darmiyan zang ko zinda rakhte hain.",
+        "Bahar mein har hafte muaina karein, khaas tor par tane aur sab se oopar wale patte ka.",
+      ],
+    },
+  },
+  "kb-wheat-blast": {
+    ur: {
+      cause: "V23 ماڈل صرف یہ بتاتا ہے کہ گندم کے پتے پر blast ہے، اس کی صحیح وجہ نہیں بتاتا۔ گندم کا blast اکثر Magnaporthe oryzae نامی پھپھوندی سے ہوتا ہے جو گرم، نم موسم میں ہوا سے پھیلتی ہے — لیکن علاج سے پہلے وجہ کی تصدیق مقامی زرعی افسر سے کرانی چاہیے، کیونکہ ہر وجہ کا علاج مختلف ہوتا ہے۔",
+      symptoms: [
+        "بالیاں اور دانے سفید ہو کر جلے ہوئے لگتے ہیں، جبکہ باقی پودا ہرا رہتا ہے",
+        "پتوں پر گہرے، آنکھ جیسے دھبے جن کا درمیان سرمئی ہوتا ہے",
+        "شدید حالت میں بالی کے نیچے تنا کالا ہو جاتا ہے",
+      ],
+      organicSolution: [
+        "متاثرہ بالیاں اور پتے ہٹا دیں اور کھیت میں کھاد کے طور پر نہ ڈالیں۔",
+        "ہوا کی گزر بہتر کریں اور پانی کھڑا نہ ہونے دیں۔",
+        "ایک پتے اور بالی کی صاف تصویر لیں اور شناخت کے لیے مقامی زرعی افسر کو دکھائیں۔",
+      ],
+      chemicalSolution: [
+        "صحیح وجہ معلوم ہونے تک کوئی مخصوص فنجیسائیڈ یا بیکٹیریسائیڈ نہ لگائیں — غلط دوا پیسے کا ضیاع ہے اور فائدہ نہیں دے گی۔",
+        "وجہ معلوم ہونے کے بعد صرف وہی دوا استعمال کریں جو اس بیماری اور فصل کے لیے لیبل شدہ ہو، صرف لیبل پر لکھی مقدار کے مطابق۔",
+      ],
+      prevention: [
+        "صاف، تصدیق شدہ بیج اور جہاں ممکن ہو blast سے محفوظ اقسام لگائیں۔",
+        "دیر سے کاشت اور زیادہ نائٹروجن سے گریز کریں، جس سے فصل زیادہ کمزور ہوتی ہے۔",
+        "فصلیں بدل بدل کر لگائیں اور کٹائی کے بعد متاثرہ باقیات صاف کر دیں۔",
+      ],
+    },
+    roman: {
+      cause: "V23 model sirf ye batata hai ke gandum ke patte par blast hai, is ki sahi wajah nahi batata. Gandum ka blast aksar Magnaporthe oryzae nami phaphundi se hota hai jo garam, num mausam mein hawa se phailti hai — lekin ilaaj se pehle wajah ki tasdeeq maqami zarae afsar se karani chahiye, kyun ke har wajah ka ilaaj mukhtalif hota hai.",
+      symptoms: [
+        "Baliyan aur dane safed ho kar jale hue lagte hain, jab ke baqi poda hara rehta hai",
+        "Patton par gehre, aankh jaise dhabbe jin ka darmiyan surmai hota hai",
+        "Shadeed haalat mein baali ke neeche tana kaala ho jata hai",
+      ],
+      organicSolution: [
+        "Mutasira baliyan aur patte hata dein aur khet mein khaad ke tor par na daalein.",
+        "Hawa ki guzar behtar karein aur paani khara na hone dein.",
+        "Aik patte aur baali ki saaf photo lein aur shanakht ke liye maqami zarae afsar ko dikhayein.",
+      ],
+      chemicalSolution: [
+        "Sahi wajah maloom hone tak koi makhsoos fungicide ya bactericide na lagayein — ghalat dawa paise ka zaya hai aur faida nahi de gi.",
+        "Wajah maloom hone ke baad sirf wohi dawa istemal karein jo is bimari aur fasal ke liye label shuda ho, sirf label par likhi miqdar ke mutabiq.",
+      ],
+      prevention: [
+        "Saaf, tasdeeq shuda beej aur jahan mumkin ho blast se mehfooz aqsaam lagayein.",
+        "Der se kasht aur zyada nitrogen se gurez karein, jis se fasal zyada kamzor hoti hai.",
+        "Faslein badal badal kar lagayein aur katai ke baad mutasira baqiyat saaf kar dein.",
+      ],
+    },
+  },
+  "kb-wheat-common-root-rot": {
+    ur: {
+      cause: "یہ مٹی میں رہنے والی پھپھوندی ہے جو جڑوں، تنے کی بنیاد اور نچلے تنے پر حملہ کرتی ہے، خاص طور پر خشک، دباؤ والی مٹی میں اور جہاں ہر سال ایک ہی زمین پر گندم لگائی جائے۔",
+      symptoms: [
+        "جڑوں، تنے کی بنیاد اور نچلے تنے پر بھورے سے گہرے دھبے",
+        "پودے چھوٹے اور پیلے رہ جاتے ہیں اور اچھی طرح شاخیں نہیں بناتے",
+        "سفید، خالی بالیاں باقی کھیت سے پہلے پک جاتی ہیں",
+        "دانے کم بھرتے ہیں اور سکڑ جاتے ہیں",
+      ],
+      organicSolution: [
+        "گندم کو دوسری فصلوں کے ساتھ بدل بدل کر لگائیں اور ہر سال ایک ہی زمین پر گندم نہ لگائیں۔",
+        "مٹی کی نکاسی اور نامی مادہ بہتر کریں تاکہ جڑیں صحت مند رہیں۔",
+        "کٹائی کے بعد متاثرہ باقیات ہٹا دیں اور ختم کر دیں۔",
+      ],
+      chemicalSolution: [
+        "عام root rot کے لیے لیبل شدہ بیج کی دوا (جیسے Tebuconazole، یا Carboxin + Thiram)، کاشت سے پہلے بیج پر لگائیں، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "پتوں پر اسپرے سے root rot ٹھیک نہیں ہوتا — علاج کاشت سے پہلے بیج یا مٹی میں ہونا چاہیے۔",
+      ],
+      prevention: [
+        "صاف، دوا لگا ہوا، تصدیق شدہ بیج لگائیں۔",
+        "فصلیں بدل بدل کر لگائیں اور زیادہ متاثرہ باقیات والی زمین میں گندم نہ لگائیں۔",
+        "پودوں کو اچھی خوراک اور پانی دیں تاکہ جڑیں مضبوط رہیں۔",
+        "اپنے علاقے کے لیے تجویز کردہ گہرائی اور وقت پر کاشت کریں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye mitti mein rehne wali phaphundi hai jo jaron, tane ki bunyad aur neeche wale tane par hamla karti hai, khaas tor par khushk, dabao wali mitti mein aur jahan har saal aik hi zameen par gandum lagayi jaye.",
+      symptoms: [
+        "Jaron, tane ki bunyad aur neeche wale tane par bhoore se gehre dhabbe",
+        "Poday chhote aur peele reh jate hain aur achhi tarah shakhein nahi banate",
+        "Safed, khaali baliyan baqi khet se pehle pak jati hain",
+        "Dane kam bharte hain aur sikar jate hain",
+      ],
+      organicSolution: [
+        "Gandum ko doosri faslon ke saath badal badal kar lagayein aur har saal aik hi zameen par gandum na lagayein.",
+        "Mitti ki nikasi aur naami mada behtar karein taake jarein sehatmand rahein.",
+        "Katai ke baad mutasira baqiyat hata dein aur khatam kar dein.",
+      ],
+      chemicalSolution: [
+        "Aam root rot ke liye label shuda beej ki dawa (jaise Tebuconazole, ya Carboxin + Thiram), kasht se pehle beej par lagayein, sirf label par likhi miqdar ke mutabiq.",
+        "Patton par spray se root rot theek nahi hota — ilaaj kasht se pehle beej ya mitti mein hona chahiye.",
+      ],
+      prevention: [
+        "Saaf, dawa laga hua, tasdeeq shuda beej lagayein.",
+        "Faslein badal badal kar lagayein aur zyada mutasira baqiyat wali zameen mein gandum na lagayein.",
+        "Podon ko achhi khoraak aur paani dein taake jarein mazboot rahein.",
+        "Apne ilaqe ke liye tajweez kardah gehrai aur waqt par kasht karein.",
+      ],
+    },
+  },
+  "kb-wheat-fusarium-head-blight": {
+    ur: {
+      cause: "یہ ایک پھپھوندی ہے جو پھول آنے کے وقت گرم، نم موسم میں گندم کی بالیوں پر حملہ کرتی ہے۔ اس کے بیج متاثرہ باقیات سے آتے ہیں، خاص طور پر مکئی کی باقیات سے، اور یہ بیماری دانوں میں نقصان دہ زہر (mycotoxins) چھوڑ سکتی ہے۔",
+      symptoms: [
+        "ایک یا زیادہ دانے سفید ہو جاتے ہیں جبکہ باقی بالی ہری رہتی ہے",
+        "نم موسم میں متاثرہ دانوں پر گلابی یا نارنجی پھپھوندی اگتی ہے",
+        "دانے سکڑ کر ہلکے اور چاک جیسے ہو جاتے ہیں",
+        "بالیاں سیدھی کھڑی رہتی ہیں اور بھر نہیں پاتیں",
+      ],
+      organicSolution: [
+        "جہاں ممکن ہو متاثرہ بالیاں ہٹا دیں اور ختم کر دیں، اور متاثرہ دانے بیج کے لیے نہ رکھیں۔",
+        "گندم کو دوسری فصلوں کے ساتھ بدل بدل کر لگائیں اور مکئی اور گندم کی باقیات کو دفن کریں۔",
+        "ہوا کی گزر بہتر کریں اور زیادہ نائٹروجن سے گریز کریں۔",
+      ],
+      chemicalSolution: [
+        "Fusarium head blight کے لیے لیبل شدہ فنجیسائیڈ (جیسے Prothioconazole + Tebuconazole، یا صرف Tebuconazole)، پھول آنے/بالی نکلنے کے وقت اسپرے کریں جیسا کہ لیبل بتاتا ہے، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "اسپرے کا وقت بہت اہم ہے — بالی مکمل متاثر ہونے کے بعد اسپرے دانوں میں موجود زہر کو ختم نہیں کرے گا۔",
+      ],
+      prevention: [
+        "جہاں ممکن ہو مزاحم یا برداشت کرنے والی اقسام لگائیں۔",
+        "دوسری فصلوں کے ساتھ بدل بدل کر لگائیں اور مکئی کی باقیات کا انتظام کریں، جو اس پھپھوندی کو لے کر آتی ہیں۔",
+        "صاف، تصدیق شدہ بیج لگائیں اور جہاں ممکن ہو نم موسم میں دیر سے پھول آنے سے گریز کریں۔",
+        "بہت زیادہ متاثرہ دانے جانوروں کو مشورے کے بغیر نہ کھلائیں — ان میں زہر ہو سکتا ہے۔",
+      ],
+    },
+    roman: {
+      cause: "Ye aik phaphundi hai jo phool aane ke waqt garam, num mausam mein gandum ki baliyon par hamla karti hai. Is ke beej mutasira baqiyat se aate hain, khaas tor par makai ki baqiyat se, aur ye bimari danon mein nuqsan deh zeher (mycotoxins) chhor sakti hai.",
+      symptoms: [
+        "Aik ya zyada dane safed ho jate hain jab ke baqi baali hari rehti hai",
+        "Num mausam mein mutasira danon par gulabi ya narangi phaphundi ugti hai",
+        "Dane sikar kar halke aur chaak jaise ho jate hain",
+        "Baliyan seedhi khari rehti hain aur bhar nahi paatin",
+      ],
+      organicSolution: [
+        "Jahan mumkin ho mutasira baliyan hata dein aur khatam kar dein, aur mutasira dane beej ke liye na rakhein.",
+        "Gandum ko doosri faslon ke saath badal badal kar lagayein aur makai aur gandum ki baqiyat ko dafan karein.",
+        "Hawa ki guzar behtar karein aur zyada nitrogen se gurez karein.",
+      ],
+      chemicalSolution: [
+        "Fusarium head blight ke liye label shuda fungicide (jaise Prothioconazole + Tebuconazole, ya sirf Tebuconazole), phool aane/baali nikalne ke waqt spray karein jaisa ke label batata hai, sirf label par likhi miqdar ke mutabiq.",
+        "Spray ka waqt bohat ahem hai — baali mukammal mutasir hone ke baad spray danon mein maujood zeher ko khatam nahi kare ga.",
+      ],
+      prevention: [
+        "Jahan mumkin ho muzahim ya bardasht karne wali aqsaam lagayein.",
+        "Doosri faslon ke saath badal badal kar lagayein aur makai ki baqiyat ka intezam karein, jo is phaphundi ko le kar aati hain.",
+        "Saaf, tasdeeq shuda beej lagayein aur jahan mumkin ho num mausam mein der se phool aane se gurez karein.",
+        "Bohat zyada mutasira dane janwaron ko mashware ke baghair na khilayein — in mein zeher ho sakta hai.",
+      ],
+    },
+  },
+  "kb-wheat-leaf-blight": {
+    ur: {
+      cause: "یہ بیج سے پھیلنے والی پھپھوندی ہے جو گرم (تقریباً 25 ڈگری)، مرطوب موسم میں پتوں پر حملہ کرتی ہے، عام طور پر جب فصل 7 سے 8 ہفتے کی ہوتی ہے۔ یہ ہوا اور بارش کے چھینٹوں سے متاثرہ پتوں اور باقیات سے پھیلتی ہے۔",
+      symptoms: [
+        "پتوں پر سرخی مائل بھورے، بیضوی دھبے جو چمکدار پیلے کنارے کے ساتھ بے ترتیب ہو جاتے ہیں",
+        "دھبوں پر گہرے، دائروں والے نشانات ہوتے ہیں اور شدید حملے میں مل جاتے ہیں",
+        "پتے سرے سے خشک ہو کر جلدی گر جاتے ہیں، جس سے پودا کمزور ہو جاتا ہے",
+        "زیادہ پتے گرنے سے دانے سکڑ کر ہلکے ہو جاتے ہیں",
+      ],
+      organicSolution: [
+        "زیادہ متاثرہ پتے ہٹا دیں اور کھیت میں نہ چھوڑیں۔",
+        "صاف، دوا لگا ہوا بیج استعمال کریں — یہ پھپھوندی بیج سے پھیلتی ہے۔",
+        "ہوا کی گزر بہتر کریں اور پانی دیتے وقت پتوں کو گیلا کرنے سے گریز کریں۔",
+      ],
+      chemicalSolution: [
+        "گندم کے leaf blight کے لیے لیبل شدہ فنجیسائیڈ (جیسے Propiconazole یا Mancozeb)، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "پہلے دھبے نظر آتے ہی اسپرے کریں اور صرف لیبل کے مطابق دہرائیں۔",
+      ],
+      prevention: [
+        "صاف، تصدیق شدہ، دوا لگا ہوا بیج لگائیں۔",
+        "فصلیں بدل بدل کر لگائیں اور متاثرہ باقیات کو دفن کریں یا کٹائی کے بعد ختم کر دیں۔",
+        "دیر سے کاشت نہ کریں اور پانی جڑوں میں دیں۔",
+        "ٹلرنگ کے بعد سے ہر ہفتے معائنہ کریں، خاص طور پر مرطوب موسم میں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye beej se phailne wali phaphundi hai jo garam (taqreeban 25 degree), martub mausam mein patton par hamla karti hai, aam tor par jab fasal 7 se 8 hafte ki hoti hai. Ye hawa aur barish ke chheenton se mutasira patton aur baqiyat se phailti hai.",
+      symptoms: [
+        "Patton par surkhi mael bhoore, baizvi dhabbe jo chamakdar peele kinare ke saath be tarteeb ho jate hain",
+        "Dhabbon par gehre, dairon wale nishanaat hote hain aur shadeed hamle mein mil jate hain",
+        "Patte saray se khushk ho kar jaldi gir jate hain, jis se poda kamzor ho jata hai",
+        "Zyada patte girne se dane sikar kar halke ho jate hain",
+      ],
+      organicSolution: [
+        "Zyada mutasira patte hata dein aur khet mein na chhorein.",
+        "Saaf, dawa laga hua beej istemal karein — ye phaphundi beej se phailti hai.",
+        "Hawa ki guzar behtar karein aur paani dete waqt patton ko geela karne se gurez karein.",
+      ],
+      chemicalSolution: [
+        "Gandum ke leaf blight ke liye label shuda fungicide (jaise Propiconazole ya Mancozeb), sirf label par likhi miqdar ke mutabiq.",
+        "Pehle dhabbe nazar aate hi spray karein aur sirf label ke mutabiq dohrayein.",
+      ],
+      prevention: [
+        "Saaf, tasdeeq shuda, dawa laga hua beej lagayein.",
+        "Faslein badal badal kar lagayein aur mutasira baqiyat ko dafan karein ya katai ke baad khatam kar dein.",
+        "Der se kasht na karein aur paani jaron mein dein.",
+        "Tillering ke baad se har hafte muaina karein, khaas tor par martub mausam mein.",
+      ],
+    },
+  },
+  "kb-wheat-mildew": {
+    ur: {
+      cause: "یہ ایک پھپھوندی ہے (گندم کی powdery mildew) جو ہلکے، مرطوب موسم میں گھنی، سایہ دار فصل میں پتے کی سطح پر اگتی ہے۔ اس کے بیج ہوا سے پھیلتے ہیں۔",
+      symptoms: [
+        "پتوں، پتے کی میان اور تنوں پر سفید، پاؤڈر جیسے دھبے",
+        "دھبے سرمئی بھورے ہو جاتے ہیں اور نیچے والے پتے پیلے ہو جاتے ہیں",
+        "شدید حملے میں پودے چھوٹے رہ جاتے ہیں اور شاخیں کم بنتی ہیں",
+        "شدید حالت میں بالیوں پر بھی سفید پاؤڈر لگ سکتا ہے",
+      ],
+      organicSolution: [
+        "زیادہ متاثرہ پتے ہٹا دیں اور ہوا کی گزر بہتر کریں۔",
+        "پاؤڈر والی پھپھوندی کے لیے لیبل شدہ Sulphur یا نیم والی مصنوعات اسپرے کریں، تیز دھوپ میں اسپرے نہ کریں۔",
+        "پانی جڑوں میں دیں اور پتوں کو گیلا کرنے سے گریز کریں۔",
+      ],
+      chemicalSolution: [
+        "گندم کی powdery mildew کے لیے لیبل شدہ فنجیسائیڈ (جیسے Propiconazole یا Sulphur)، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "پہلے سفید دھبے نظر آتے ہی اسپرے کریں — پتے پر پھیل جانے کے بعد اسے روکنا بہت مشکل ہو جاتا ہے۔",
+      ],
+      prevention: [
+        "مزاحم اقسام لگائیں اور گھنی کاشت سے گریز کریں۔",
+        "زیادہ نائٹروجن سے گریز کریں، جس سے نرم پتے بنتے ہیں جنہیں پھپھوندی پسند کرتی ہے۔",
+        "فصلیں بدل بدل کر لگائیں اور کٹائی کے بعد گرے ہوئے پتے صاف کر دیں۔",
+        "ہلکے، مرطوب موسم میں ہر ہفتے نیچے والے پتے چیک کریں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye aik phaphundi hai (gandum ki powdery mildew) jo halke, martub mausam mein ghani, saya daar fasal mein patte ki satah par ugti hai. Is ke beej hawa se phailte hain.",
+      symptoms: [
+        "Patton, patte ki miyan aur tanon par safed, powder jaise dhabbe",
+        "Dhabbe surmai bhoore ho jate hain aur neeche wale patte peele ho jate hain",
+        "Shadeed hamle mein poday chhote reh jate hain aur shakhein kam banti hain",
+        "Shadeed haalat mein baliyon par bhi safed powder lag sakta hai",
+      ],
+      organicSolution: [
+        "Zyada mutasira patte hata dein aur hawa ki guzar behtar karein.",
+        "Powder wali phaphundi ke liye label shuda Sulphur ya neem wali masnooaat spray karein, tez dhoop mein spray na karein.",
+        "Paani jaron mein dein aur patton ko geela karne se gurez karein.",
+      ],
+      chemicalSolution: [
+        "Gandum ki powdery mildew ke liye label shuda fungicide (jaise Propiconazole ya Sulphur), sirf label par likhi miqdar ke mutabiq.",
+        "Pehle safed dhabbe nazar aate hi spray karein — patte par phail jaane ke baad isay rokna bohat mushkil ho jata hai.",
+      ],
+      prevention: [
+        "Muzahim aqsaam lagayein aur ghani kasht se gurez karein.",
+        "Zyada nitrogen se gurez karein, jis se naram patte bante hain jinhein phaphundi pasand karti hai.",
+        "Faslein badal badal kar lagayein aur katai ke baad giray hue patte saaf kar dein.",
+        "Halke, martub mausam mein har hafte neeche wale patte check karein.",
+      ],
+    },
+  },
+  "kb-wheat-mite": {
+    ur: {
+      cause: "یہ چھوٹے رس چوسنے والے کیڑے (mite) ہیں جو گرم، خشک موسم میں پتوں کا رس چوستے ہیں۔ یہ اتنے چھوٹے ہوتے ہیں کہ بغیر لینس کے صاف نظر نہیں آتے، اور کچھ اقسام گندم کے وائرس بھی پھیلاتی ہیں۔",
+      symptoms: [
+        "پتوں پر باریک سفید یا چاندی جیسے چھوٹے دھبے",
+        "پتے مڑ جاتے ہیں، پیلے ہو کر سرے سے خشک ہو جاتے ہیں",
+        "شدید حملے میں پودے چھوٹے رہ جاتے ہیں اور شاخیں کم بنتی ہیں",
+        "کچھ صورتوں میں پتوں کے نیچے باریک جالا یا دھول جیسی تہہ نظر آتی ہے",
+      ],
+      organicSolution: [
+        "جہاں ممکن ہو زیادہ متاثرہ پتے ہاتھ سے ہٹا دیں۔",
+        "Mite کے لیے لیبل شدہ نیم کا تیل یا insecticidal soap اسپرے کریں، پتوں کے نیچے کا حصہ بھی بھیگوئیں۔",
+        "قدرتی شکاری کیڑوں کی حوصلہ افزائی کریں اور ایسے اسپرے سے گریز کریں جو انہیں مار دیتے ہیں۔",
+      ],
+      chemicalSolution: [
+        "گندم پر mite کے لیے لیبل شدہ miticide (جیسے Abamectin)، صرف اس وقت جب تعداد زیادہ ہو اور پھیل رہی ہو، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "استعمال سے پہلے چیک کریں کہ دوا کے لیبل پر گندم اور mite لکھا ہو۔",
+      ],
+      prevention: [
+        "گرم، خشک موسم میں ہر ہفتے پتے چیک کریں، خاص طور پر نیچے کا حصہ۔",
+        "پودوں کو صحت مند رکھیں اور جہاں ممکن ہو خشک، دھول والی فصل سے گریز کریں۔",
+        "کھیت کے کنارے جڑی بوٹیاں اور خود رو گندم ہٹا دیں جو mite کو پناہ دیتی ہیں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye chhote ras choosne wale keere (mite) hain jo garam, khushk mausam mein patton ka ras chooste hain. Ye itne chhote hote hain ke baghair lens ke saaf nazar nahi aate, aur kuch aqsaam gandum ke virus bhi phailati hain.",
+      symptoms: [
+        "Patton par bareek safed ya chaandi jaise chhote dhabbe",
+        "Patte mur jate hain, peele ho kar saray se khushk ho jate hain",
+        "Shadeed hamle mein poday chhote reh jate hain aur shakhein kam banti hain",
+        "Kuch sooraton mein patton ke neeche bareek jaala ya dhool jaisi teh nazar aati hai",
+      ],
+      organicSolution: [
+        "Jahan mumkin ho zyada mutasira patte haath se hata dein.",
+        "Mite ke liye label shuda neem ka tail ya insecticidal soap spray karein, patton ke neeche ka hissa bhi bhigoyein.",
+        "Qudrati shikari keeron ki hosla afzai karein aur aise spray se gurez karein jo inhein maar dete hain.",
+      ],
+      chemicalSolution: [
+        "Gandum par mite ke liye label shuda miticide (jaise Abamectin), sirf is waqt jab tadad zyada ho aur phail rahi ho, sirf label par likhi miqdar ke mutabiq.",
+        "Istemal se pehle check karein ke dawa ke label par gandum aur mite likha ho.",
+      ],
+      prevention: [
+        "Garam, khushk mausam mein har hafte patte check karein, khaas tor par neeche ka hissa.",
+        "Podon ko sehatmand rakhein aur jahan mumkin ho khushk, dhool wali fasal se gurez karein.",
+        "Khet ke kinare jari bootiyan aur khud ro gandum hata dein jo mite ko panah deti hain.",
+      ],
+    },
+  },
+  "kb-wheat-septoria": {
+    ur: {
+      cause: "V23 ماڈل صرف یہ بتاتا ہے کہ گندم کے پتے پر septoria ہے، اس کی صحیح وجہ نہیں بتاتا۔ Septoria leaf blotch اکثر Zymoseptoria tritici نامی پھپھوندی سے ہوتا ہے جو نم موسم میں بارش کے چھینٹوں سے پھیلتی ہے — لیکن علاج سے پہلے وجہ کی تصدیق مقامی زرعی افسر سے کرانی چاہیے، کیونکہ ہر وجہ کا علاج مختلف ہوتا ہے۔",
+      symptoms: [
+        "پتوں پر سرمئی بھورے دھبے، جن کے اندر اکثر چھوٹے کالے نقطے (بیج کے خول) ہوتے ہیں",
+        "نم موسم میں دھبے نیچے والے پتوں سے اوپر کی طرف پھیلتے ہیں",
+        "دھبے مل جانے سے پتے جلدی خشک ہو کر مر جاتے ہیں",
+      ],
+      organicSolution: [
+        "متاثرہ پتے ہٹا دیں اور کھیت میں کھاد کے طور پر نہ ڈالیں۔",
+        "ہوا کی گزر بہتر کریں اور پانی کھڑا نہ ہونے دیں۔",
+        "ایک پتے کی صاف تصویر لیں اور شناخت کے لیے مقامی زرعی افسر کو دکھائیں۔",
+      ],
+      chemicalSolution: [
+        "صحیح وجہ معلوم ہونے تک کوئی مخصوص فنجیسائیڈ نہ لگائیں — غلط دوا پیسے کا ضیاع ہے اور فائدہ نہیں دے گی۔",
+        "وجہ معلوم ہونے کے بعد صرف وہی دوا استعمال کریں جو اس بیماری اور فصل کے لیے لیبل شدہ ہو، صرف لیبل پر لکھی مقدار کے مطابق۔",
+      ],
+      prevention: [
+        "صاف، تصدیق شدہ بیج اور جہاں ممکن ہو مزاحم اقسام لگائیں۔",
+        "فصلیں بدل بدل کر لگائیں اور متاثرہ باقیات کو کٹائی کے بعد دفن کریں۔",
+        "دیر سے کاشت اور زیادہ نائٹروجن سے گریز کریں۔",
+      ],
+    },
+    roman: {
+      cause: "V23 model sirf ye batata hai ke gandum ke patte par septoria hai, is ki sahi wajah nahi batata. Septoria leaf blotch aksar Zymoseptoria tritici nami phaphundi se hota hai jo num mausam mein barish ke chheenton se phailti hai — lekin ilaaj se pehle wajah ki tasdeeq maqami zarae afsar se karani chahiye, kyun ke har wajah ka ilaaj mukhtalif hota hai.",
+      symptoms: [
+        "Patton par surmai bhoore dhabbe, jin ke andar aksar chhote kaale nuqte (beej ke khol) hote hain",
+        "Num mausam mein dhabbe neeche wale patton se oopar ki taraf phailte hain",
+        "Dhabbe mil jaane se patte jaldi khushk ho kar mar jate hain",
+      ],
+      organicSolution: [
+        "Mutasira patte hata dein aur khet mein khaad ke tor par na daalein.",
+        "Hawa ki guzar behtar karein aur paani khara na hone dein.",
+        "Aik patte ki saaf photo lein aur shanakht ke liye maqami zarae afsar ko dikhayein.",
+      ],
+      chemicalSolution: [
+        "Sahi wajah maloom hone tak koi makhsoos fungicide na lagayein — ghalat dawa paise ka zaya hai aur faida nahi de gi.",
+        "Wajah maloom hone ke baad sirf wohi dawa istemal karein jo is bimari aur fasal ke liye label shuda ho, sirf label par likhi miqdar ke mutabiq.",
+      ],
+      prevention: [
+        "Saaf, tasdeeq shuda beej aur jahan mumkin ho muzahim aqsaam lagayein.",
+        "Faslein badal badal kar lagayein aur mutasira baqiyat ko katai ke baad dafan karein.",
+        "Der se kasht aur zyada nitrogen se gurez karein.",
+      ],
+    },
+  },
+  "kb-wheat-smut": {
+    ur: {
+      cause: "یہ بیج سے پھیلنے والی پھپھوندی ہے (loose smut) جو پودے کے اندر بغیر نظر آئے بڑھتی ہے، پھر بالی نکلنے کے وقت پوری بالی کو کالے، پاؤڈر جیسے بیجوں میں بدل دیتی ہے۔ ایک متاثرہ بالی سے بیج اڑ کر کئی صحت مند پھولوں کو متاثر کر سکتے ہیں۔",
+      symptoms: [
+        "پوری بالی دانے کی بجائے کالے، پاؤڈر جیسے مادے میں بدل جاتی ہے",
+        "متاثرہ بالیاں پہلے نکلتی ہیں اور صحت مند بالیوں سے اوپر کھڑی ہوتی ہیں",
+        "کالے بیج ہوا میں اڑ جاتے ہیں اور خالی ڈنڈی رہ جاتی ہے",
+        "متاثرہ بالیوں پر کوئی دانہ نہیں بنتا",
+      ],
+      organicSolution: [
+        "کالا پاؤڈر اڑنے سے پہلے متاثرہ بالیاں ہٹا دیں اور ختم کر دیں — انہیں تھیلے میں ڈالیں، کھیت میں نہ جھٹکیں۔",
+        "صحت مند فصل سے صاف، تصدیق شدہ بیج استعمال کریں۔",
+        "متاثرہ کھیت کا دانہ بیج کے لیے نہ رکھیں۔",
+      ],
+      chemicalSolution: [
+        "Loose smut کے لیے لیبل شدہ بیج کی دوا (جیسے Carboxin یا Tebuconazole)، کاشت سے پہلے بیج پر لگائیں، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "پتوں پر اسپرے سے smut ٹھیک نہیں ہوتا — پھپھوندی پہلے سے پودے کے اندر ہے، اس لیے علاج بیج پر ہونا چاہیے۔",
+      ],
+      prevention: [
+        "ہمیشہ تصدیق شدہ، دوا لگا ہوا بیج لگائیں — یہ سب سے مؤثر علاج ہے۔",
+        "جیسے ہی متاثرہ بالیاں نظر آئیں انہیں ہٹا دیں، ہر موسم میں۔",
+        "فصلیں بدل بدل کر لگائیں اور متاثرہ کھیتوں سے بیج نہ بچائیں۔",
+        "بالی نکلنے کے وقت کھیت کا معائنہ کریں، جب smut آسانی سے نظر آتا ہے۔",
+      ],
+    },
+    roman: {
+      cause: "Ye beej se phailne wali phaphundi hai (loose smut) jo poday ke andar baghair nazar aaye barhti hai, phir baali nikalne ke waqt poori baali ko kaale, powder jaise beejon mein badal deti hai. Aik mutasira baali se beej ur kar kai sehatmand phoolon ko mutasir kar sakte hain.",
+      symptoms: [
+        "Poori baali dane ki bajaye kaale, powder jaise made mein badal jati hai",
+        "Mutasira baliyan pehle nikalti hain aur sehatmand baliyon se oopar khari hoti hain",
+        "Kaale beej hawa mein ur jate hain aur khaali dandi reh jati hai",
+        "Mutasira baliyon par koi dana nahi banta",
+      ],
+      organicSolution: [
+        "Kaala powder urne se pehle mutasira baliyan hata dein aur khatam kar dein — inhein thaile mein daalein, khet mein na jhatkein.",
+        "Sehatmand fasal se saaf, tasdeeq shuda beej istemal karein.",
+        "Mutasira khet ka dana beej ke liye na rakhein.",
+      ],
+      chemicalSolution: [
+        "Loose smut ke liye label shuda beej ki dawa (jaise Carboxin ya Tebuconazole), kasht se pehle beej par lagayein, sirf label par likhi miqdar ke mutabiq.",
+        "Patton par spray se smut theek nahi hota — phaphundi pehle se poday ke andar hai, is liye ilaaj beej par hona chahiye.",
+      ],
+      prevention: [
+        "Hamesha tasdeeq shuda, dawa laga hua beej lagayein — ye sab se moassar ilaaj hai.",
+        "Jaise hi mutasira baliyan nazar aayein inhein hata dein, har mausam mein.",
+        "Faslein badal badal kar lagayein aur mutasira kheton se beej na bachayein.",
+        "Baali nikalne ke waqt khet ka muaina karein, jab smut aasani se nazar aata hai.",
+      ],
+    },
+  },
+  "kb-wheat-stem-fly": {
+    ur: {
+      cause: "V23 ماڈل صرف یہ بتاتا ہے کہ گندم کے پودے پر stem fly کا نقصان ہے، اس کی صحیح وجہ نہیں بتاتا۔ گندم کے stem fly کا نقصان اکثر shoot fly کے کیڑوں (Atherigona اقسام) سے ہوتا ہے جو نوجوان تنوں میں سوراخ کرتے ہیں — لیکن علاج سے پہلے کیڑے کی تصدیق مقامی زرعی افسر سے کرانی چاہیے، کیونکہ ہر کیڑے کا علاج مختلف ہوتا ہے۔",
+      symptoms: [
+        "نوجوان پودے مرجھا جاتے ہیں اور درمیانی شاخ مر جاتی ہے (dead heart)، اور آسانی سے کھینچی جا سکتی ہے",
+        "سفید، خالی بالیاں جن سے کوئی دانہ نہیں بنتا",
+        "تنے کو چیرنے پر اندر چھوٹے کیڑے یا سرنگیں ملتی ہیں",
+      ],
+      organicSolution: [
+        "متاثرہ پودے ہٹا دیں اور ختم کر دیں تاکہ کیڑے نہ پھیلیں۔",
+        "تجویز کردہ وقت پر کاشت کریں — جلدی کاشت عام طور پر سب سے زیادہ حملے سے بچ جاتی ہے۔",
+        "صاف تصویر لیں اور نقصان والا تنا شناخت کے لیے مقامی زرعی افسر کو دکھائیں۔",
+      ],
+      chemicalSolution: [
+        "صحیح کیڑا معلوم ہونے تک کوئی مخصوص کیڑے مار دوا نہ لگائیں — غلط دوا پیسے کا ضیاع ہے اور فائدہ نہیں دے گی۔",
+        "کیڑا معلوم ہونے کے بعد صرف وہی دوا استعمال کریں جو اس کیڑے اور فصل کے لیے لیبل شدہ ہو، صرف لیبل پر لکھی مقدار کے مطابق۔",
+      ],
+      prevention: [
+        "تجویز کردہ وقت پر کاشت کریں اور صاف، صحت مند بیج استعمال کریں۔",
+        "خود رو گندم اور باقیات ہٹا دیں جو موسموں کے درمیان مکھی کو پناہ دیتی ہیں۔",
+        "کھاد متوازن رکھیں اور فصل کو مضبوطی سے بڑھنے دیں۔",
+      ],
+    },
+    roman: {
+      cause: "V23 model sirf ye batata hai ke gandum ke poday par stem fly ka nuqsan hai, is ki sahi wajah nahi batata. Gandum ke stem fly ka nuqsan aksar shoot fly ke keeron (Atherigona aqsaam) se hota hai jo naujawan tanon mein surakh karte hain — lekin ilaaj se pehle keere ki tasdeeq maqami zarae afsar se karani chahiye, kyun ke har keere ka ilaaj mukhtalif hota hai.",
+      symptoms: [
+        "Naujawan poday murjha jate hain aur darmiyani shaakh mar jati hai (dead heart), aur aasani se khainchi ja sakti hai",
+        "Safed, khaali baliyan jin se koi dana nahi banta",
+        "Tane ko cheerne par andar chhote keere ya surangein milti hain",
+      ],
+      organicSolution: [
+        "Mutasira poday hata dein aur khatam kar dein taake keere na phailain.",
+        "Tajweez kardah waqt par kasht karein — jaldi kasht aam tor par sab se zyada hamle se bach jati hai.",
+        "Saaf photo lein aur nuqsan wala tana shanakht ke liye maqami zarae afsar ko dikhayein.",
+      ],
+      chemicalSolution: [
+        "Sahi keera maloom hone tak koi makhsoos keere maar dawa na lagayein — ghalat dawa paise ka zaya hai aur faida nahi de gi.",
+        "Keera maloom hone ke baad sirf wohi dawa istemal karein jo is keere aur fasal ke liye label shuda ho, sirf label par likhi miqdar ke mutabiq.",
+      ],
+      prevention: [
+        "Tajweez kardah waqt par kasht karein aur saaf, sehatmand beej istemal karein.",
+        "Khud ro gandum aur baqiyat hata dein jo mausamon ke darmiyan makkhi ko panah deti hain.",
+        "Khaad mutawazan rakhein aur fasal ko mazbooti se barhne dein.",
+      ],
+    },
+  },
+  "kb-wheat-tan-spot": {
+    ur: {
+      cause: "یہ ایک پھپھوندی ہے جو گندم کی باقیات میں زندہ رہتی ہے اور گرم، نم موسم میں ہوا اور بارش کے چھینٹوں سے پھیلتی ہے۔ یہ پہلے پتوں پر حملہ کرتی ہے اور سب سے اوپر والے پتے تک پہنچ سکتی ہے، جہاں سب سے زیادہ پیداوار کا نقصان ہوتا ہے۔",
+      symptoms: [
+        "پتوں پر بھورے دھبے جن کے گرد پیلا حلقہ اور درمیان میں گہرا نقطہ ہوتا ہے",
+        "دھبے بڑھ کر مل جاتے ہیں اور پتے سرے سے مر جاتے ہیں",
+        "پرانے دھبوں کے درمیان چھوٹے کالے نقطے نظر آ سکتے ہیں",
+        "سب سے اوپر والے پتے پر شدید حملے سے دانے سکڑ جاتے ہیں",
+      ],
+      organicSolution: [
+        "زیادہ متاثرہ پتے ہٹا دیں اور کھیت میں نہ چھوڑیں۔",
+        "کٹائی کے بعد گندم کی باقیات کو دفن کریں یا ختم کر دیں تاکہ پھپھوندی زندہ نہ رہے۔",
+        "ہوا کی گزر بہتر کریں اور پانی دیتے وقت پتوں کو گیلا کرنے سے گریز کریں۔",
+      ],
+      chemicalSolution: [
+        "گندم کے tan spot کے لیے لیبل شدہ فنجیسائیڈ (جیسے Propiconazole، یا Azoxystrobin + Difenoconazole)، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "پہلے دھبے نظر آتے ہی اسپرے کریں اور سب سے اوپر والے پتے کو بچائیں — صرف لیبل کے مطابق دہرائیں۔",
+      ],
+      prevention: [
+        "گندم کو دوسری فصلوں کے ساتھ بدل بدل کر لگائیں اور باقیات کا انتظام کریں۔",
+        "مزاحم اقسام لگائیں اور دیر سے کاشت نہ کریں۔",
+        "پانی جڑوں میں دیں اور ہر ہفتے معائنہ کریں، خاص طور پر سب سے اوپر والے پتے کا۔",
+        "کٹائی کے بعد گرے ہوئے پتے اور خود رو گندم صاف کر دیں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye aik phaphundi hai jo gandum ki baqiyat mein zinda rehti hai aur garam, num mausam mein hawa aur barish ke chheenton se phailti hai. Ye pehle patton par hamla karti hai aur sab se oopar wale patte tak pahunch sakti hai, jahan sab se zyada paidawar ka nuqsan hota hai.",
+      symptoms: [
+        "Patton par bhoore dhabbe jin ke gird peela halqa aur darmiyan mein gehra nuqta hota hai",
+        "Dhabbe barh kar mil jate hain aur patte saray se mar jate hain",
+        "Purane dhabbon ke darmiyan chhote kaale nuqte nazar aa sakte hain",
+        "Sab se oopar wale patte par shadeed hamle se dane sikar jate hain",
+      ],
+      organicSolution: [
+        "Zyada mutasira patte hata dein aur khet mein na chhorein.",
+        "Katai ke baad gandum ki baqiyat ko dafan karein ya khatam kar dein taake phaphundi zinda na rahe.",
+        "Hawa ki guzar behtar karein aur paani dete waqt patton ko geela karne se gurez karein.",
+      ],
+      chemicalSolution: [
+        "Gandum ke tan spot ke liye label shuda fungicide (jaise Propiconazole, ya Azoxystrobin + Difenoconazole), sirf label par likhi miqdar ke mutabiq.",
+        "Pehle dhabbe nazar aate hi spray karein aur sab se oopar wale patte ko bachayein — sirf label ke mutabiq dohrayein.",
+      ],
+      prevention: [
+        "Gandum ko doosri faslon ke saath badal badal kar lagayein aur baqiyat ka intezam karein.",
+        "Muzahim aqsaam lagayein aur der se kasht na karein.",
+        "Paani jaron mein dein aur har hafte muaina karein, khaas tor par sab se oopar wale patte ka.",
+        "Katai ke baad giray hue patte aur khud ro gandum saaf kar dein.",
+      ],
+    },
+  },
 };

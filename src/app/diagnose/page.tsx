@@ -3,14 +3,19 @@
 import React, { useEffect } from "react";
 import { ScanFlow } from "../../components/diagnosis/ScanFlow";
 import { preloadTfjsModel } from "../../services/ai/predictionService";
+import { preloadVoices } from "../../lib/speak";
 import { useApp } from "../../context/AppContext";
 
 export default function DiagnosePage() {
   const { t } = useApp();
   // Preload the model as soon as this page opens, so it downloads
   // while the user picks a photo instead of only after they press Scan.
+  // Voices are preloaded here too, so the first Listen tap on the
+  // results page speaks immediately instead of waiting for the
+  // browser's voice list to load.
   useEffect(() => {
     preloadTfjsModel();
+    void preloadVoices();
   }, []);
   return (
     <div className="flex-1 w-full px-4 sm:px-8 py-8 md:py-14">

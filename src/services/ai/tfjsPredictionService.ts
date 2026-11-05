@@ -5,17 +5,32 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 // Vercel-only prediction: the model runs in the visitor's browser.
 // Model files live in public/model/ and are served by Vercel itself,
 // with the free jsDelivr CDN (which mirrors this GitHub repo) as the
-// first source and the local /model/ files as fallback:
+// fallback:
 //   model.json + group1-shard*.bin.b64 (base64 weights, see README)
 //   class_names.json, solutions.json (always local, they are tiny)
 // There is no external backend and no mock fallback. If the model files
 // are missing, the scan fails with an error instead of a fake result.
 //
+// IMPORTANT: the files in /model/ are ALWAYS fetched first, and the
+// CDN only second. The CDN mirrors the main branch, so on a preview
+// deployment (or any branch) it serves the MAIN branch's model — a
+// different model from the branch's own class list. Loading the
+// main-branch 9-class model with the 23-class list silently mapped
+// every rice photo to a cotton disease (the V1 model's "diseased
+// rice" output slot is the V2 list's "cotton bacterial blight").
+// Local-first keeps model and class list from the same deployment,
+// and the output-length check in loadModelData() now fails loudly
+// instead of mislabelling if they ever disagree again.
+//
 // Speed: three things together make scans feel fast.
 //  1. Preload: preloadTfjsModel() is called when the Diagnose page
 //     opens, so the model downloads while the user picks a photo,
 //     instead of only after they press Scan.
-//  2. CDN: weights come from jsDelivr's edge servers first.
+//  2. Same-origin first: the model files come from the deployment
+//     itself, and the split weight parts are fetched in parallel
+//     instead of one by one (the old sequential fetch kept the
+//     "Loading model in your browser..." screen up for minutes
+//     on a phone connection).
 //  3. Browser cache: after the first successful load, the decoded
 //     weights + model topology are stored in IndexedDB, so later
 //     visits skip the download entirely.
@@ -30,17 +45,35 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 const CDN_BASE =
   "https://cdn.jsdelivr.net/gh/Shahbaz4462/AgroSight-Crop-Disease-Prediction@main/public/model";
 const LOCAL_BASE = "/model";
-const CACHE_KEY = "v1";
+// Cache key MUST change whenever the model in public/model/ changes.
+// The old key "v1" still holds the 9-class model in returning
+// visitors' browsers; after the V2 model ships, that stale cache
+// would keep answering with the old model forever.
+const CACHE_KEY = "v2";
 
 const DISPLAY: Record<string, [string, string]> = {
   cotton_aphids: ["Cotton", "Aphids"],
   cotton_army_worm: ["Cotton", "Army Worm"],
+  cotton_bacterial_blight: ["Cotton", "Bacterial Blight"],
+  cotton_powdery_mildew: ["Cotton", "Powdery Mildew"],
+  cotton_target_spot: ["Cotton", "Target Spot"],
   diseased_rice: ["Rice", "Diseased"],
   healthy_cotton: ["Cotton", "Healthy"],
   healthy_rice: ["Rice", "Healthy"],
   healthy_wheat: ["Wheat", "Healthy"],
   wheat_aphid: ["Wheat", "Aphid"],
+  wheat_black_rust: ["Wheat", "Black Rust"],
+  wheat_blast: ["Wheat", "Blast"],
   wheat_brown_rust: ["Wheat", "Brown Rust"],
+  wheat_common_root_rot: ["Wheat", "Common Root Rot"],
+  wheat_fusarium_head_blight: ["Wheat", "Fusarium Head Blight"],
+  wheat_leaf_blight: ["Wheat", "Leaf Blight"],
+  wheat_mildew: ["Wheat", "Mildew"],
+  wheat_mite: ["Wheat", "Mite"],
+  wheat_septoria: ["Wheat", "Septoria"],
+  wheat_smut: ["Wheat", "Smut"],
+  wheat_stem_fly: ["Wheat", "Stem Fly"],
+  wheat_tan_spot: ["Wheat", "Tan Spot"],
   wheat_yellow_rust: ["Wheat", "Yellow Rust"],
 };
 
@@ -62,10 +95,13 @@ function base64ToArrayBuffer(b64: string): ArrayBuffer {
   return bytes.buffer;
 }
 
-// Fetch a model file from the CDN first, then from the local /model/
-// copy if the CDN fails. Returns null when neither has it.
+// Fetch a model file from the deployment's own /model/ copy first,
+// then from the CDN if the local copy fails. Local-first is required:
+// the CDN mirrors the main branch, so on any other branch it would
+// serve the main branch's model with this deployment's class list.
+// Returns null when neither has it.
 async function fetchModelText(relative: string): Promise<string | null> {
-  for (const base of [CDN_BASE, LOCAL_BASE]) {
+  for (const base of [LOCAL_BASE, CDN_BASE]) {
     try {
       const res = await fetch(`${base}/${relative}`);
       if (res.ok) return await res.text();
@@ -74,6 +110,24 @@ async function fetchModelText(relative: string): Promise<string | null> {
     }
   }
   return null;
+}
+
+// Fetch the split parts of one weight shard in parallel and join
+// them in order. Parts are ~500 KB each; fetching them one by one
+// kept the loading screen up for minutes on a phone connection.
+// At most 24 parts are looked for (a 4 MB shard is ~11 parts).
+async function fetchShardParts(file: string): Promise<string | null> {
+  const found = await Promise.all(
+    Array.from({ length: 24 }, (_, i) =>
+      fetchModelText(`${file}.b64.part${String(i).padStart(2, "0")}`)
+    )
+  );
+  const parts: string[] = [];
+  for (const part of found) {
+    if (part === null) break;
+    parts.push(part);
+  }
+  return parts.length > 0 ? parts.join("") : null;
 }
 
 type CachedModel = { modelJsonText: string; weightData: ArrayBuffer };
@@ -152,28 +206,21 @@ async function loadModelData() {
         const modelJsonText = await fetchModelText("model.json");
         if (!modelJsonText) throw new Error("Model file not found (model.json)");
         const modelJson = JSON.parse(modelJsonText) as ModelJson;
-        const buffers: ArrayBuffer[] = [];
-        for (const group of modelJson.weightsManifest) {
-          for (const file of group.paths) {
-            // Weights are base64 text. Large shards are split into
-            // ~500 KB parts because a single large push is rejected;
-            // try the single file first, then its parts in order.
-            let b64 = await fetchModelText(`${file}.b64`);
-            if (b64 === null) {
-              const parts: string[] = [];
-              for (let i = 0; ; i++) {
-                const part = await fetchModelText(
-                  `${file}.b64.part${String(i).padStart(2, "0")}`
-                );
-                if (part === null) break;
-                parts.push(part);
-              }
-              if (parts.length === 0) throw new Error(`Model weights not found for ${file}`);
-              b64 = parts.join("");
-            }
-            buffers.push(base64ToArrayBuffer(b64));
-          }
-        }
+        // Weights are base64 text. Large shards are split into
+        // ~500 KB parts because a single large push is rejected;
+        // try the single file first, then its parts (in parallel).
+        // All shard files are fetched at the same time as well.
+        const files = modelJson.weightsManifest.flatMap((g) => g.paths);
+        const b64s = await Promise.all(
+          files.map(async (file: string) => {
+            const single = await fetchModelText(`${file}.b64`);
+            if (single !== null) return single;
+            const joined = await fetchShardParts(file);
+            if (joined === null) throw new Error(`Model weights not found for ${file}`);
+            return joined;
+          })
+        );
+        const buffers: ArrayBuffer[] = b64s.map((b64) => base64ToArrayBuffer(b64));
         const total = buffers.reduce((n, b) => n + b.byteLength, 0);
         const weightData = new Uint8Array(total);
         let offset = 0;
@@ -194,6 +241,15 @@ async function loadModelData() {
     solutions = (await (await fetch("/model/solutions.json")).json()) as Record<string, Solution>;
   }
   const model = await modelPromise;
+  // Safety net: the model must output exactly one probability per
+  // class name. If a wrong-branch model ever loads again, fail loudly
+  // instead of naming the wrong crop — this once mapped rice to cotton.
+  const outputSize = (model.outputs?.[0]?.shape as number[] | undefined)?.[1];
+  if (outputSize !== undefined && outputSize !== classNames.length) {
+    throw new Error(
+      `Model mismatch: the model predicts ${outputSize} classes but the class list has ${classNames.length}.`
+    );
+  }
   return { model, classNames: classNames as string[], solutions: solutions as Record<string, Solution> };
 }
 

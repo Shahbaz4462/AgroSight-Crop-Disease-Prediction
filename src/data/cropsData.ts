@@ -1,9 +1,9 @@
 import { CropInfo } from "../types";
 
 // Crops in the guide.
-// Scannable (v1 model): wheat, cotton, rice — 9 classes.
+// Scannable (v2 model): wheat, cotton, rice — 23 classes.
 // Guide only: tomato, potato, mango, citrus, apple. Their disease
-// information is educational only; the v1 model does NOT scan them,
+// information is educational only; the v2 model does NOT scan them,
 // and the Crop guide must not offer a scan for them. They will become
 // scannable only in a future update when a model covers them.
 
@@ -28,7 +28,7 @@ export const CROPS_DATA: CropInfo[] = [
     category: "Cereal",
     iconName: "Wheat",
     description: "Core food security cereal crop in Pakistan; grown in Rabi season across irrigated and rainfed zones.",
-    commonDiseases: ["Brown Rust", "Yellow Rust", "Wheat Aphid", "Healthy"],
+    commonDiseases: ["Brown Rust", "Yellow Rust", "Black Rust", "Blast", "Common Root Rot", "Fusarium Head Blight", "Leaf Blight", "Mildew", "Mite", "Septoria", "Smut", "Stem Fly", "Tan Spot", "Wheat Aphid", "Healthy"],
     growthCycleDays: 140,
     optimalTemperature: "15°C - 24°C",
     waterRequirement: "Moderate",
@@ -41,7 +41,7 @@ export const CROPS_DATA: CropInfo[] = [
     category: "Cash Crop",
     iconName: "Flower",
     description: "Major cash crop known as 'white gold', central to textile industrial exports.",
-    commonDiseases: ["Cotton Aphids", "Army Worm", "Healthy"],
+    commonDiseases: ["Cotton Aphids", "Army Worm", "Bacterial Blight", "Powdery Mildew", "Target Spot", "Healthy"],
     growthCycleDays: 160,
     optimalTemperature: "26°C - 35°C",
     waterRequirement: "Moderate",

@@ -69,6 +69,53 @@ export const CHEMICALS_BY_CLASS: Record<string, Chemical[]> = {
     { name: "Acetamiprid", type: "Insecticide", detail: "Systemic insecticide labelled for wheat aphids. Use only at the dose on the product label." },
     { name: "Neem oil", type: "Organic", detail: "Plant-based oil for light aphid attacks. Spray the underside of leaves, preferably in the evening." },
   ],
+
+  cotton_bacterial_blight: [
+    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based bactericide labelled for cotton bacterial blight. Use only at the dose on the product label." },
+  ],
+  cotton_powdery_mildew: [
+    { name: "Sulphur", type: "Organic", detail: "Protective spray for powdery mildew. Do not spray in hot midday sun — it can scorch leaves. Use only at the dose on the product label." },
+    { name: "Hexaconazole", type: "Fungicide", detail: "Triazole fungicide labelled for powdery mildew. Use only at the dose on the product label." },
+  ],
+  cotton_target_spot: [
+    { name: "Azoxystrobin + Difenoconazole", type: "Fungicide", detail: "Combination fungicide labelled for target spot on cotton. Use only at the dose on the product label." },
+    { name: "Mancozeb", type: "Fungicide", detail: "Protective fungicide labelled for cotton leaf spots. Use only at the dose on the product label." },
+  ],
+  wheat_black_rust: [
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat black (stem) rust. Use only at the dose on the product label." },
+    { name: "Tebuconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat black (stem) rust. Use only at the dose on the product label." },
+  ],
+  wheat_common_root_rot: [
+    { name: "Tebuconazole", type: "Fungicide", detail: "Seed treatment for common root rot — applied to seed before sowing, not as a foliar spray. Use only at the dose on the product label." },
+    { name: "Carboxin + Thiram", type: "Fungicide", detail: "Seed treatment for root rot and seed-borne disease — applied to seed before sowing. Use only at the dose on the product label." },
+  ],
+  wheat_fusarium_head_blight: [
+    { name: "Prothioconazole + Tebuconazole", type: "Fungicide", detail: "Combination fungicide labelled for fusarium head blight. Spray at flowering/heading, as the label directs. Use only at the dose on the product label." },
+    { name: "Tebuconazole", type: "Fungicide", detail: "Triazole fungicide labelled for fusarium head blight. Spray at flowering/heading, as the label directs. Use only at the dose on the product label." },
+  ],
+  wheat_leaf_blight: [
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat leaf blight. Use only at the dose on the product label." },
+    { name: "Mancozeb", type: "Fungicide", detail: "Protective fungicide labelled for wheat leaf blight. Use only at the dose on the product label." },
+  ],
+  wheat_mildew: [
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat powdery mildew. Use only at the dose on the product label." },
+    { name: "Sulphur", type: "Organic", detail: "Protective spray for powdery mildew. Do not spray in hot midday sun — it can scorch leaves. Use only at the dose on the product label." },
+  ],
+  wheat_mite: [
+    { name: "Abamectin", type: "Insecticide", detail: "Miticide (acaricide) labelled for mites on wheat. Check the label lists wheat and mites before use. Use only at the dose on the product label." },
+    { name: "Neem oil", type: "Organic", detail: "Plant-based oil for light mite attacks. Spray the underside of leaves, preferably in the evening." },
+  ],
+  wheat_smut: [
+    { name: "Carboxin", type: "Fungicide", detail: "Seed treatment for loose smut — applied to seed before sowing, not as a foliar spray. Spraying leaves cannot cure smut. Use only at the dose on the product label." },
+    { name: "Tebuconazole", type: "Fungicide", detail: "Seed treatment for loose smut — applied to seed before sowing, not as a foliar spray. Use only at the dose on the product label." },
+  ],
+  wheat_tan_spot: [
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat tan spot. Use only at the dose on the product label." },
+    { name: "Azoxystrobin + Difenoconazole", type: "Fungicide", detail: "Combination fungicide labelled for wheat tan spot, for longer residual control. Use only at the dose on the product label." },
+  ],
+  // wheat_blast: intentionally absent — exact cause not identified by the model.
+  // wheat_septoria: intentionally absent — exact cause not identified by the model.
+  // wheat_stem_fly: intentionally absent — exact pest not identified by the model.
   // diseased_rice: intentionally absent — the disease is unspecified.
   // healthy_*: intentionally absent — no chemical is needed.
 };
@@ -84,6 +131,20 @@ export function classForDisplay(crop: string, disease: string): string | null {
     "wheat|brown rust": "wheat_brown_rust",
     "wheat|yellow rust": "wheat_yellow_rust",
     "wheat|aphid": "wheat_aphid",
+    "cotton|bacterial blight": "cotton_bacterial_blight",
+    "cotton|powdery mildew": "cotton_powdery_mildew",
+    "cotton|target spot": "cotton_target_spot",
+    "wheat|black rust": "wheat_black_rust",
+    "wheat|blast": "wheat_blast",
+    "wheat|common root rot": "wheat_common_root_rot",
+    "wheat|fusarium head blight": "wheat_fusarium_head_blight",
+    "wheat|leaf blight": "wheat_leaf_blight",
+    "wheat|mildew": "wheat_mildew",
+    "wheat|mite": "wheat_mite",
+    "wheat|septoria": "wheat_septoria",
+    "wheat|smut": "wheat_smut",
+    "wheat|stem fly": "wheat_stem_fly",
+    "wheat|tan spot": "wheat_tan_spot",
   };
   return map[key] ?? null;
 }

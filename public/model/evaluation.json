@@ -1,69 +1,153 @@
 {
   "cotton_aphids": {
-    "precision": 0.9698795180722891,
-    "recall": 0.9415204678362573,
-    "f1-score": 0.9554896142433235,
+    "precision": 0.7883008356545961,
+    "recall": 0.827485380116959,
+    "f1-score": 0.8074179743223966,
     "support": 342.0
   },
   "cotton_army_worm": {
-    "precision": 0.9605633802816902,
-    "recall": 0.9770773638968482,
-    "f1-score": 0.96875,
+    "precision": 0.930939226519337,
+    "recall": 0.9656160458452722,
+    "f1-score": 0.9479606188466948,
     "support": 349.0
   },
+  "cotton_bacterial_blight": {
+    "precision": 0.8664383561643836,
+    "recall": 0.7597597597597597,
+    "f1-score": 0.8096,
+    "support": 333.0
+  },
+  "cotton_powdery_mildew": {
+    "precision": 0.8727810650887574,
+    "recall": 0.8676470588235294,
+    "f1-score": 0.8702064896755162,
+    "support": 340.0
+  },
+  "cotton_target_spot": {
+    "precision": 0.8171091445427728,
+    "recall": 0.8318318318318318,
+    "f1-score": 0.8244047619047619,
+    "support": 333.0
+  },
   "diseased_rice": {
-    "precision": 0.7192982456140351,
-    "recall": 0.7884615384615384,
-    "f1-score": 0.7522935779816514,
+    "precision": 0.7894736842105263,
+    "recall": 0.8653846153846154,
+    "f1-score": 0.8256880733944955,
     "support": 52.0
   },
   "healthy_cotton": {
-    "precision": 0.9886363636363636,
-    "recall": 0.997134670487106,
-    "f1-score": 0.992867332382311,
+    "precision": 0.96045197740113,
+    "recall": 0.9742120343839542,
+    "f1-score": 0.9672830725462305,
     "support": 349.0
   },
   "healthy_rice": {
-    "precision": 0.75,
-    "recall": 0.8235294117647058,
-    "f1-score": 0.7850467289719626,
+    "precision": 0.86,
+    "recall": 0.8431372549019608,
+    "f1-score": 0.8514851485148515,
     "support": 51.0
   },
   "healthy_wheat": {
-    "precision": 0.93,
-    "recall": 0.8857142857142857,
-    "f1-score": 0.9073170731707317,
+    "precision": 0.8018018018018018,
+    "recall": 0.8476190476190476,
+    "f1-score": 0.8240740740740741,
     "support": 105.0
   },
   "wheat_aphid": {
-    "precision": 0.8863636363636364,
-    "recall": 0.8764044943820225,
-    "f1-score": 0.8813559322033898,
+    "precision": 0.7397260273972602,
+    "recall": 0.6067415730337079,
+    "f1-score": 0.6666666666666666,
     "support": 89.0
   },
+  "wheat_black_rust": {
+    "precision": 0.4745762711864407,
+    "recall": 0.6363636363636364,
+    "f1-score": 0.5436893203883495,
+    "support": 44.0
+  },
+  "wheat_blast": {
+    "precision": 0.6438356164383562,
+    "recall": 0.7966101694915254,
+    "f1-score": 0.7121212121212122,
+    "support": 59.0
+  },
   "wheat_brown_rust": {
-    "precision": 0.9145299145299145,
-    "recall": 0.8699186991869918,
-    "f1-score": 0.8916666666666667,
+    "precision": 0.8317757009345794,
+    "recall": 0.7235772357723578,
+    "f1-score": 0.7739130434782608,
     "support": 123.0
   },
+  "wheat_common_root_rot": {
+    "precision": 0.7142857142857143,
+    "recall": 0.7627118644067796,
+    "f1-score": 0.7377049180327869,
+    "support": 59.0
+  },
+  "wheat_fusarium_head_blight": {
+    "precision": 0.8194444444444444,
+    "recall": 0.9076923076923077,
+    "f1-score": 0.8613138686131386,
+    "support": 65.0
+  },
+  "wheat_leaf_blight": {
+    "precision": 0.5441176470588235,
+    "recall": 0.49333333333333335,
+    "f1-score": 0.5174825174825175,
+    "support": 75.0
+  },
+  "wheat_mildew": {
+    "precision": 0.8316831683168316,
+    "recall": 0.7368421052631579,
+    "f1-score": 0.7813953488372093,
+    "support": 114.0
+  },
+  "wheat_mite": {
+    "precision": 0.7215189873417721,
+    "recall": 0.7307692307692307,
+    "f1-score": 0.7261146496815286,
+    "support": 78.0
+  },
+  "wheat_septoria": {
+    "precision": 0.7619047619047619,
+    "recall": 0.8888888888888888,
+    "f1-score": 0.8205128205128205,
+    "support": 36.0
+  },
+  "wheat_smut": {
+    "precision": 0.6530612244897959,
+    "recall": 0.5925925925925926,
+    "f1-score": 0.6213592233009708,
+    "support": 54.0
+  },
+  "wheat_stem_fly": {
+    "precision": 0.8823529411764706,
+    "recall": 0.8333333333333334,
+    "f1-score": 0.8571428571428571,
+    "support": 18.0
+  },
+  "wheat_tan_spot": {
+    "precision": 0.3698630136986301,
+    "recall": 0.38028169014084506,
+    "f1-score": 0.375,
+    "support": 71.0
+  },
   "wheat_yellow_rust": {
-    "precision": 0.9496402877697842,
-    "recall": 0.9705882352941176,
-    "f1-score": 0.96,
+    "precision": 0.9416058394160584,
+    "recall": 0.9485294117647058,
+    "f1-score": 0.945054945054945,
     "support": 136.0
   },
-  "accuracy": 0.9423558897243107,
+  "accuracy": 0.8235114503816794,
   "macro avg": {
-    "precision": 0.896545705140857,
-    "recall": 0.9033721296693193,
-    "f1-score": 0.8994207695133372,
-    "support": 1596.0
+    "precision": 0.7659585847597065,
+    "recall": 0.7748243652831882,
+    "f1-score": 0.7681561567214037,
+    "support": 3275.0
   },
   "weighted avg": {
-    "precision": 0.9434822285966714,
-    "recall": 0.9423558897243107,
-    "f1-score": 0.9426582186430374,
-    "support": 1596.0
+    "precision": 0.8254582082255285,
+    "recall": 0.8235114503816794,
+    "f1-score": 0.8230877262933238,
+    "support": 3275.0
   }
 }
