@@ -11,6 +11,7 @@ const links = [
   { href: "/history", key: "nav_scans" },
   { href: "/crops", key: "nav_crops" },
   { href: "/insights", key: "nav_map" },
+  { href: "/weather", key: "nav_weather" },
   { href: "/about", key: "nav_about" },
 ];
 
