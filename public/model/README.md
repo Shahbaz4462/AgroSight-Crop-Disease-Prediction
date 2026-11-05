@@ -16,6 +16,19 @@ full unfreeze). Final test on 3,275 images: overall 82.35%. Wheat is
 73.2% — below the 80% per-crop gate, accepted by the owner for this
 branch; do not present wheat as 80%+ anywhere.
 
+## 2026-11-05 fix: model and class list must come from the same deployment
+
+The loader fetches `model.json` and the weights from this deployment's
+own `/model/` copy FIRST, and only falls back to the jsDelivr CDN
+(which mirrors the main branch). An earlier version fetched the CDN
+first, so a preview deployment loaded the main branch's 9-class model
+while using this branch's 23-class list — every rice photo was then
+reported as a cotton disease. The loader now also checks that the
+model's output size equals the class list length and fails loudly
+instead of mislabelling. The IndexedDB cache key is `v2`; change it
+whenever the model here changes, or returning visitors keep the old
+model cached.
+
 ## Why the weights are stored as base64
 
 The original shards (`group1-shard*.bin`) are binary files, and the

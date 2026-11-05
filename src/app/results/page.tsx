@@ -123,7 +123,7 @@ function ResultContent() {
 
   const pct = Math.round(result.confidence);
 
-  const listen = () => {
+  const listen = async () => {
     if (speaking) {
       stopSpeaking();
       setSpeaking(false);
@@ -132,10 +132,19 @@ function ResultContent() {
     // The spoken text is built in the selected language. In Urdu
     // and Roman Urdu mode the treatment is a short translated
     // summary, because the full treatment paragraphs are English.
+    // Wait for the voice list first: checking too early reports
+    // "no Urdu voice" even on phones that do have one.
+    await preloadVoices();
+    // If Urdu script is selected but this phone has no Urdu voice
+    // installed, an Urdu utterance stays silent. Speak the Roman
+    // Urdu text instead (clear English voice) and say why, rather
+    // than playing nothing at all.
+    const noUrduVoice = language === "ur" && !urduVoiceAvailable();
+    const speakLang = noUrduVoice ? "roman" : language;
     const className =
       result.topPredictions?.[0]?.className ?? classForDisplay(result.crop, result.disease);
     const text = spokenResult({
-      lang: language,
+      lang: speakLang,
       crop: result.crop,
       disease: result.disease,
       confidence: pct,
@@ -144,17 +153,10 @@ function ResultContent() {
       organic: result.organic_solution?.[0],
       chemical: result.chemical_solution?.[0],
     });
-    if (!speak(text, language, () => setSpeaking(false))) {
+    if (!speak(text, speakLang, () => setSpeaking(false))) {
       setVoiceNote(t("voice_unavailable"));
     } else {
-      // If the phone has no Urdu voice, the browser may still read
-      // with an English-sounding voice. Tell the user why, instead
-      // of silently sounding English.
-      if (language !== "en" && !urduVoiceAvailable()) {
-        setVoiceNote(t("voice_no_urdu"));
-      } else {
-        setVoiceNote("");
-      }
+      setVoiceNote(noUrduVoice ? t("voice_no_urdu") : "");
       setSpeaking(true);
     }
   };
