@@ -2,7 +2,7 @@ import * as tf from "@tensorflow/tfjs";
 import { PredictionResult, PredictionServiceInterface, ScanningStage } from "./types";
 import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 
-// Vercel-only prediction: the model runs in the visitor's browser.
+// Vercel-only prediction: the models run in the visitor's browser.
 // Model files live in public/model/ and are served by Vercel itself,
 // with the free jsDelivr CDN (which mirrors this GitHub repo) as the
 // fallback:
@@ -10,6 +10,13 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 //   class_names.json, solutions.json (always local, they are tiny)
 // There is no external backend and no mock fallback. If the model files
 // are missing, the scan fails with an error instead of a fake result.
+//
+// A second model lives in public/model/crop/: a dedicated 3-class
+// crop model (cotton / rice / wheat) trained only on real field
+// photos. Every scan runs it first; below 90% crop confidence the
+// answer is "not sure" with no crop named, and above it the disease
+// model's outputs are masked to the decided crop, so a cotton leaf
+// can never be answered with a wheat disease.
 //
 // IMPORTANT: the files in /model/ are ALWAYS fetched first, and the
 // CDN only second. The CDN mirrors the main branch, so on a preview
@@ -53,6 +60,26 @@ const LOCAL_BASE = "/model";
 // would keep answering with the old model forever.
 const CACHE_KEY = "v2";
 
+// Crop gate: a second, dedicated 3-class model (cotton / rice /
+// wheat) trained ONLY on real field photos, in public/model/crop/.
+// It runs first on every scan. The disease model below is then
+// masked to the decided crop, so a cotton leaf can never be
+// answered with a wheat disease. Measured on the 1,476-image
+// field-only test set: 99.59% crop accuracy, and 100% accuracy
+// among scans confident at the 90% gate. On the user's own 7
+// cotton field photos it called all 7 cotton (6 confident, 1
+// "not sure" at 87.9%) — the earlier lab-trained crop model had
+// called 6 of the same 7 wheat at 94-100% confidence.
+const CROP_LOCAL_BASE = "/model/crop";
+const CROP_CDN_BASE = `${CDN_BASE}/crop`;
+const CROP_CACHE_KEY = "crop-v1";
+const CROP_GATE = 90;
+const CROP_DISPLAY: Record<string, string> = {
+  cotton: "Cotton",
+  rice: "Rice",
+  wheat: "Wheat",
+};
+
 const DISPLAY: Record<string, [string, string]> = {
   cotton_aphids: ["Cotton", "Aphids"],
   cotton_army_worm: ["Cotton", "Army Worm"],
@@ -86,10 +113,6 @@ type Solution = {
   note?: string;
 };
 
-let modelPromise: Promise<tf.GraphModel> | null = null;
-let classNames: string[] | null = null;
-let solutions: Record<string, Solution> | null = null;
-
 function base64ToArrayBuffer(b64: string): ArrayBuffer {
   const binary = atob(b64.replace(/\s/g, ""));
   const bytes = new Uint8Array(binary.length);
@@ -97,13 +120,17 @@ function base64ToArrayBuffer(b64: string): ArrayBuffer {
   return bytes.buffer;
 }
 
-// Fetch a model file from the deployment's own /model/ copy first,
-// then from the CDN if the local copy fails. Local-first is required:
+// Fetch a model file from the deployment's own copy first, then
+// from the CDN if the local copy fails. Local-first is required:
 // the CDN mirrors the main branch, so on any other branch it would
 // serve the main branch's model with this deployment's class list.
 // Returns null when neither has it.
-async function fetchModelText(relative: string): Promise<string | null> {
-  for (const base of [LOCAL_BASE, CDN_BASE]) {
+async function fetchModelText(
+  relative: string,
+  localBase: string = LOCAL_BASE,
+  cdnBase: string = CDN_BASE
+): Promise<string | null> {
+  for (const base of [localBase, cdnBase]) {
     try {
       const res = await fetch(`${base}/${relative}`);
       if (res.ok) return await res.text();
@@ -118,10 +145,14 @@ async function fetchModelText(relative: string): Promise<string | null> {
 // them in order. Parts are ~500 KB each; fetching them one by one
 // kept the loading screen up for minutes on a phone connection.
 // At most 24 parts are looked for (a 4 MB shard is ~11 parts).
-async function fetchShardParts(file: string): Promise<string | null> {
+async function fetchShardParts(
+  file: string,
+  localBase: string = LOCAL_BASE,
+  cdnBase: string = CDN_BASE
+): Promise<string | null> {
   const found = await Promise.all(
     Array.from({ length: 24 }, (_, i) =>
-      fetchModelText(`${file}.b64.part${String(i).padStart(2, "0")}`)
+      fetchModelText(`${file}.b64.part${String(i).padStart(2, "0")}`, localBase, cdnBase)
     )
   );
   const parts: string[] = [];
@@ -150,13 +181,13 @@ function openModelCache(): Promise<IDBDatabase | null> {
   });
 }
 
-async function readModelCache(): Promise<CachedModel | null> {
+async function readModelCache(cacheKey: string): Promise<CachedModel | null> {
   const db = await openModelCache();
   if (!db) return null;
   return new Promise((resolve) => {
     try {
       const tx = db.transaction("artifacts", "readonly");
-      const req = tx.objectStore("artifacts").get(CACHE_KEY);
+      const req = tx.objectStore("artifacts").get(cacheKey);
       req.onsuccess = () => resolve((req.result as CachedModel) ?? null);
       req.onerror = () => resolve(null);
     } catch {
@@ -165,12 +196,12 @@ async function readModelCache(): Promise<CachedModel | null> {
   });
 }
 
-async function writeModelCache(entry: CachedModel): Promise<void> {
+async function writeModelCache(cacheKey: string, entry: CachedModel): Promise<void> {
   const db = await openModelCache();
   if (!db) return;
   try {
     const tx = db.transaction("artifacts", "readwrite");
-    tx.objectStore("artifacts").put(entry, CACHE_KEY);
+    tx.objectStore("artifacts").put(entry, cacheKey);
   } catch {
     // Cache failure must never break a scan.
   }
@@ -197,44 +228,55 @@ function artifactsFrom(modelJson: ModelJson, weightData: ArrayBuffer): tf.io.Mod
   } as tf.io.ModelArtifacts;
 }
 
+let modelPromise: Promise<tf.GraphModel> | null = null;
+let cropModelPromise: Promise<tf.GraphModel> | null = null;
+let classNames: string[] | null = null;
+let cropClassNames: string[] | null = null;
+let solutions: Record<string, Solution> | null = null;
+
+async function loadGraphModelArtifacts(
+  localBase: string,
+  cdnBase: string,
+  cacheKey: string
+): Promise<tf.io.ModelArtifacts> {
+  const cached = await readModelCache(cacheKey);
+  if (cached) {
+    return artifactsFrom(JSON.parse(cached.modelJsonText) as ModelJson, cached.weightData);
+  }
+  const modelJsonText = await fetchModelText("model.json", localBase, cdnBase);
+  if (!modelJsonText) throw new Error("Model file not found (model.json)");
+  const modelJson = JSON.parse(modelJsonText) as ModelJson;
+  // Weights are base64 text. Large shards are split into
+  // ~500 KB parts because a single large push is rejected;
+  // try the single file first, then its parts (in parallel).
+  // All shard files are fetched at the same time as well.
+  const files = modelJson.weightsManifest.flatMap((g) => g.paths);
+  const b64s = await Promise.all(
+    files.map(async (file: string) => {
+      const single = await fetchModelText(`${file}.b64`, localBase, cdnBase);
+      if (single !== null) return single;
+      const joined = await fetchShardParts(file, localBase, cdnBase);
+      if (joined === null) throw new Error(`Model weights not found for ${file}`);
+      return joined;
+    })
+  );
+  const buffers: ArrayBuffer[] = b64s.map((b64) => base64ToArrayBuffer(b64));
+  const total = buffers.reduce((n, b) => n + b.byteLength, 0);
+  const weightData = new Uint8Array(total);
+  let offset = 0;
+  for (const b of buffers) {
+    weightData.set(new Uint8Array(b), offset);
+    offset += b.byteLength;
+  }
+  await writeModelCache(cacheKey, { modelJsonText, weightData: weightData.buffer });
+  return artifactsFrom(modelJson, weightData.buffer);
+}
+
 async function loadModelData() {
   if (!modelPromise) {
-    const handler: tf.io.IOHandler = {
-      load: async () => {
-        const cached = await readModelCache();
-        if (cached) {
-          return artifactsFrom(JSON.parse(cached.modelJsonText) as ModelJson, cached.weightData);
-        }
-        const modelJsonText = await fetchModelText("model.json");
-        if (!modelJsonText) throw new Error("Model file not found (model.json)");
-        const modelJson = JSON.parse(modelJsonText) as ModelJson;
-        // Weights are base64 text. Large shards are split into
-        // ~500 KB parts because a single large push is rejected;
-        // try the single file first, then its parts (in parallel).
-        // All shard files are fetched at the same time as well.
-        const files = modelJson.weightsManifest.flatMap((g) => g.paths);
-        const b64s = await Promise.all(
-          files.map(async (file: string) => {
-            const single = await fetchModelText(`${file}.b64`);
-            if (single !== null) return single;
-            const joined = await fetchShardParts(file);
-            if (joined === null) throw new Error(`Model weights not found for ${file}`);
-            return joined;
-          })
-        );
-        const buffers: ArrayBuffer[] = b64s.map((b64) => base64ToArrayBuffer(b64));
-        const total = buffers.reduce((n, b) => n + b.byteLength, 0);
-        const weightData = new Uint8Array(total);
-        let offset = 0;
-        for (const b of buffers) {
-          weightData.set(new Uint8Array(b), offset);
-          offset += b.byteLength;
-        }
-        await writeModelCache({ modelJsonText, weightData: weightData.buffer });
-        return artifactsFrom(modelJson, weightData.buffer);
-      },
-    };
-    modelPromise = tf.loadGraphModel(handler);
+    modelPromise = tf.loadGraphModel({
+      load: () => loadGraphModelArtifacts(LOCAL_BASE, CDN_BASE, CACHE_KEY),
+    });
   }
   if (!classNames) {
     classNames = (await (await fetch("/model/class_names.json")).json()) as string[];
@@ -253,6 +295,25 @@ async function loadModelData() {
     );
   }
   return { model, classNames: classNames as string[], solutions: solutions as Record<string, Solution> };
+}
+
+async function loadCropModelData() {
+  if (!cropModelPromise) {
+    cropModelPromise = tf.loadGraphModel({
+      load: () => loadGraphModelArtifacts(CROP_LOCAL_BASE, CROP_CDN_BASE, CROP_CACHE_KEY),
+    });
+  }
+  if (!cropClassNames) {
+    cropClassNames = (await (await fetch("/model/crop/crop_class_names.json")).json()) as string[];
+  }
+  const model = await cropModelPromise;
+  const outputSize = (model.outputs?.[0]?.shape as number[] | undefined)?.[1];
+  if (outputSize !== undefined && outputSize !== cropClassNames.length) {
+    throw new Error(
+      `Crop model mismatch: the model predicts ${outputSize} crops but the class list has ${cropClassNames.length}.`
+    );
+  }
+  return { model, classNames: cropClassNames as string[] };
 }
 
 function blobToImage(blob: Blob): Promise<HTMLImageElement> {
@@ -297,6 +358,7 @@ export class TfjsPredictionService implements PredictionServiceInterface {
   ): Promise<PredictionResult> {
     onProgress?.({ stage: "stage_loading", progress: 20, detail: "stage_loading_detail" });
     const { model, classNames: names, solutions: sols } = await loadModelData();
+    const { model: cropModel, classNames: cropNames } = await loadCropModelData();
     onProgress?.({ stage: "stage_checking", progress: 70, detail: "stage_checking_detail" });
 
     const blob = await resolveToBlob(image);
@@ -310,12 +372,51 @@ export class TfjsPredictionService implements PredictionServiceInterface {
       return resized.div(127.5).sub(1).expandDims(0);
     });
 
+    // Crop gate first: the field-only crop model decides cotton /
+    // rice / wheat. Below 90% it is "not sure" — no crop is named
+    // and the disease model never runs, so a wrong-crop guess can
+    // never reach the farmer as a confident answer.
+    const cropOutput = cropModel.execute(input) as tf.Tensor;
+    const cropProbs = (await cropOutput.data()) as Float32Array;
+    tf.dispose(cropOutput);
+    const cropOrder = Array.from(cropProbs)
+      .map((p, i) => ({ i, p }))
+      .sort((a, b) => b.p - a.p);
+    const decidedCrop = cropNames[cropOrder[0].i];
+    const cropConfidence = cropProbs[cropOrder[0].i] * 100;
+    if (cropConfidence < CROP_GATE) {
+      tf.dispose(input);
+      onProgress?.({ stage: "stage_done", progress: 100, detail: "stage_done_detail" });
+      return {
+        id: `pred-${Date.now()}`,
+        crop: CROP_DISPLAY[decidedCrop] ?? decidedCrop,
+        disease: "",
+        confidence: Math.round(cropConfidence * 100) / 100,
+        status: "uncertain",
+        topPredictions: [],
+        organic_solution: [],
+        chemical_solution: [],
+        prevention: [],
+        message:
+          "The model is not sure enough about this photo, so no crop or disease is named as a confident answer. Take a closer, well-lit photo of a single leaf.",
+        timestamp: new Date().toISOString(),
+      };
+    }
+
     const output = model.execute(input) as tf.Tensor;
     const probs = (await output.data()) as Float32Array;
     tf.dispose([input, output]);
 
+    // Mask the disease outputs to the decided crop: only classes
+    // of that crop keep their probability, the rest become 0, so
+    // the answer can never name another crop's disease. The
+    // confidence stays the raw softmax probability of the best
+    // in-crop class — if the disease model was confident about
+    // the wrong crop, the masked best is low and the scan turns
+    // uncertain instead of confidently naming a wrong disease.
+    const decidedDisplay = CROP_DISPLAY[decidedCrop];
     const order = Array.from(probs)
-      .map((p, i) => ({ i, p }))
+      .map((p, i) => ({ i, p: DISPLAY[names[i]]?.[0] === decidedDisplay ? p : 0 }))
       .sort((a, b) => b.p - a.p);
     const best = order[0].i;
     const label = names[best];
@@ -365,12 +466,12 @@ export class TfjsPredictionService implements PredictionServiceInterface {
 
 export const tfjsPredictionService = new TfjsPredictionService();
 
-// Start loading the model in the background (Diagnose page mount).
+// Start loading both models in the background (Diagnose page mount).
 // Failures are ignored here on purpose: a real scan will retry and
-// show its normal error if the model still cannot load.
+// show its normal error if a model still cannot load.
 export async function preloadTfjsModel(): Promise<void> {
   try {
-    await loadModelData();
+    await Promise.all([loadModelData(), loadCropModelData()]);
   } catch {
     // The scan itself will surface any load failure.
   }
