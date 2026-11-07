@@ -106,10 +106,18 @@ export const LiveCamera: React.FC<Props> = ({ onCapture, onGallery }) => {
     const v = videoRef.current;
     if (!v || !v.videoWidth || firedRef.current) return;
     firedRef.current = true;
+    // Capture only the centre square the farmer framed (the same
+    // 80% region the quality loop analyses and the corner brackets
+    // show). The full frame makes the leaf small in the analysed
+    // photo, which is a big source of "not sure" on live scans;
+    // the framed square is what the farmer meant to scan.
+    const side = Math.min(v.videoWidth, v.videoHeight) * 0.8;
+    const sx = (v.videoWidth - side) / 2;
+    const sy = (v.videoHeight - side) / 2;
     const c = document.createElement("canvas");
-    c.width = v.videoWidth;
-    c.height = v.videoHeight;
-    c.getContext("2d")?.drawImage(v, 0, 0, c.width, c.height);
+    c.width = side;
+    c.height = side;
+    c.getContext("2d")?.drawImage(v, sx, sy, side, side, 0, 0, side, side);
     setFlash(true);
     c.toBlob(
       (blob) => {

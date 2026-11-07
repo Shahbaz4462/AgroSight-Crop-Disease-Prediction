@@ -31,9 +31,12 @@ class UnifiedPredictionService implements PredictionServiceInterface {
 
   public async predictLeafWithProgress(
     image: File | Blob | string,
-    onProgress?: (stage: ScanningStage) => void
+    onProgress?: (stage: ScanningStage) => void,
+    // Crop the farmer picked before scanning, or null/undefined for
+    // Auto-detect. Passed straight through to the TFJS service.
+    selectedCrop?: string | null
   ): Promise<PredictionResult> {
-    return await this.tfjsService.predictLeafWithProgress(image, onProgress);
+    return await this.tfjsService.predictLeafWithProgress(image, onProgress, selectedCrop);
   }
 
   public cancelPrediction(): void {
