@@ -15,26 +15,39 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 // any step can answer "not sure" instead of guessing:
 //   1. Leaf gate (public/model/leaf/): a 2-class model (leaf /
 //      no_leaf) trained on real field photos plus soil, wall and
-//      wide-field negatives. Below 90% leaf confidence the answer
+//      wide-field negatives. Below 80% leaf confidence the answer
 //      is "not sure" and the crop/disease models never run, so a
 //      photo of soil, a wall or a hand can never be answered with
 //      a crop or a disease. Measured on the 216-photo acceptance
-//      set: with the 90% gate, no photo is confidently wrong —
-//      the errors all fall below the gate and become "not sure"
-//      instead. The gate is the safety: the model itself is
-//      89.8% accurate on its held-out test set, so about 30% of
-//      real leaf photos also land below the gate and are answered
-//      "not sure" rather than risked.
-//   2. Crop gate (public/model/crop/): a dedicated 3-class model
-//      (cotton / rice / wheat) trained only on real field photos.
-//      Below 90% crop confidence the answer is "not sure" with no
-//      crop named, and the disease model never runs. Measured on
-//      the 180-photo field acceptance set: the chosen model makes
-//      about half as many confident crop errors as the previous
-//      field-only crop model. Healthy wheat and healthy rice leaves
-//      look near-identical (long narrow grassy blades with no
-//      disease symptoms), so some wheat field photos are still
-//      answered "not sure" rather than risked.
+//      set: at the 80% gate, 0/36 non-leaf photos pass, so no
+//      photo is confidently wrong — the errors all fall below the
+//      gate and become "not sure" instead. The gate is the safety:
+//      the model itself is 89.8% accurate on its held-out test
+//      set, so about a quarter of real leaf photos still land
+//      below the gate and are answered "not sure" rather than
+//      risked. (The gate was 90% until 2026-11-07; see LEAF_GATE
+//      for the measured reason it was lowered to 80%.)
+//   2. Crop: the farmer picks the crop before scanning (wheat /
+//      cotton / rice, or Auto-detect). When a crop is picked, the
+//      crop gate below runs only as a disagree check: if it is
+//      90%+ confident the photo is a DIFFERENT crop, the scan
+//      answers "not sure" with a message to check the crop, so a
+//      wrongly picked crop can never produce a confident disease
+//      answer. Otherwise the picked crop is trusted and its
+//      disease model runs directly. Measured on the 180-photo
+//      field acceptance set, asking the farmer removes the crop
+//      gate as a source of "not sure" (38.9% of field photos fell
+//      below the 90% crop gate) and cuts the pipeline "not sure"
+//      rate from 53.9% to 31.1%. The disagree check wrongly fires
+//      on 6.1% of correctly picked crops (mostly healthy wheat
+//      the crop model confidently calls rice). With Auto-detect
+//      the old behaviour applies: the crop gate decides, and
+//      below 90% the answer is "not sure" with no crop named.
+//      The crop gate is a dedicated 3-class model (cotton / rice
+//      / wheat) trained only on real field photos. Healthy wheat
+//      and healthy rice leaves look near-identical (long narrow
+//      grassy blades with no disease symptoms), which is why the
+//      gate alone could not be trusted for the crop decision.
 //   3. Disease (public/model/rice|cotton|wheat/): one model per
 //      crop, run only for the decided crop, so a cotton leaf can
 //      never be answered with a wheat disease. Wheat 95.2%,
@@ -80,12 +93,21 @@ const CDN_BASE =
   "https://cdn.jsdelivr.net/gh/Shahbaz4462/AgroSight-Crop-Disease-Prediction@main/public/model";
 
 // Leaf gate: a 2-class model (leaf / no_leaf) in public/model/leaf/.
-// Runs first on every scan. Below 90% leaf confidence the answer is
+// Runs first on every scan. Below 80% leaf confidence the answer is
 // "not sure" — no crop is named and the crop/disease models never run.
+// The gate was 90% until 2026-11-07; it was lowered to 80% because
+// live scans answered "not sure" too often. Measured on the 216-photo
+// field acceptance set: at 80%, 136/180 real leaf photos pass (vs
+// 124/180 at 90%) and still 0/36 non-leaf photos pass, so no new
+// confidently-wrong answers on field photos. On the 3,211-image
+// held-out test set the cost is 24 non-leaf photos passing (1.6%)
+// vs 7 (0.5%) at 90% — the crop gate below is a second net for
+// those, and the leaf-gate v5 retrain is meant to close the gap
+// properly.
 const LEAF_LOCAL_BASE = "/model/leaf";
 const LEAF_CDN_BASE = `${CDN_BASE}/leaf`;
 const LEAF_CACHE_KEY = "leaf-v4";
-const LEAF_GATE = 90;
+const LEAF_GATE = 80;
 
 // Crop gate: a dedicated 3-class model (cotton / rice / wheat)
 // trained ONLY on real field photos, in public/model/crop/.
@@ -425,7 +447,11 @@ export class TfjsPredictionService implements PredictionServiceInterface {
 
   public async predictLeafWithProgress(
     image: File | Blob | string,
-    onProgress?: (stage: ScanningStage) => void
+    onProgress?: (stage: ScanningStage) => void,
+    // Crop the farmer picked before scanning ("wheat" | "cotton" |
+    // "rice"), or null/undefined for Auto-detect (the crop gate
+    // decides). See step 2 below for what the pick changes.
+    selectedCrop?: string | null
   ): Promise<PredictionResult> {
     onProgress?.({ stage: "stage_loading", progress: 20, detail: "stage_loading_detail" });
     const { model: leafModel, classNames: leafNames } = await loadLeafModelData();
@@ -444,7 +470,7 @@ export class TfjsPredictionService implements PredictionServiceInterface {
     });
 
     // Step 1 — leaf gate: does this photo show a leaf at all? Below
-    // 90% leaf confidence it is "not sure" — no crop is named and
+    // 80% leaf confidence it is "not sure" — no crop is named and
     // the crop/disease models never run, so a photo of soil, a wall
     // or a hand can never be answered with a crop or a disease.
     const leafOutput = leafModel.execute(input) as tf.Tensor;
@@ -471,35 +497,64 @@ export class TfjsPredictionService implements PredictionServiceInterface {
       };
     }
 
-    // Step 2 — crop gate: the field-only crop model decides cotton /
-    // rice / wheat. Below 90% it is "not sure" — no crop is named
-    // and the disease model never runs, so a wrong-crop guess can
-    // never reach the farmer as a confident answer.
+    // Step 2 — crop. When the farmer picked a crop before scanning,
+    // the crop gate runs only as a disagree check: if it is 90%+
+    // confident the photo is a DIFFERENT crop, the pick was almost
+    // certainly wrong, so the answer is "not sure" with a message
+    // to check the crop — a wrongly picked crop can never produce
+    // a confident disease answer. Otherwise the picked crop is
+    // trusted (the farmer knows their own field) and its disease
+    // model runs directly. With no pick (Auto-detect) the crop
+    // gate decides as before, and below 90% the answer is "not
+    // sure" with no crop named.
     const cropOutput = cropModel.execute(input) as tf.Tensor;
     const cropProbs = (await cropOutput.data()) as Float32Array;
     tf.dispose(cropOutput);
     const cropOrder = Array.from(cropProbs)
       .map((p, i) => ({ i, p }))
       .sort((a, b) => b.p - a.p);
-    const decidedCrop = cropNames[cropOrder[0].i];
+    const modelCrop = cropNames[cropOrder[0].i];
     const cropConfidence = cropProbs[cropOrder[0].i] * 100;
-    if (cropConfidence < CROP_GATE) {
-      tf.dispose(input);
-      onProgress?.({ stage: "stage_done", progress: 100, detail: "stage_done_detail" });
-      return {
-        id: `pred-${Date.now()}`,
-        crop: CROP_DISPLAY[decidedCrop] ?? decidedCrop,
-        disease: "",
-        confidence: Math.round(cropConfidence * 100) / 100,
-        status: "uncertain",
-        topPredictions: [],
-        organic_solution: [],
-        chemical_solution: [],
-        prevention: [],
-        message:
-          "The model is not sure enough about this photo, so no crop or disease is named as a confident answer. Take a closer, well-lit photo of a single leaf.",
-        timestamp: new Date().toISOString(),
-      };
+    let decidedCrop: string;
+    if (selectedCrop) {
+      if (modelCrop !== selectedCrop && cropConfidence >= CROP_GATE) {
+        tf.dispose(input);
+        onProgress?.({ stage: "stage_done", progress: 100, detail: "stage_done_detail" });
+        return {
+          id: `pred-${Date.now()}`,
+          crop: CROP_DISPLAY[selectedCrop] ?? selectedCrop,
+          disease: "",
+          confidence: Math.round(cropConfidence * 100) / 100,
+          status: "uncertain",
+          topPredictions: [],
+          organic_solution: [],
+          chemical_solution: [],
+          prevention: [],
+          message: `You selected ${CROP_DISPLAY[selectedCrop] ?? selectedCrop}, but this photo looks like ${CROP_DISPLAY[modelCrop] ?? modelCrop}. Please check the crop and scan again.`,
+          timestamp: new Date().toISOString(),
+        };
+      }
+      decidedCrop = selectedCrop;
+    } else {
+      if (cropConfidence < CROP_GATE) {
+        tf.dispose(input);
+        onProgress?.({ stage: "stage_done", progress: 100, detail: "stage_done_detail" });
+        return {
+          id: `pred-${Date.now()}`,
+          crop: CROP_DISPLAY[modelCrop] ?? modelCrop,
+          disease: "",
+          confidence: Math.round(cropConfidence * 100) / 100,
+          status: "uncertain",
+          topPredictions: [],
+          organic_solution: [],
+          chemical_solution: [],
+          prevention: [],
+          message:
+            "The model is not sure enough about this photo, so no crop or disease is named as a confident answer. Take a closer, well-lit photo of a single leaf.",
+          timestamp: new Date().toISOString(),
+        };
+      }
+      decidedCrop = modelCrop;
     }
 
     // Step 3 — disease: the decided crop's own model. It only knows
