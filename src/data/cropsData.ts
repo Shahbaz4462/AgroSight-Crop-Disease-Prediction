@@ -1,7 +1,8 @@
 import { CropInfo } from "../types";
 
 // Crops in the guide.
-// Scannable (v2 model): wheat, cotton, rice — 23 classes.
+// Scannable (new per-crop models): wheat, cotton, rice — 15 classes
+// (wheat 4, cotton 4, rice 7).
 // Guide only: tomato, potato, mango, citrus, apple. Their disease
 // information is educational only; the v2 model does NOT scan them,
 // and the Crop guide must not offer a scan for them. They will become
@@ -15,7 +16,7 @@ export const CROPS_DATA: CropInfo[] = [
     category: "Cereal",
     iconName: "Wheat",
     description: "Primary staple crop cultivated extensively across Punjab and Sindh flood plains.",
-    commonDiseases: ["Diseased", "Healthy"],
+    commonDiseases: ["Bacterial Leaf Blight", "Blast", "Brown Spot", "Leaf Scald", "Sheath Blight", "Tungro", "Healthy"],
     growthCycleDays: 120,
     optimalTemperature: "22°C - 32°C",
     waterRequirement: "High",
@@ -28,7 +29,7 @@ export const CROPS_DATA: CropInfo[] = [
     category: "Cereal",
     iconName: "Wheat",
     description: "Core food security cereal crop in Pakistan; grown in Rabi season across irrigated and rainfed zones.",
-    commonDiseases: ["Brown Rust", "Yellow Rust", "Black Rust", "Blast", "Common Root Rot", "Fusarium Head Blight", "Leaf Blight", "Mildew", "Mite", "Septoria", "Smut", "Stem Fly", "Tan Spot", "Wheat Aphid", "Healthy"],
+    commonDiseases: ["Brown Rust", "Yellow Rust", "Septoria", "Healthy"],
     growthCycleDays: 140,
     optimalTemperature: "15°C - 24°C",
     waterRequirement: "Moderate",
@@ -41,7 +42,7 @@ export const CROPS_DATA: CropInfo[] = [
     category: "Cash Crop",
     iconName: "Flower",
     description: "Major cash crop known as 'white gold', central to textile industrial exports.",
-    commonDiseases: ["Cotton Aphids", "Army Worm", "Bacterial Blight", "Powdery Mildew", "Target Spot", "Healthy"],
+    commonDiseases: ["Bacterial Blight", "Leaf Curl Virus", "Fusarium Wilt", "Healthy"],
     growthCycleDays: 160,
     optimalTemperature: "26°C - 35°C",
     waterRequirement: "Moderate",

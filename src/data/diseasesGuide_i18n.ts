@@ -264,52 +264,6 @@ export const GUIDE_TRANSLATIONS: Record<string, Record<GuideLang, GuideTranslati
       ],
     },
   },
-  "kb-rice-diseased": {
-    ur: {
-      cause: "v1 ماڈل صرف یہ بتاتا ہے کہ چاول کا پتہ بیمار ہے، یہ نہیں بتاتا کہ کون سی بیماری ہے۔ وجہ پھپھوندی، بیکٹیریا، وائرس یا غذائی کمی بھی ہو سکتی ہے، اور ہر ایک کا علاج الگ ہے۔",
-      symptoms: [
-        "پتوں پر داغ، پیلا پن، مرجھانا یا خشک ہونا جو صحت مند پتے سے میل نہیں کھاتا",
-        "علامات کا ایک پتے یا پودے سے پڑوسی پودوں تک پھیلنا",
-        "اسی کھیت کے صحت مند پودوں کے مقابلے میں کمزور نشوونما",
-      ],
-      organicSolution: [
-        "متاثرہ پتے اتار دیں اور بیمار مواد کھیت میں نہ گلائیں۔",
-        "نکاسی اور ہوا کی آمدورفت بہتر کریں، اور جہاں ممکن ہو پانی کھڑا نہ ہونے دیں۔",
-        "ایک پتے کی صاف تصویر لیں اور شناخت کے لیے مقامی زرعی افسر کو دکھائیں۔",
-      ],
-      chemicalSolution: [
-        "جب تک بیماری کی درست شناخت نہ ہو جائے، کوئی خاص fungicide یا bactericide نہ لگائیں — غلط دوا پیسے کا ضیاع ہے اور فائدہ نہیں دے گی۔",
-        "شناخت کے بعد صرف اس بیماری اور فصل کے لیے منظور شدہ دوا استعمال کریں، لیبل پر لکھی مقدار کے مطابق۔",
-      ],
-      prevention: [
-        "صاف، منظور شدہ بیج اور جہاں دستیاب ہو، مزاحمتی اقسام استعمال کریں۔",
-        "کھاد متوازن رکھیں — زیادہ nitrogen سے چاول بیماریوں کا زیادہ شکار ہوتا ہے۔",
-        "فصلیں بدل بدل کر لگائیں اور کھیتوں کے درمیان باڑیں اور اوزار صاف کریں۔",
-      ],
-    },
-    roman: {
-      cause: "v1 model sirf ye batata hai ke chawal ka patta beemar hai, ye nahi batata ke kaun si bimari hai. Wajah phaphundi, bacteria, virus ya ghizai kami bhi ho sakti hai, aur har aik ka ilaaj alag hai.",
-      symptoms: [
-        "Patton par daagh, peela pan, murjhana ya khushk hona jo sehatmand patte se mail nahi khata",
-        "Alamat ka aik patte ya poday se parosi podon tak phailna",
-        "Isi khet ke sehatmand podon ke muqable mein kamzor nashonuma",
-      ],
-      organicSolution: [
-        "Mutasira patte utaar dein aur beemar mawaad khet mein na galayein.",
-        "Nikasi aur hawa ki aamad o raft behtar karein, aur jahan mumkin ho pani khara na hone dein.",
-        "Aik patte ki saaf photo lein aur shanakht ke liye maqami zarae afsar ko dikhayein.",
-      ],
-      chemicalSolution: [
-        "Jab tak bimari ki durust shanakht na ho jaye, koi khaas fungicide ya bactericide na lagayein — ghalat dawa paise ka ziya hai aur faida nahi de gi.",
-        "Shanakht ke baad sirf is bimari aur fasal ke liye manzoor shuda dawa istemal karein, label par likhi miqdar ke mutabiq.",
-      ],
-      prevention: [
-        "Saaf, manzoor shuda beej aur jahan dastiyab ho, muzahimti aqsaam istemal karein.",
-        "Khaad mutawazan rakhein — zyada nitrogen se chawal bimariyon ka zyada shikar hota hai.",
-        "Faslein badal badal kar lagayein aur kheton ke darmiyan baarein aur auzaar saaf karein.",
-      ],
-    },
-  },
   "kb-healthy-wheat": {
     ur: {
       cause: "کوئی بیماری یا کیڑا نہیں ملا۔ پتہ عام طور پر بڑھ رہا ہے۔",
@@ -1342,6 +1296,409 @@ export const GUIDE_TRANSLATIONS: Record<string, Record<GuideLang, GuideTranslati
         "Muzahim aqsaam lagayein aur der se kasht na karein.",
         "Paani jaron mein dein aur har hafte muaina karein, khaas tor par sab se oopar wale patte ka.",
         "Katai ke baad giray hue patte aur khud ro gandum saaf kar dein.",
+      ],
+    },
+  },  "kb-rice-bacterial-blight": {
+    ur: {
+      cause: "یہ بیکٹیریا کی بیماری ہے جو بارش اور آبپاشی کے پانی سے پھیلتی ہے۔ بیکٹیریا پتوں کے زخموں اور مساموں سے داخل ہوتا ہے اور متاثرہ بیج، بھوسے اور کھونٹوں میں زندہ رہتا ہے۔",
+      symptoms: [
+        "پتوں کی نوک اور کناروں سے پانی بھرے پیلے دھبے شروع ہوتے ہیں",
+        "بیماری بڑھنے پر دھبے سرمئی سبز سے بھوسے کے رنگ کے ہو جاتے ہیں",
+        "پتے نوک سے اندر کی طرف خشک ہونا شروع ہو جاتے ہیں",
+        "شدید حملے میں پورا گچھا مرجھا کر خشک ہو جاتا ہے",
+      ],
+      organicSolution: [
+        "متاثرہ پتے ہٹا دیں اور کھاد میں نہ ڈالیں۔",
+        "گیلے پودوں کے ساتھ کام نہ کریں۔",
+        "بیماری سے پاک بیج استعمال کریں۔",
+      ],
+      chemicalSolution: [
+        "چاول کی Bacterial Leaf Blight کے لیے لیبل شدہ Copper oxychloride، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "جہاں رجسٹرڈ ہو وہاں Streptocycline، صرف لیبل پر لکھی مقدار کے مطابق۔",
+      ],
+      prevention: [
+        "جہاں دستیاب ہو مدافعت رکھنے والی اقسام لگائیں۔",
+        "نائٹروجن زیادہ نہ ڈالیں۔",
+        "پانی کی نکاسی بہتر کریں اور فصلیں بدل بدل کر لگائیں۔",
+        "صاف اور بیماری سے پاک بیج استعمال کریں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye bacteria ki bimari hai jo barish aur aabpashi ke pani se phailti hai. Bacteria patton ke zakhmon aur masamon se dakhil hota hai aur mutasira beej, bhuse aur khonton mein zinda rehta hai.",
+      symptoms: [
+        "Patton ki nok aur kinaron se pani bhare peele dhabbe shuru hote hain",
+        "Bimari barhne par dhabbe surmayi sabz se bhuse ke rang ke ho jate hain",
+        "Patte nok se andar ki taraf khushk hona shuru ho jate hain",
+        "Shadeed hamle mein poora guchha murjha kar khushk ho jata hai",
+      ],
+      organicSolution: [
+        "Mutasira patte hata dein aur khaad mein na dalein.",
+        "Geele podon ke saath kaam na karein.",
+        "Bimari se pak beej istemal karein.",
+      ],
+      chemicalSolution: [
+        "Chawal ki Bacterial Leaf Blight ke liye label shuda Copper oxychloride, sirf label par likhi miqdar ke mutabiq.",
+        "Jahan registered ho wahan Streptocycline, sirf label par likhi miqdar ke mutabiq.",
+      ],
+      prevention: [
+        "Jahan dastiyab ho mudafiat rakhne wali aqsaam lagayein.",
+        "Nitrogen zyada na dalein.",
+        "Pani ki nikasi behtar karein aur faslein badal badal kar lagayein.",
+        "Saaf aur bimari se pak beej istemal karein.",
+      ],
+    },
+  },
+  "kb-rice-blast": {
+    ur: {
+      cause: "یہ پھپھوندی گرم اور نم موسم میں ہوا کے ذریعے پھیلنے والے بیجوں سے پھیلتی ہے۔ ایک ساتھ زیادہ نائٹروجن ڈالنے سے پودے زیادہ کمزور ہو جاتے ہیں۔",
+      symptoms: [
+        "سرمئی سفید مرکز اور بھورے کناروں والے ہیرے جیسے دھبے",
+        "دھبے مل جاتے ہیں اور پتہ مر جاتا ہے",
+        "گرہوں اور بالی کی گردن پر گہرے دھبے",
+        "شدید حملے میں دانے خالی رہ جاتے ہیں",
+      ],
+      organicSolution: [
+        "متاثرہ پتے ہٹا دیں اور کھیت میں نہ چھوڑیں۔",
+        "پانی دیتے وقت پتے گیلے نہ کریں۔",
+        "جہاں دستیاب ہو مدافعت رکھنے والی اقسام استعمال کریں۔",
+      ],
+      chemicalSolution: [
+        "چاول کی Blast کے لیے لیبل شدہ Tricyclazole یا Propiconazole، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "کاشت سے پہلے Tricyclazole یا Carbendazim سے بیج کا علاج کریں۔",
+      ],
+      prevention: [
+        "مدافعت رکھنے والی اقسام اور تصدیق شدہ بیج لگائیں۔",
+        "نائٹروجن ایک ساتھ نہیں بلکہ قسطوں میں ڈالیں۔",
+        "پانی جڑ کے پاس دیں اور متاثرہ بھوسہ صاف کریں۔",
+        "خاص طور پر نم موسم میں ہر ہفتے کھیت کا معائنہ کریں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye phaphundi garam aur num mausam mein hawa ke zariye phailne wale beejon se phailti hai. Aik saath zyada nitrogen dalne se poday zyada kamzor ho jate hain.",
+      symptoms: [
+        "Surmayi safed markaz aur bhure kinaron wale heere jaise dhabbe",
+        "Dhabbe mil jate hain aur patta mar jata hai",
+        "Girahon aur bali ki gardan par gehre dhabbe",
+        "Shadeed hamle mein dane khaali reh jate hain",
+      ],
+      organicSolution: [
+        "Mutasira patte hata dein aur khet mein na chhodein.",
+        "Pani dete waqt patte geele na karein.",
+        "Jahan dastiyab ho mudafiat rakhne wali aqsaam istemal karein.",
+      ],
+      chemicalSolution: [
+        "Chawal ki Blast ke liye label shuda Tricyclazole ya Propiconazole, sirf label par likhi miqdar ke mutabiq.",
+        "Kasht se pehle Tricyclazole ya Carbendazim se beej ka ilaaj karein.",
+      ],
+      prevention: [
+        "Mudafiat rakhne wali aqsaam aur tasdeeq shuda beej lagayein.",
+        "Nitrogen aik saath nahi balki qiston mein dalein.",
+        "Pani jar ke paas dein aur mutasira bhusa saaf karein.",
+        "Khaas taur par num mausam mein har hafte khet ka muaaina karein.",
+      ],
+    },
+  },
+  "kb-rice-brown-spot": {
+    ur: {
+      cause: "یہ بیج سے پھیلنے والی پھپھوندی ہے جو کمزور اور کم خوراک والے پودوں پر اور خشک، دباؤ والے کھیتوں میں پھلتی پھولتی ہے۔ یہ متاثرہ بیج اور بھوسے سے پھیلتی ہے۔",
+      symptoms: [
+        "پتوں پر تل کے دانے جتنے چھوٹے بھورے دھبے",
+        "دھبے بڑے ہو کر گہرے کناروں اور سرمئی مرکز والے بیضوی دھبے بن جاتے ہیں",
+        "دانوں اور بھوسے پر بھی دھبے نظر آتے ہیں",
+        "شدید حملے میں پتے خشک ہو جاتے ہیں",
+      ],
+      organicSolution: [
+        "متاثرہ پتے ہٹا دیں اور کھیت میں نہ چھوڑیں۔",
+        "کاشت سے پہلے بیج کو گرم پانی (53 سے 54 ڈگری، 10 سے 12 منٹ) میں بھگوئیں۔",
+        "پودوں کو اچھی خوراک دیں، خاص طور پر پوٹاش۔",
+      ],
+      chemicalSolution: [
+        "چاول کی Brown Spot کے لیے لیبل شدہ Propiconazole یا Azoxystrobin، صرف لیبل پر لکھی مقدار کے مطابق۔",
+      ],
+      prevention: [
+        "بیماری سے پاک بیج استعمال کریں۔",
+        "پودوں کو متوازن خوراک دیں، خاص طور پر پوٹاش۔",
+        "پانی کی نکاسی بہتر کریں۔",
+        "فصلیں بدل بدل کر لگائیں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye beej se phailne wali phaphundi hai jo kamzor aur kam khurak wale podon par aur khushk, dabao wale kheton mein phalti phoolti hai. Ye mutasira beej aur bhuse se phailti hai.",
+      symptoms: [
+        "Patton par til ke dane jitne chhote bhure dhabbe",
+        "Dhabbe bare ho kar gehre kinaron aur surmayi markaz wale bezvi dhabbe ban jate hain",
+        "Danon aur bhuse par bhi dhabbe nazar aate hain",
+        "Shadeed hamle mein patte khushk ho jate hain",
+      ],
+      organicSolution: [
+        "Mutasira patte hata dein aur khet mein na chhodein.",
+        "Kasht se pehle beej ko garam pani (53 se 54 degree, 10 se 12 minute) mein bhigoyein.",
+        "Podon ko achhi khurak dein, khaas taur par potash.",
+      ],
+      chemicalSolution: [
+        "Chawal ki Brown Spot ke liye label shuda Propiconazole ya Azoxystrobin, sirf label par likhi miqdar ke mutabiq.",
+      ],
+      prevention: [
+        "Bimari se pak beej istemal karein.",
+        "Podon ko mutawazan khurak dein, khaas taur par potash.",
+        "Pani ki nikasi behtar karein.",
+        "Faslein badal badal kar lagayein.",
+      ],
+    },
+  },
+  "kb-rice-tungro": {
+    ur: {
+      cause: "یہ وائرس سبز ٹڈے (Green Leafhopper) کے ذریعے ایک پودے سے دوسرے پودے تک پہنچتا ہے۔ یہ کیڑا متاثرہ پودے کا رس چوستا ہے، پھر صحت مند پودے پر کھاتے وقت وائرس پھیلا دیتا ہے۔",
+      symptoms: [
+        "بونے پودے جن کے پتے پیلے نارنجی ہو جاتے ہیں",
+        "صحت مند پودوں سے کم ٹلر",
+        "پھول آنے میں تاخیر",
+        "خالی یا آدھے بھرے دانے",
+      ],
+      organicSolution: [
+        "شدید متاثرہ پودے ہٹا دیں تاکہ وائرس نہ پھیلے۔",
+        "سبز ٹڈوں کو کنٹرول کریں۔",
+        "بندوں کو ان جڑی بوٹیوں سے پاک رکھیں جن میں وائرس رہتا ہے۔",
+      ],
+      chemicalSolution: [
+        "Tungro وائرس کا کوئی کیمیائی علاج نہیں ہے۔",
+        "Green Leafhopper کے لیے لیبل شدہ Imidacloprid اس کیڑے کو کنٹرول کرتا ہے جو وائرس پھیلاتا ہے، صرف لیبل پر لکھی مقدار کے مطابق۔",
+      ],
+      prevention: [
+        "جہاں دستیاب ہو مدافعت رکھنے والی اقسام استعمال کریں۔",
+        "پڑوسی کھیتوں کے ساتھ ایک ہی وقت میں کاشت کریں۔",
+        "موسم کے شروع میں ہی ٹڈوں کو کنٹرول کریں۔",
+        "بندوں کو جڑی بوٹیوں سے پاک رکھیں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye virus sabz tidde (Green Leafhopper) ke zariye aik poday se dusre poday tak pahunchta hai. Ye keera mutasira poday ka ras chusta hai, phir sehatmand poday par khate waqt virus phaila deta hai.",
+      symptoms: [
+        "Boune poday jin ke patte peele narangi ho jate hain",
+        "Sehatmand podon se kam tiller",
+        "Phool aane mein takheer",
+        "Khaali ya aadhe bhare dane",
+      ],
+      organicSolution: [
+        "Shadeed mutasira poday hata dein taake virus na phaile.",
+        "Sabz tiddon ko control karein.",
+        "Bandon ko un jari bootion se pak rakhein jin mein virus rehta hai.",
+      ],
+      chemicalSolution: [
+        "Tungro virus ka koi kimiyai ilaaj nahi hai.",
+        "Green Leafhopper ke liye label shuda Imidacloprid is keere ko control karta hai jo virus phailata hai, sirf label par likhi miqdar ke mutabiq.",
+      ],
+      prevention: [
+        "Jahan dastiyab ho mudafiat rakhne wali aqsaam istemal karein.",
+        "Parosi kheton ke saath aik hi waqt mein kasht karein.",
+        "Mausam ke shuru mein hi tiddon ko control karein.",
+        "Bandon ko jari bootion se pak rakhein.",
+      ],
+    },
+  },
+  "kb-rice-leaf-scald": {
+    ur: {
+      cause: "یہ فنگس بارش کے چھینٹوں اور ہوا سے گرم اور نم موسم میں پھیلتی ہے۔ یہ متاثرہ بیج اور بھوسے میں زندہ رہتی ہے اور زیادہ دیر گیلے رہنے والے پتوں پر حملہ کرتی ہے۔",
+      symptoms: [
+        "پتوں پر جلے ہوئے دھبے، جن میں ہلکی اور گہری پٹیاں باری باری آتی ہیں",
+        "پتوں کی نوک خشک ہو کر بھوسے کے رنگ کی ہو جاتی ہے",
+        "گہرے بھورے کناروں والے زخم",
+        "شدید حملے میں پورے پتے خشک ہو جاتے ہیں",
+      ],
+      organicSolution: [
+        "متاثرہ پتے ہٹا دیں اور کھیت میں نہ چھوڑیں۔",
+        "بیماری سے پاک بیج استعمال کریں۔",
+        "نائٹروجن زیادہ نہ ڈالیں۔",
+      ],
+      chemicalSolution: [
+        "چاول کی Leaf Scald کے لیے لیبل شدہ Propiconazole، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "چاول کے لیے لیبل شدہ Copper oxychloride، صرف لیبل پر لکھی مقدار کے مطابق۔",
+      ],
+      prevention: [
+        "جہاں دستیاب ہو مدافعت رکھنے والی اقسام لگائیں۔",
+        "صاف اور بیماری سے پاک بیج استعمال کریں۔",
+        "نائٹروجن زیادہ نہ ڈالیں۔",
+        "پانی کی نکاسی بہتر کریں اور فصلیں بدل بدل کر لگائیں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye fungus barish ke chheenton aur hawa se garam aur nam mausam mein phailti hai. Ye mutasira beej aur bhuse mein zinda rehti hai aur zyada der geele rehne wale patton par hamla karti hai.",
+      symptoms: [
+        "Patton par jale hue dhabbe, jin mein halki aur gehri pattiyan bari bari aati hain",
+        "Patton ki nok khushk ho kar bhuse ke rang ki ho jati hai",
+        "Gehre bhure kinaron wale zakham",
+        "Shadeed hamle mein poore patte khushk ho jate hain",
+      ],
+      organicSolution: [
+        "Mutasira patte hata dein aur khet mein na chhodein.",
+        "Bimari se pak beej istemal karein.",
+        "Nitrogen zyada na dalein.",
+      ],
+      chemicalSolution: [
+        "Chawal ki Leaf Scald ke liye label shuda Propiconazole, sirf label par likhi miqdar ke mutabiq.",
+        "Chawal ke liye label shuda Copper oxychloride, sirf label par likhi miqdar ke mutabiq.",
+      ],
+      prevention: [
+        "Jahan dastiyab ho mudafiat rakhne wali aqsaam lagayein.",
+        "Saaf aur bimari se pak beej istemal karein.",
+        "Nitrogen zyada na dalein.",
+        "Pani ki nikasi behtar karein aur faslein badal badal kar lagayein.",
+      ],
+    },
+  },
+  "kb-rice-sheath-blight": {
+    ur: {
+      cause: "یہ مٹی اور پانی سے پھیلنے والی فنگس ہے جو گھنی، نم فصل اور زیادہ نائٹروجن میں خوب بڑھتی ہے۔ یہ پانی اور رابطے سے ایک پودے سے دوسرے پودے تک پھیلتی ہے۔",
+      symptoms: [
+        "پانی کی سطح کے پاس پتوں کی میان پر گہرے بھورے کناروں والے بیضوی سرمئی سبز دھبے",
+        "دھبے مل کر پودے کے اوپر چڑھ جاتے ہیں",
+        "میان پر سفید فنگس کی بڑھوتری",
+        "متاثرہ میان پر چھوٹی گہری بھوری گیندیں (اسکلیروشیا)",
+      ],
+      organicSolution: [
+        "پودوں کے درمیان فاصلہ بڑھائیں تاکہ ہوا گزر سکے۔",
+        "کھیت سے اضافی پانی نکال دیں۔",
+        "کٹائی کے بعد متاثرہ بھوسا ہٹا دیں۔",
+        "نائٹروجن زیادہ نہ ڈالیں۔",
+      ],
+      chemicalSolution: [
+        "چاول کی Sheath Blight کے لیے لیبل شدہ Validamycin، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "چاول کی Sheath Blight کے لیے لیبل شدہ Hexaconazole، صرف لیبل پر لکھی مقدار کے مطابق۔",
+      ],
+      prevention: [
+        "پودوں کے درمیان ہوا کے گزرنے کے لیے جگہ رکھیں۔",
+        "نائٹروجن ایک ساتھ نہیں بلکہ قسطوں میں ڈالیں۔",
+        "اضافی پانی نکال دیں۔",
+        "فصلیں بدل بدل کر لگائیں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye mitti aur pani se phailne wali fungus hai jo ghani, nam fasal aur zyada nitrogen mein khoob barhti hai. Ye pani aur rabte se ek poday se doosre poday tak phailti hai.",
+      symptoms: [
+        "Pani ki satah ke paas patton ki miyan par gehre bhure kinaron wale bezwi surmayi sabz dhabbe",
+        "Dhabbe mil kar poday ke upar charh jate hain",
+        "Miyan par safed fungus ki barhotri",
+        "Mutasira miyan par chhoti gehri bhuri gendein (sclerotia)",
+      ],
+      organicSolution: [
+        "Podon ke darmiyan fasla barhayein taake hawa guzar sake.",
+        "Khet se izafi pani nikal dein.",
+        "Katai ke baad mutasira bhusa hata dein.",
+        "Nitrogen zyada na dalein.",
+      ],
+      chemicalSolution: [
+        "Chawal ki Sheath Blight ke liye label shuda Validamycin, sirf label par likhi miqdar ke mutabiq.",
+        "Chawal ki Sheath Blight ke liye label shuda Hexaconazole, sirf label par likhi miqdar ke mutabiq.",
+      ],
+      prevention: [
+        "Podon ke darmiyan hawa ke guzarne ke liye jagah rakhein.",
+        "Nitrogen ek saath nahi balkay qiston mein dalein.",
+        "Izafi pani nikal dein.",
+        "Faslein badal badal kar lagayein.",
+      ],
+    },
+  },
+  "kb-cotton-curl-virus": {
+    ur: {
+      cause: "یہ وائرس سفید مکھی سے ایک پودے سے دوسرے پودے تک پہنچتا ہے۔ کیڑا متاثرہ پودے کا رس چوستا ہے، پھر صحت مند پودے پر کھانا کھاتے وقت وائرس پھیلا دیتا ہے۔ یہ بیج سے نہیں پھیلتا۔",
+      symptoms: [
+        "پتے اوپر کی طرف مڑ جاتے ہیں اور رگیں موٹی ہو جاتی ہیں",
+        "پتوں کی نچلی سطح پر پتے جیسی بڑھوتریاں (اینیشنز)",
+        "پودے چھوٹے رہ جاتے ہیں",
+        "ٹینڈے کم اور چھوٹے بنتے ہیں",
+      ],
+      organicSolution: [
+        "متاثرہ پودے اکھاڑ کر تلف کر دیں تاکہ وائرس نہ پھیلے۔",
+        "پیلے چپکنے والے جال سے سفید مکھی کنٹرول کریں۔",
+        "کھیت کے آس پاس جڑی بوٹیاں ہٹا دیں۔",
+        "ہلکے حملے میں نیم کا تیل استعمال کریں۔",
+      ],
+      chemicalSolution: [
+        "وائرس کا کوئی کیمیائی علاج نہیں۔",
+        "سفید مکھی کے لیے لیبل شدہ Imidacloprid یا Acetamiprid اس کیڑے کو کنٹرول کرتی ہے جو وائرس پھیلاتا ہے، صرف لیبل پر لکھی مقدار کے مطابق۔",
+      ],
+      prevention: [
+        "جہاں دستیاب ہو مدافعت رکھنے والی اقسام لگائیں۔",
+        "صاف اور مصدقہ بیج استعمال کریں۔",
+        "کپاس کو ٹماٹر یا سفید مکھی کے دیگر میزبان پودوں کے پاس نہ لگائیں۔",
+        "موسم کے شروع میں سفید مکھی کنٹرول کریں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye virus safed makhi se ek poday se doosre poday tak pahunchta hai. Keera mutasira poday ka ras choosta hai, phir sehat mand poday par khana khate waqt virus phaila deta hai. Ye beej se nahi phailta.",
+      symptoms: [
+        "Patte upar ki taraf mur jate hain aur ragein moti ho jati hain",
+        "Patton ki nichli satah par patte jaisi barhotriyan (enations)",
+        "Poday chhote reh jate hain",
+        "Tinday kam aur chhote bante hain",
+      ],
+      organicSolution: [
+        "Mutasira poday ukhaar kar talaf kar dein taake virus na phaile.",
+        "Peele chipakne wale jaal se safed makhi control karein.",
+        "Khet ke aas paas jari bootiyan hata dein.",
+        "Halke hamle mein neem ka tail istemal karein.",
+      ],
+      chemicalSolution: [
+        "Virus ka koi chemical ilaaj nahi.",
+        "Safed makhi ke liye label shuda Imidacloprid ya Acetamiprid us keere ko control karti hai jo virus phailata hai, sirf label par likhi miqdar ke mutabiq.",
+      ],
+      prevention: [
+        "Jahan dastiyab ho mudafiat rakhne wali aqsaam lagayein.",
+        "Saaf aur musaddaqa beej istemal karein.",
+        "Kapas ko tamatar ya safed makhi ke deegar mezban podon ke paas na lagayein.",
+        "Mausam ke shuru mein safed makhi control karein.",
+      ],
+    },
+  },
+  "kb-cotton-fusarium-wilt": {
+    ur: {
+      cause: "یہ مٹی سے پھیلنے والی فنگس ہے جو مٹی میں سالوں تک زندہ رہتی ہے۔ یہ جڑوں سے داخل ہو کر پانی کی نالیاں بند کر دیتی ہے، اس لیے پودا مٹی میں پانی ہوتے ہوئے بھی مرجھا جاتا ہے۔",
+      symptoms: [
+        "پتے پیلے پڑ کر مرجھا جاتے ہیں، اکثر پہلے پودے کے ایک طرف",
+        "پودے چھوٹے رہ جاتے ہیں",
+        "تنے کے اندر بھوری رنگت",
+        "شدید حملے میں ننھے پودے مرجھا کر مر جاتے ہیں",
+      ],
+      organicSolution: [
+        "متاثرہ پودے اکھاڑ کر تلف کر دیں۔",
+        "کپاس کے علاوہ دیگر فصلیں بدل بدل کر لگائیں۔",
+        "پانی کی نکاسی بہتر کریں۔",
+        "متاثرہ کھیت کی مٹی دوسرے کھیت میں نہ لے جائیں۔",
+      ],
+      chemicalSolution: [
+        "بوائی سے پہلے بیج کے علاج کے طور پر Carbendazim یا Thiophanate-methyl، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "پودے متاثر ہونے کے بعد کوئی علاج نہیں — مقامی زرعی افسر سے تصدیق کریں۔",
+      ],
+      prevention: [
+        "مدافعت رکھنے والی اقسام لگائیں — یہی سب سے اہم دفاع ہے۔",
+        "فصلیں بدلیں اور ہر سال ایک ہی کھیت میں کپاس نہ لگائیں۔",
+        "صاف اور مصدقہ بیج استعمال کریں۔",
+        "جڑ کی گرہ والے نیماٹوڈ کنٹرول کریں، جو ولٹ کو بڑھاتے ہیں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye mitti se phailne wali fungus hai jo mitti mein saalon tak zinda rehti hai. Ye jadon se dakhil ho kar pani ki naliyan band kar deti hai, is liye poda mitti mein pani hote hue bhi murjha jata hai.",
+      symptoms: [
+        "Patte peele par kar murjha jate hain, aksar pehle poday ke ek taraf",
+        "Poday chhote reh jate hain",
+        "Tane ke andar bhuri rangat",
+        "Shadeed hamle mein nanhe poday murjha kar mar jate hain",
+      ],
+      organicSolution: [
+        "Mutasira poday ukhaar kar talaf kar dein.",
+        "Kapas ke ilawa deegar faslein badal badal kar lagayein.",
+        "Pani ki nikasi behtar karein.",
+        "Mutasira khet ki mitti doosre khet mein na le jayein.",
+      ],
+      chemicalSolution: [
+        "Bawai se pehle beej ke ilaaj ke tor par Carbendazim ya Thiophanate-methyl, sirf label par likhi miqdar ke mutabiq.",
+        "Poday mutasir hone ke baad koi ilaaj nahi — maqami zarae afsar se tasdeeq karein.",
+      ],
+      prevention: [
+        "Mudafiat rakhne wali aqsaam lagayein — yehi sab se ahem difa hai.",
+        "Faslein badlein aur har saal ek hi khet mein kapas na lagayein.",
+        "Saaf aur musaddaqa beej istemal karein.",
+        "Jar ki girah wale nematode control karein, jo wilt ko barhate hain.",
       ],
     },
   },
