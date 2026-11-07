@@ -1,0 +1,42 @@
+{
+  "healthy_wheat": {
+    "class": "healthy_wheat",
+    "crop": "wheat",
+    "disease": "healthy",
+    "type": "healthy",
+    "immediate_steps": "Monitor the plant regularly and keep leaves dry where possible.",
+    "treatment": "No treatment needed. Keep balanced watering and feeding, and remove any dead leaves promptly.",
+    "prevention": "Give good air circulation, avoid overwatering, and check leaves weekly so any new problem is caught early.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_brown_rust": {
+    "class": "wheat_brown_rust",
+    "crop": "wheat",
+    "disease": "brown rust",
+    "type": "fungal",
+    "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
+    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_septoria": {
+    "class": "wheat_septoria",
+    "crop": "wheat",
+    "disease": "septoria",
+    "type": "other",
+    "immediate_steps": "Remove affected leaves and monitor whether the problem spreads.",
+    "treatment": "Identify the exact cause first — treatment depends on whether it is fungal, bacterial, viral or a nutrient issue. Seek local agricultural advice if it spreads quickly.",
+    "prevention": "Keep plants well fed and watered, improve airflow, and check leaves regularly.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_yellow_rust": {
+    "class": "wheat_yellow_rust",
+    "crop": "wheat",
+    "disease": "yellow rust",
+    "type": "fungal",
+    "immediate_steps": "Remove severely infected leaves, improve air circulation, and avoid wetting leaves when watering. Check the flag leaf first, as it matters most for yield.",
+    "treatment": "A fungicide labelled for wheat yellow rust may help — for example propiconazole or tebuconazole, always following the product label and local agricultural advice. Apply at the first sign of yellow stripes.",
+    "prevention": "Use rust-resistant wheat varieties where available, avoid late sowing, scout weekly in early spring, and remove volunteer wheat plants.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  }
+}

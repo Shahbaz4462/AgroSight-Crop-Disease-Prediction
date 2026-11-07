@@ -1,0 +1,42 @@
+{
+  "cotton_bacterial_blight": {
+    "class": "cotton_bacterial_blight",
+    "crop": "cotton",
+    "disease": "bacterial blight",
+    "type": "bacterial",
+    "immediate_steps": "Remove infected leaves carefully, do not compost them, and clean tools after handling the plant.",
+    "treatment": "Improve drainage and avoid overhead watering. A copper-based bactericide labelled for this crop may help — always follow the product label and local agricultural advice.",
+    "prevention": "Rotate crops, use clean seed/plants, space plants for airflow, and avoid working with wet plants.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "cotton_curl_virus": {
+    "class": "cotton_curl_virus",
+    "crop": "cotton",
+    "disease": "leaf curl virus",
+    "immediate_steps": "Pull out and destroy infected plants, and control whiteflies so the virus does not spread.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "prevention": "Use resistant or tolerant varieties, clean seed, and control whiteflies early in the season.",
+    "treatment": "There is no cure for the virus itself. An insecticide labelled for whitefly, such as imidacloprid or acetamiprid, controls the insect that spreads it — always follow the product label and local agricultural advice.",
+    "type": "viral"
+  },
+  "cotton_fusarium_wilt": {
+    "class": "cotton_fusarium_wilt",
+    "crop": "cotton",
+    "disease": "fusarium wilt",
+    "immediate_steps": "Pull out and destroy infected plants, and do not move soil from infested fields.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "prevention": "Use resistant or tolerant varieties, rotate crops, and use clean certified seed.",
+    "treatment": "There is no cure once plants are infected. Carbendazim or thiophanate-methyl as a seed treatment before sowing may help — always follow the product label and local agricultural advice.",
+    "type": "fungal"
+  },
+  "healthy_cotton": {
+    "class": "healthy_cotton",
+    "crop": "cotton",
+    "disease": "healthy",
+    "type": "healthy",
+    "immediate_steps": "Monitor the plant regularly and keep leaves dry where possible.",
+    "treatment": "No treatment needed. Keep balanced watering and feeding, and remove any dead leaves promptly.",
+    "prevention": "Give good air circulation, avoid overwatering, and check leaves weekly so any new problem is caught early.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  }
+}

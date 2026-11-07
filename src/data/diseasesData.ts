@@ -2,8 +2,10 @@ import { KnowledgeBaseEntry } from "../types";
 
 // Disease guide.
 // Two kinds of entries live here, and they must not be confused:
-//  - "Scannable" entries match a v1 model class (wheat, cotton, rice).
-//    Those diseases can be checked with a photo on /diagnose.
+//  - "Scannable" entries match a class of the new per-crop models
+//    (wheat, cotton, rice — leaf gate, then crop gate, then the
+//    crop's own disease model). Those diseases can be checked
+//    with a photo on /diagnose.
 //  - "Guide only" entries are educational information for crops the
 //    v1 model does NOT scan yet (tomato, potato, mango, citrus, apple).
 //    They are shown in the Crop guide with a "Guide only" label, and
@@ -162,35 +164,6 @@ export const DISEASES_KNOWLEDGE_BASE: KnowledgeBaseEntry[] = [
       "Scout every 2-3 days in the growing season, looking under leaves.",
       "Remove weeds and crop residue that shelter moths and larvae.",
       "Rotate crops and avoid planting cotton after cotton in the same field every year.",
-    ],
-    lastUpdated: "2026-11-05",
-    verifiedBy: "General agricultural guidance — confirm with local extension",
-  },
-  {
-    id: "kb-rice-diseased",
-    crop: "Rice",
-    disease: "Diseased",
-    scientificName: "Unspecified — exact disease not identified by the model",
-    pathogenType: "Unknown",
-    cause: "The v1 model only says a rice leaf is diseased, not which disease it is. The cause could be fungal, bacterial, viral or a nutrient problem, and each needs different treatment.",
-    symptoms: [
-      "Leaf spots, yellowing, wilting or drying that do not match a healthy leaf",
-      "Symptoms spreading from one leaf or plant to neighbours",
-      "Poor growth compared with healthy plants in the same field",
-    ],
-    organicSolution: [
-      "Remove affected leaves and do not compost diseased material in the field.",
-      "Improve drainage and airflow, and avoid waterlogging where possible.",
-      "Take a clear photo of a single leaf and show it to a local agriculture officer for identification.",
-    ],
-    chemicalSolution: [
-      "Do NOT apply a specific fungicide or bactericide until the exact disease is identified — the wrong chemical wastes money and may not help.",
-      "Once identified, use only a product labelled for that disease and crop, at the dose on the label.",
-    ],
-    prevention: [
-      "Use clean, certified seed and resistant varieties where available.",
-      "Balance fertilizer — excess nitrogen makes rice more disease-prone.",
-      "Rotate crops and clean field bunds and tools between fields.",
     ],
     lastUpdated: "2026-11-05",
     verifiedBy: "General agricultural guidance — confirm with local extension",
@@ -844,6 +817,255 @@ export const DISEASES_KNOWLEDGE_BASE: KnowledgeBaseEntry[] = [
       "Clean up fallen leaves and volunteer wheat after harvest.",
     ],
     lastUpdated: "2026-11-05",
+    verifiedBy: "General agricultural guidance — confirm with local extension",
+  },  {
+    id: "kb-rice-bacterial-blight",
+    crop: "Rice",
+    disease: "Bacterial Leaf Blight",
+    scientificName: "Xanthomonas oryzae pv. oryzae",
+    pathogenType: "Bacterial",
+    cause: "Bacterial disease spread by wind-driven rain and irrigation water. The bacteria enter through leaf wounds and water pores, and survive in infected seed, straw and stubble.",
+    symptoms: [
+      "Water-soaked yellowish stripes starting from leaf tips and margins",
+      "Stripes turn grey-green to straw colour as the disease advances",
+      "Leaves dry from the tip inwards",
+      "Whole clumps wilt and dry in severe attacks",
+    ],
+    organicSolution: [
+      "Remove infected leaves and do not compost them.",
+      "Avoid working with wet plants.",
+      "Use disease-free seed.",
+    ],
+    chemicalSolution: [
+      "A copper-based bactericide (copper oxychloride) labelled for rice bacterial blight, at the dose on the product label.",
+      "Streptocycline where registered, at the dose on the product label.",
+    ],
+    prevention: [
+      "Sow resistant varieties where available.",
+      "Avoid excess nitrogen.",
+      "Improve drainage and rotate crops.",
+      "Use clean, disease-free seed.",
+    ],
+    lastUpdated: "2026-11-06",
+    verifiedBy: "General agricultural guidance — confirm with local extension",
+  },
+  {
+    id: "kb-rice-blast",
+    crop: "Rice",
+    disease: "Blast",
+    scientificName: "Magnaporthe oryzae",
+    pathogenType: "Fungal",
+    cause: "Fungus spread by wind-borne spores in warm, humid weather. A large dose of nitrogen applied at once makes plants more vulnerable.",
+    symptoms: [
+      "Diamond-shaped spots with grey-white centres and brown margins",
+      "Spots join together and kill the leaf",
+      "Dark lesions on nodes and on the neck of the panicle",
+      "Empty grains in severe attacks",
+    ],
+    organicSolution: [
+      "Remove infected leaves and do not leave them in the field.",
+      "Avoid wetting leaves when watering.",
+      "Use resistant varieties where available.",
+    ],
+    chemicalSolution: [
+      "Tricyclazole or propiconazole labelled for rice blast, at the dose on the product label.",
+      "Seed treatment with tricyclazole or carbendazim before sowing.",
+    ],
+    prevention: [
+      "Sow resistant varieties and certified seed.",
+      "Apply nitrogen in split doses, not all at once.",
+      "Water at the base and clean up infected straw.",
+      "Scout the field weekly, especially in humid weather.",
+    ],
+    lastUpdated: "2026-11-06",
+    verifiedBy: "General agricultural guidance — confirm with local extension",
+  },
+  {
+    id: "kb-rice-brown-spot",
+    crop: "Rice",
+    disease: "Brown Spot",
+    scientificName: "Bipolaris oryzae",
+    pathogenType: "Fungal",
+    cause: "Seed-borne fungus that thrives on weak, poorly fed plants and in dry, stressed fields. Spreads through infected seed and straw.",
+    symptoms: [
+      "Small brown spots the size of a sesame seed on leaves",
+      "Spots enlarge into ovals with dark margins and grey centres",
+      "Spots also appear on grains and husks",
+      "Leaves dry out in severe attacks",
+    ],
+    organicSolution: [
+      "Remove infected leaves and do not leave them in the field.",
+      "Soak seed in hot water (53–54°C for 10–12 minutes) before sowing.",
+      "Keep plants well fed, especially with potash.",
+    ],
+    chemicalSolution: [
+      "Propiconazole or azoxystrobin labelled for rice brown spot, at the dose on the product label.",
+    ],
+    prevention: [
+      "Use disease-free seed.",
+      "Feed plants well with balanced potash.",
+      "Improve drainage.",
+      "Rotate crops.",
+    ],
+    lastUpdated: "2026-11-06",
+    verifiedBy: "General agricultural guidance — confirm with local extension",
+  },
+  {
+    id: "kb-rice-tungro",
+    crop: "Rice",
+    disease: "Tungro",
+    scientificName: "Rice tungro bacilliform virus + Rice tungro spherical virus",
+    pathogenType: "Viral",
+    cause: "Viruses carried from plant to plant by the green leafhopper. The insect feeds on an infected plant, then spreads the virus when it feeds on a healthy one.",
+    symptoms: [
+      "Stunted plants with yellow-orange leaves",
+      "Fewer tillers than healthy plants",
+      "Delayed flowering",
+      "Empty or partly filled grains",
+    ],
+    organicSolution: [
+      "Remove severely infected plants so the virus does not spread.",
+      "Control the green leafhoppers.",
+      "Keep bunds free of weeds that host the virus.",
+    ],
+    chemicalSolution: [
+      "There is no chemical cure for tungro virus.",
+      "Imidacloprid labelled for green leafhopper controls the insect that spreads it, at the dose on the product label.",
+    ],
+    prevention: [
+      "Use resistant varieties where available.",
+      "Plant at the same time as neighbouring fields.",
+      "Control leafhoppers early in the season.",
+      "Keep bunds weed-free.",
+    ],
+    lastUpdated: "2026-11-06",
+    verifiedBy: "General agricultural guidance — confirm with local extension",
+  },
+  {
+    id: "kb-rice-leaf-scald",
+    crop: "Rice",
+    disease: "Leaf Scald",
+    scientificName: "Microdochium oryzae",
+    pathogenType: "Fungal",
+    cause: "Fungus spread by rain splash and wind in warm, humid weather. It survives in infected seed and straw, and attacks leaves that stay wet for long.",
+    symptoms: [
+      "Zonate scalded patches on leaves, with alternating light and dark bands",
+      "Leaf tips dry and turn straw-coloured",
+      "Lesions with dark brown margins",
+      "Whole leaves dry up in severe attacks",
+    ],
+    organicSolution: [
+      "Remove infected leaves and do not leave them in the field.",
+      "Use disease-free seed.",
+      "Avoid excess nitrogen.",
+    ],
+    chemicalSolution: [
+      "Propiconazole labelled for rice leaf scald, at the dose on the product label.",
+      "Copper oxychloride labelled for rice, at the dose on the product label.",
+    ],
+    prevention: [
+      "Sow resistant varieties where available.",
+      "Use clean, disease-free seed.",
+      "Avoid excess nitrogen.",
+      "Improve drainage and rotate crops.",
+    ],
+    lastUpdated: "2026-11-07",
+    verifiedBy: "General agricultural guidance — confirm with local extension",
+  },
+  {
+    id: "kb-rice-sheath-blight",
+    crop: "Rice",
+    disease: "Sheath Blight",
+    scientificName: "Rhizoctonia solani",
+    pathogenType: "Fungal",
+    cause: "Soil- and water-borne fungus that thrives in dense, humid crops with heavy nitrogen. It spreads from plant to plant through water and contact.",
+    symptoms: [
+      "Oval grey-green spots with dark brown margins on leaf sheaths near the water level",
+      "Spots join and climb up the plant",
+      "White fungal growth on the sheaths",
+      "Small dark brown balls (sclerotia) on infected sheaths",
+    ],
+    organicSolution: [
+      "Widen spacing so air moves through the crop.",
+      "Drain excess water from the field.",
+      "Remove infected straw after harvest.",
+      "Avoid excess nitrogen.",
+    ],
+    chemicalSolution: [
+      "Validamycin labelled for rice sheath blight, at the dose on the product label.",
+      "Hexaconazole labelled for rice sheath blight, at the dose on the product label.",
+    ],
+    prevention: [
+      "Space plants for airflow.",
+      "Apply nitrogen in split doses, not all at once.",
+      "Drain excess water.",
+      "Rotate crops.",
+    ],
+    lastUpdated: "2026-11-07",
+    verifiedBy: "General agricultural guidance — confirm with local extension",
+  },
+  {
+    id: "kb-cotton-curl-virus",
+    crop: "Cotton",
+    disease: "Leaf Curl Virus",
+    scientificName: "Cotton leaf curl virus (Begomovirus)",
+    pathogenType: "Viral",
+    cause: "Virus carried from plant to plant by the whitefly. The insect feeds on an infected plant, then spreads the virus when it feeds on a healthy one. It does not spread through seed.",
+    symptoms: [
+      "Leaves curl upwards and thicken along the veins",
+      "Leaf-like outgrowths (enations) on the underside of leaves",
+      "Plants stay stunted",
+      "Fewer and smaller bolls",
+    ],
+    organicSolution: [
+      "Pull out and destroy infected plants so the virus does not spread.",
+      "Control whiteflies with yellow sticky traps.",
+      "Remove weed hosts around the field.",
+      "Use neem oil for light whitefly attacks.",
+    ],
+    chemicalSolution: [
+      "There is no chemical cure for the virus itself.",
+      "Imidacloprid or acetamiprid labelled for whitefly controls the insect that spreads it, at the dose on the product label.",
+    ],
+    prevention: [
+      "Use resistant or tolerant varieties where available.",
+      "Use clean, certified seed.",
+      "Do not plant cotton near tomato or other whitefly host crops.",
+      "Control whiteflies early in the season.",
+    ],
+    lastUpdated: "2026-11-07",
+    verifiedBy: "General agricultural guidance — confirm with local extension",
+  },
+  {
+    id: "kb-cotton-fusarium-wilt",
+    crop: "Cotton",
+    disease: "Fusarium Wilt",
+    scientificName: "Fusarium oxysporum f. sp. vasinfectum",
+    pathogenType: "Fungal",
+    cause: "Soil-borne fungus that survives in the soil for years. It enters through the roots and blocks the water vessels, so the plant wilts even with water in the soil.",
+    symptoms: [
+      "Leaves yellow and wilt, often on one side of the plant first",
+      "Plants stay stunted",
+      "Brown discolouration inside the stem",
+      "Seedlings wilt and die in severe cases",
+    ],
+    organicSolution: [
+      "Pull out and destroy infected plants.",
+      "Rotate with crops that are not cotton.",
+      "Improve drainage.",
+      "Do not move soil from infested fields.",
+    ],
+    chemicalSolution: [
+      "Carbendazim or thiophanate-methyl as a seed treatment before sowing, at the dose on the product label.",
+      "There is no cure once plants are infected — confirm with a local agriculture officer.",
+    ],
+    prevention: [
+      "Use resistant or tolerant varieties — the main defence.",
+      "Rotate crops and avoid planting cotton in the same field every year.",
+      "Use clean, certified seed.",
+      "Control root-knot nematodes, which make wilt worse.",
+    ],
+    lastUpdated: "2026-11-07",
     verifiedBy: "General agricultural guidance — confirm with local extension",
   },
 ];

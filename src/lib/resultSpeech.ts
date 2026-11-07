@@ -105,6 +105,39 @@ const SUMMARIES: Record<string, { ur: string; roman: string }> = {
     ur: "ٹین اسپاٹ کے لیے لیبل کے مطابق پروپیکونازول یا ایزوکسٹروبن پلس ڈائفینوکونازول استعمال کریں، اور سب سے اوپر والے پتے کو بچائیں۔",
     roman: "Tan spot ke liye label ke mutabiq propiconazole ya azoxystrobin plus difenoconazole istemal karein, aur sab se oopar wale patte ko bachayein.",
   },
+  rice_bacterial_blight: {
+    ur: "بیکٹیریل بلائٹ کے لیے لیبل کے مطابق کاپر آکسی کلورائیڈ استعمال کریں، اور متاثرہ پتے ہٹا دیں۔",
+    roman: "Bacterial blight ke liye label ke mutabiq copper oxychloride istemal karein, aur mutasira patte hata dein.",
+  },
+  rice_blast: {
+    ur: "بلاسٹ کے لیے لیبل کے مطابق ٹرائی سائیکلازول یا پروپیکونازول فنجیسائیڈ استعمال کریں۔",
+    roman: "Blast ke liye label ke mutabiq tricyclazole ya propiconazole fungicide istemal karein.",
+  },
+  rice_brown_spot: {
+    ur: "براؤن اسپاٹ کے لیے لیبل کے مطابق پروپیکونازول یا ایزوکسی اسٹروبن استعمال کریں۔",
+    roman: "Brown spot ke liye label ke mutabiq propiconazole ya azoxystrobin istemal karein.",
+  },
+  rice_tungro: {
+    ur: "ٹنگرو وائرس کا کوئی علاج نہیں۔ سبز ٹڈوں کو کنٹرول کریں اور متاثرہ پودے ہٹا دیں۔",
+    roman: "Tungro virus ka koi ilaaj nahi. Sabz tiddon ko control karein aur mutasira poday hata dein.",
+  },
+  rice_leaf_scald: {
+    ur: "لیف اسکالڈ کے لیے لیبل کے مطابق پروپیکونازول یا کاپر آکسی کلورائیڈ استعمال کریں، اور متاثرہ پتے ہٹا دیں۔",
+    roman: "Leaf scald ke liye label ke mutabiq propiconazole ya copper oxychloride istemal karein, aur mutasira patte hata dein.",
+  },
+  rice_sheath_blight: {
+    ur: "شیتھ بلائٹ کے لیے لیبل کے مطابق ویلیڈامائسن یا ہیکساکونازول استعمال کریں، اور کھیت سے اضافی پانی نکال دیں۔",
+    roman: "Sheath blight ke liye label ke mutabiq validamycin ya hexaconazole istemal karein, aur khet se izafi pani nikal dein.",
+  },
+  cotton_curl_virus: {
+    ur: "لیف کرل وائرس کا کوئی علاج نہیں۔ سفید مکھی کو کنٹرول کریں اور متاثرہ پودے ہٹا دیں۔",
+    roman: "Leaf curl virus ka koi ilaaj nahi. Safed makhi ko control karein aur mutasira poday hata dein.",
+  },
+  cotton_fusarium_wilt: {
+    ur: "فیوزیریم ولٹ کا کوئی علاج نہیں۔ اگلی بار مدافعت رکھنے والی قسم لگائیں اور بیج کا علاج کریں۔",
+    roman: "Fusarium wilt ka koi ilaaj nahi. Agli baar mudafiat rakhne wali qism lagayein aur beej ka ilaaj karein.",
+  },
+
 };
 
 // Short spoken summary for a disease family, used only when an

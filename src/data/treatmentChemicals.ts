@@ -113,6 +113,36 @@ export const CHEMICALS_BY_CLASS: Record<string, Chemical[]> = {
     { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat tan spot. Use only at the dose on the product label." },
     { name: "Azoxystrobin + Difenoconazole", type: "Fungicide", detail: "Combination fungicide labelled for wheat tan spot, for longer residual control. Use only at the dose on the product label." },
   ],
+  rice_bacterial_blight: [
+    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based bactericide labelled for rice bacterial leaf blight. Use only at the dose on the product label." },
+  ],
+  rice_blast: [
+    { name: "Tricyclazole", type: "Fungicide", detail: "Systemic fungicide labelled for rice blast. Use only at the dose on the product label." },
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for rice blast. Use only at the dose on the product label." },
+  ],
+  rice_brown_spot: [
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for rice brown spot. Use only at the dose on the product label." },
+    { name: "Azoxystrobin", type: "Fungicide", detail: "Fungicide labelled for rice brown spot. Use only at the dose on the product label." },
+  ],
+  rice_tungro: [
+    { name: "Imidacloprid", type: "Insecticide", detail: "Controls the green leafhopper that spreads tungro virus. There is no cure for the virus itself. Use only at the dose on the product label." },
+  ],
+  rice_leaf_scald: [
+    { name: "Propiconazole", type: "Fungicide", detail: "Systemic fungicide labelled for rice leaf scald. Use only at the dose on the product label." },
+    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based fungicide labelled for rice. Use only at the dose on the product label." },
+  ],
+  rice_sheath_blight: [
+    { name: "Validamycin", type: "Fungicide", detail: "Systemic fungicide labelled for rice sheath blight — the standard treatment. Use only at the dose on the product label." },
+    { name: "Hexaconazole", type: "Fungicide", detail: "Triazole fungicide labelled for rice sheath blight. Use only at the dose on the product label." },
+  ],
+  cotton_curl_virus: [
+    { name: "Imidacloprid", type: "Insecticide", detail: "Controls the whitefly that spreads cotton leaf curl virus. There is no cure for the virus itself. Use only at the dose on the product label." },
+    { name: "Acetamiprid", type: "Insecticide", detail: "Controls the whitefly that spreads cotton leaf curl virus. There is no cure for the virus itself. Use only at the dose on the product label." },
+  ],
+  cotton_fusarium_wilt: [
+    { name: "Carbendazim", type: "Fungicide", detail: "Seed treatment labelled for cotton fusarium wilt, before sowing. There is no cure once plants are infected. Use only at the dose on the product label." },
+    { name: "Thiophanate-methyl", type: "Fungicide", detail: "Seed treatment labelled for cotton fusarium wilt, before sowing. Use only at the dose on the product label." },
+  ],
   // wheat_blast: intentionally absent — exact cause not identified by the model.
   // wheat_septoria: intentionally absent — exact cause not identified by the model.
   // wheat_stem_fly: intentionally absent — exact pest not identified by the model.
@@ -145,6 +175,14 @@ export function classForDisplay(crop: string, disease: string): string | null {
     "wheat|smut": "wheat_smut",
     "wheat|stem fly": "wheat_stem_fly",
     "wheat|tan spot": "wheat_tan_spot",
+    "rice|bacterial leaf blight": "rice_bacterial_blight",
+    "rice|blast": "rice_blast",
+    "rice|brown spot": "rice_brown_spot",
+    "rice|leaf scald": "rice_leaf_scald",
+    "rice|sheath blight": "rice_sheath_blight",
+    "rice|tungro": "rice_tungro",
+    "cotton|leaf curl virus": "cotton_curl_virus",
+    "cotton|fusarium wilt": "cotton_fusarium_wilt",
   };
   return map[key] ?? null;
 }
