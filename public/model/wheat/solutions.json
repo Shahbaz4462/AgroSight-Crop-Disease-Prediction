@@ -38,5 +38,25 @@
     "treatment": "A fungicide labelled for wheat yellow rust may help — for example propiconazole or tebuconazole, always following the product label and local agricultural advice. Apply at the first sign of yellow stripes.",
     "prevention": "Use rust-resistant wheat varieties where available, avoid late sowing, scout weekly in early spring, and remove volunteer wheat plants.",
     "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "wheat_black_rust": {
+    "class": "wheat_black_rust",
+    "crop": "wheat",
+    "disease": "black rust",
+    "immediate_steps": "Scout the crop at once, especially stems and flag leaves, and spray at the first sign of pustules — black rust spreads fast in warm, humid weather.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "prevention": "Sow resistant varieties, remove volunteer wheat and barberry near fields, avoid late sowing, and rotate crops.",
+    "treatment": "A triazole fungicide such as propiconazole or tebuconazole, or a strobilurin mix such as azoxystrobin + difenoconazole, labelled for wheat stem rust, may help — always follow the product label and local agricultural advice. Resistant varieties are the main defence.",
+    "type": "fungal"
+  },
+  "wheat_powdery_mildew": {
+    "class": "wheat_powdery_mildew",
+    "crop": "wheat",
+    "disease": "powdery mildew",
+    "immediate_steps": "Remove heavily infected leaves, improve airflow through the crop, and spray at the first sign of white powdery patches.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "prevention": "Sow resistant varieties, avoid excess nitrogen and dense sowing, space plants for airflow, and rotate crops.",
+    "treatment": "A triazole fungicide such as propiconazole or tebuconazole, or sulphur, labelled for wheat powdery mildew, may help — always follow the product label and local agricultural advice. Spray soon after the disease appears.",
+    "type": "fungal"
   }
 }
