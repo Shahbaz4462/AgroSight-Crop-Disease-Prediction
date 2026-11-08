@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Camera, ImagePlus, RefreshCw, AlertCircle, Sun, Leaf, Focus, ScanLine, ChevronDown } from "lucide-react";
-import { predictionService } from "../../services/ai/predictionService";
+import { predictionService, preloadTfjsModel } from "../../services/ai/predictionService";
 import { PredictionResult, ScanningStage } from "../../services/ai/types";
 import { historyService } from "../../services/api/historyService";
 import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
@@ -63,6 +63,13 @@ export const ScanFlow: React.FC = () => {
       // A missing/blocked store must never break the scan.
     }
   }, []);
+  // When the picked crop changes, start downloading that crop's
+  // disease model in the background, so it is ready by scan time.
+  // With Auto-detect (null) only the leaf+crop model preloads, and
+  // the decided crop's disease model loads at scan time.
+  useEffect(() => {
+    preloadTfjsModel(selectedCrop);
+  }, [selectedCrop]);
   const chooseCrop = (crop: string | null) => {
     setSelectedCrop(crop);
     try {
