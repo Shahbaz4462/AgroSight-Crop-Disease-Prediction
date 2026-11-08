@@ -65,9 +65,15 @@ export function preloadVoices(): Promise<SpeechSynthesisVoice[]> {
     };
     window.speechSynthesis.addEventListener("voiceschanged", handler);
     // Never hang: resolve with whatever we have after 1.5 s.
+    // But if the list is still empty, do NOT cache this result:
+    // the phone may still be loading its voices, and a later
+    // call must be able to retry instead of reusing the empty
+    // list for the rest of the visit (that is what made the
+    // first Listen tap silent or wrong-voiced on some phones).
     setTimeout(() => {
       window.speechSynthesis.removeEventListener("voiceschanged", handler);
       if (cachedVoices.length === 0) cachedVoices = loadVoices();
+      if (cachedVoices.length === 0) voicesReady = null;
       resolve(cachedVoices);
     }, 1500);
   });
@@ -146,7 +152,16 @@ function splitSentences(text: string): string[] {
 export function speak(text: string, lang: Lang, onEnd?: () => void): boolean {
   try {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
-    window.speechSynthesis.cancel();
+    // Only cancel when something is actually speaking: on some
+    // Android phones cancel() right before speak() drops the new
+    // utterance, which made the first Listen tap silent.
+    try {
+      if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+        window.speechSynthesis.cancel();
+      }
+    } catch {
+      // Ignore.
+    }
     const start = () => {
       const voice = pickVoice(lang);
       const rate = rateFor(lang);

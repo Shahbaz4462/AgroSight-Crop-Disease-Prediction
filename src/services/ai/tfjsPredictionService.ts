@@ -172,18 +172,36 @@ function base64ToArrayBuffer(b64: string): ArrayBuffer {
 // the CDN mirrors the main branch, so on any other branch it would
 // serve the main branch's model with this deployment's class list.
 // Returns null when neither has it.
+//
+// localOnly: only try the deployment itself, never the CDN. Used
+// for weight-part probes and single-shard files: a part that is
+// not on this deployment is simply not part of this model, and
+// asking the CDN for it wastes a round-trip on a slow connection
+// (the probe fires 24 requests per shard, most of them 404s) and
+// risks mixing main's weights into this deployment's model.
 async function fetchModelText(
   relative: string,
   localBase: string,
-  cdnBase: string
+  cdnBase: string,
+  localOnly = false
 ): Promise<string | null> {
-  for (const base of [localBase, cdnBase]) {
-    try {
-      const res = await fetch(`${base}/${relative}`);
-      if (res.ok) return await res.text();
-    } catch {
-      // Try the next source.
-    }
+  try {
+    const res = await fetch(`${localBase}/${relative}`);
+    if (res.ok) return await res.text();
+    // A 404 is definitive for this deployment. For probe files
+    // there is nothing more to try; for real files (model.json,
+    // class lists) a 404 can also be a deploy window, so the CDN
+    // below is still worth one attempt.
+    if (localOnly) return null;
+  } catch {
+    // Network error: the CDN is worth trying, unless local-only.
+    if (localOnly) return null;
+  }
+  try {
+    const res = await fetch(`${cdnBase}/${relative}`);
+    if (res.ok) return await res.text();
+  } catch {
+    // Both sources failed.
   }
   return null;
 }
@@ -192,6 +210,9 @@ async function fetchModelText(
 // them in order. Parts are ~500 KB each; fetching them one by one
 // kept the loading screen up for minutes on a phone connection.
 // At most 24 parts are looked for (a 4 MB shard is ~11 parts).
+// Probing is local-only: a part that is not on this deployment is
+// simply not part of this model, so asking the CDN for every
+// missing part would double the wasted round-trips.
 async function fetchShardParts(
   file: string,
   localBase: string,
@@ -199,7 +220,7 @@ async function fetchShardParts(
 ): Promise<string | null> {
   const found = await Promise.all(
     Array.from({ length: 24 }, (_, i) =>
-      fetchModelText(`${file}.b64.part${String(i).padStart(2, "0")}`, localBase, cdnBase)
+      fetchModelText(`${file}.b64.part${String(i).padStart(2, "0")}`, localBase, cdnBase, true)
     )
   );
   const parts: string[] = [];
@@ -254,6 +275,36 @@ async function writeModelCache(cacheKey: string, entry: CachedModel): Promise<vo
   }
 }
 
+// One shard's decoded weights, cached under "<model-cache-key>:<shard-file>".
+// A shard is written as soon as it downloads, so an interrupted
+// first load resumes from the shards it already has instead of
+// downloading the whole model again from zero.
+async function readShardCache(key: string): Promise<ArrayBuffer | null> {
+  const db = await openModelCache();
+  if (!db) return null;
+  return new Promise((resolve) => {
+    try {
+      const tx = db.transaction("artifacts", "readonly");
+      const req = tx.objectStore("artifacts").get(key);
+      req.onsuccess = () => resolve((req.result as ArrayBuffer) ?? null);
+      req.onerror = () => resolve(null);
+    } catch {
+      resolve(null);
+    }
+  });
+}
+
+async function writeShardCache(key: string, data: ArrayBuffer): Promise<void> {
+  const db = await openModelCache();
+  if (!db) return;
+  try {
+    const tx = db.transaction("artifacts", "readwrite");
+    tx.objectStore("artifacts").put(data, key);
+  } catch {
+    // Cache failure must never break a scan.
+  }
+}
+
 type ModelJson = {
   modelTopology: unknown;
   weightsManifest: { paths: string[]; weights: unknown[] }[];
@@ -297,17 +348,26 @@ async function loadGraphModelArtifacts(
   // ~500 KB parts because a single large push is rejected;
   // try the single file first, then its parts (in parallel).
   // All shard files are fetched at the same time as well.
+  // Each shard is cached as soon as it downloads, so an
+  // interrupted first load resumes from the shards it already
+  // has instead of downloading the whole model again.
   const files = modelJson.weightsManifest.flatMap((g) => g.paths);
-  const b64s = await Promise.all(
+  const buffers: ArrayBuffer[] = await Promise.all(
     files.map(async (file: string) => {
-      const single = await fetchModelText(`${file}.b64`, localBase, cdnBase);
-      if (single !== null) return single;
-      const joined = await fetchShardParts(file, localBase, cdnBase);
-      if (joined === null) throw new Error(`Model weights not found for ${file}`);
-      return joined;
+      const shardKey = `${cacheKey}:${file}`;
+      const cachedShard = await readShardCache(shardKey);
+      if (cachedShard) return cachedShard;
+      const single = await fetchModelText(`${file}.b64`, localBase, cdnBase, true);
+      let b64: string | null = single;
+      if (b64 === null) {
+        b64 = await fetchShardParts(file, localBase, cdnBase);
+        if (b64 === null) throw new Error(`Model weights not found for ${file}`);
+      }
+      const buf = base64ToArrayBuffer(b64);
+      await writeShardCache(shardKey, buf);
+      return buf;
     })
   );
-  const buffers: ArrayBuffer[] = b64s.map((b64) => base64ToArrayBuffer(b64));
   const total = buffers.reduce((n, b) => n + b.byteLength, 0);
   const weightData = new Uint8Array(total);
   let offset = 0;
@@ -321,9 +381,17 @@ async function loadGraphModelArtifacts(
 
 async function loadLeafcropModelData() {
   if (!leafcropModelPromise) {
-    leafcropModelPromise = tf.loadGraphModel({
-      load: () => loadGraphModelArtifacts(LEAFCROP_LOCAL_BASE, LEAFCROP_CDN_BASE, LEAFCROP_CACHE_KEY),
-    });
+    // A failed load must not poison the singleton: reset it so
+    // the next attempt (e.g. the scan) retries instead of
+    // re-throwing the same failure for the rest of the visit.
+    leafcropModelPromise = tf
+      .loadGraphModel({
+        load: () => loadGraphModelArtifacts(LEAFCROP_LOCAL_BASE, LEAFCROP_CDN_BASE, LEAFCROP_CACHE_KEY),
+      })
+      .catch((e) => {
+        leafcropModelPromise = null;
+        throw e;
+      });
   }
   if (!leafcropClassNames) {
     leafcropClassNames = (await (
@@ -347,9 +415,17 @@ async function loadDiseaseModelData(crop: string) {
   const bases = DISEASE_BASES[crop];
   if (!bases) throw new Error(`No disease model for crop "${crop}"`);
   if (!diseaseModelPromises[crop]) {
-    diseaseModelPromises[crop] = tf.loadGraphModel({
-      load: () => loadGraphModelArtifacts(bases.local, bases.cdn, bases.cacheKey),
-    });
+    // A failed load must not poison the singleton: reset it so
+    // the next attempt retries instead of re-throwing the same
+    // failure for the rest of the visit.
+    diseaseModelPromises[crop] = tf
+      .loadGraphModel({
+        load: () => loadGraphModelArtifacts(bases.local, bases.cdn, bases.cacheKey),
+      })
+      .catch((e) => {
+        delete diseaseModelPromises[crop];
+        throw e;
+      });
   }
   if (!diseaseClassNames[crop]) {
     diseaseClassNames[crop] = (await (
@@ -578,19 +654,24 @@ export class TfjsPredictionService implements PredictionServiceInterface {
 
 export const tfjsPredictionService = new TfjsPredictionService();
 
-// Start loading all four models in the background (Diagnose
-// page mount). The leaf+crop model loads first; the three disease
-// models load right after, so that by the time the user presses
-// Scan every model is already in the browser cache and a scan never
-// waits on a download. This is about 34 MB on the first visit,
-// downloaded in the background while the user is still on the home
-// page; later visits use the IndexedDB cache and skip the download
-// entirely. Failures are ignored here on purpose: a real scan will
-// retry and show its normal error if a model still cannot load.
+// Start loading the models in the background (Diagnose
+// page mount). The leaf+crop model loads first, ON ITS OWN: it
+// gates every scan, and on a slow connection four models
+// downloading at once split the bandwidth four ways, so the
+// first scan waited on all of them. Loading it alone first makes
+// the first scan ready after ~8 MB instead of ~34 MB. The three
+// disease models follow in the background, so that by the time
+// the user presses Scan every model is already in the browser
+// cache and a scan never waits on a download. This is about
+// 34 MB on the first visit, downloaded in the background while
+// the user is still on the home page; later visits use the
+// IndexedDB cache and skip the download entirely. Failures are
+// ignored here on purpose: a real scan will retry and show its
+// normal error if a model still cannot load.
 export async function preloadTfjsModel(): Promise<void> {
   try {
+    await loadLeafcropModelData().catch(() => undefined);
     await Promise.allSettled([
-      loadLeafcropModelData(),
       loadDiseaseModelData("rice"),
       loadDiseaseModelData("cotton"),
       loadDiseaseModelData("wheat"),
