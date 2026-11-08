@@ -34,6 +34,13 @@ export type Lang = "en" | "ur" | "roman";
 
 let cachedVoices: SpeechSynthesisVoice[] = [];
 let voicesReady: Promise<SpeechSynthesisVoice[]> | null = null;
+let speakGen = 0;
+// Generation counter for the currently playing speech session.
+// speak() bumps it; stopSpeaking() bumps it too. Every step of a
+// session (the next sentence, the pause between sentences, the
+// onend/onerror handlers) checks it first and stops silently when
+// it no longer matches — so stopping really stops, instead of the
+// next queued sentence starting again after cancel().
 
 function loadVoices(): SpeechSynthesisVoice[] {
   try {
@@ -152,6 +159,9 @@ function splitSentences(text: string): string[] {
 export function speak(text: string, lang: Lang, onEnd?: () => void): boolean {
   try {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
+    // A new session invalidates any previous one: its queued
+    // sentences and pause timers must never speak again.
+    const gen = ++speakGen;
     // Only cancel when something is actually speaking: on some
     // Android phones cancel() right before speak() drops the new
     // utterance, which made the first Listen tap silent.
@@ -172,6 +182,8 @@ export function speak(text: string, lang: Lang, onEnd?: () => void): boolean {
       }
       let i = 0;
       const speakNext = () => {
+        // Stopped or superseded by a newer session: say nothing.
+        if (gen !== speakGen) return;
         if (i >= sentences.length) {
           onEnd?.();
           return;
@@ -213,6 +225,12 @@ export function speak(text: string, lang: Lang, onEnd?: () => void): boolean {
 
 export function stopSpeaking(): void {
   try {
+    // Invalidate the current session first: cancel() alone does
+    // not stop it, because the cancelled utterance's onerror
+    // handler and the pause timer between sentences would queue
+    // the next sentence again. Bumping the generation makes every
+    // pending step of that session return silently.
+    speakGen++;
     if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
   } catch {
     // Ignore.
