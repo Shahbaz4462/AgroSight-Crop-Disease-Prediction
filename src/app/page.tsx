@@ -9,7 +9,7 @@ import { formatDate } from "../lib/utils";
 import { LeafSpecimen } from "../components/layout/LeafSpecimen";
 import { useApp } from "../context/AppContext";
 
-const CROPS = ["Wheat", "Cotton", "Rice", "Maize", "Tomato", "Potato", "Apple", "Grape", "Citrus", "Peach", "Cherry", "Strawberry"];
+const CROPS = ["Wheat", "Rice", "Cotton"];
 
 const STEPS = [
   { n: "01", titleKey: "home_step1_t", textKey: "home_step1_x" },
