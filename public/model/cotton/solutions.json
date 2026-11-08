@@ -38,5 +38,25 @@
     "treatment": "No treatment needed. Keep balanced watering and feeding, and remove any dead leaves promptly.",
     "prevention": "Give good air circulation, avoid overwatering, and check leaves weekly so any new problem is caught early.",
     "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+  },
+  "cotton_alternaria": {
+    "class": "cotton_alternaria",
+    "crop": "cotton",
+    "disease": "alternaria leaf spot",
+    "immediate_steps": "Remove and burn infected leaves and plant debris, and spray at the first sign of spots — do not wait for them to spread to the bolls.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "prevention": "Use clean seed, remove and burn infected plant debris after harvest, rotate crops, and avoid excess nitrogen.",
+    "treatment": "A protectant fungicide such as mancozeb or copper oxychloride, or a systemic triazole such as propiconazole, labelled for cotton Alternaria leaf spot, may help — always follow the product label and local agricultural advice.",
+    "type": "fungal"
+  },
+  "cotton_verticillium_wilt": {
+    "class": "cotton_verticillium_wilt",
+    "crop": "cotton",
+    "disease": "verticillium wilt",
+    "immediate_steps": "Pull out and destroy infected plants, and do not move soil or plant debris from the infested field to clean fields.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "prevention": "Use resistant or tolerant varieties — the main defence — rotate with non-host crops such as cereals, use clean seed, and avoid excess nitrogen and excess irrigation.",
+    "treatment": "There is no cure once plants are infected, and no fungicide controls this disease. A Trichoderma seed treatment may reduce severity in the next crop — always follow the product label and local agricultural advice.",
+    "type": "fungal"
   }
 }

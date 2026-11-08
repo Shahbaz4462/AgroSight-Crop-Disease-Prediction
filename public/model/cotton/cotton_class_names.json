@@ -1,6 +1,8 @@
 [
+  "cotton_alternaria",
   "cotton_bacterial_blight",
   "cotton_curl_virus",
   "cotton_fusarium_wilt",
+  "cotton_verticillium_wilt",
   "healthy_cotton"
 ]

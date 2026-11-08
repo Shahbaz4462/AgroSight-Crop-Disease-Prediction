@@ -11,48 +11,45 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 // There is no external backend and no mock fallback. If a model file
 // is missing, the scan fails with an error instead of a fake result.
 //
-// Three-step pipeline — every scan runs three models in order, and
-// any step can answer "not sure" instead of guessing:
-//   1. Leaf gate (public/model/leaf/): a 2-class model (leaf /
-//      no_leaf) trained on real field photos plus soil, wall and
-//      wide-field negatives. Below 80% leaf confidence the answer
-//      is "not sure" and the crop/disease models never run, so a
-//      photo of soil, a wall or a hand can never be answered with
-//      a crop or a disease. Measured on the 216-photo acceptance
-//      set: at the 80% gate, 0/36 non-leaf photos pass, so no
-//      photo is confidently wrong — the errors all fall below the
-//      gate and become "not sure" instead. The gate is the safety:
-//      the model itself is 89.8% accurate on its held-out test
-//      set, so about a quarter of real leaf photos still land
-//      below the gate and are answered "not sure" rather than
-//      risked. (The gate was 90% until 2026-11-07; see LEAF_GATE
-//      for the measured reason it was lowered to 80%.)
-//   2. Crop: the farmer picks the crop before scanning (wheat /
-//      cotton / rice, or Auto-detect). When a crop is picked, the
-//      crop gate below runs only as a disagree check: if it is
-//      90%+ confident the photo is a DIFFERENT crop, the scan
-//      answers "not sure" with a message to check the crop, so a
-//      wrongly picked crop can never produce a confident disease
-//      answer. Otherwise the picked crop is trusted and its
-//      disease model runs directly. Measured on the 180-photo
-//      field acceptance set, asking the farmer removes the crop
-//      gate as a source of "not sure" (38.9% of field photos fell
-//      below the 90% crop gate) and cuts the pipeline "not sure"
-//      rate from 53.9% to 31.1%. The disagree check wrongly fires
-//      on 6.1% of correctly picked crops (mostly healthy wheat
-//      the crop model confidently calls rice). With Auto-detect
-//      the old behaviour applies: the crop gate decides, and
-//      below 90% the answer is "not sure" with no crop named.
-//      The crop gate is a dedicated 3-class model (cotton / rice
-//      / wheat) trained only on real field photos. Healthy wheat
+// Two-model pipeline (v3, 2026-11-08) — every scan runs two models
+// in order, and any step can answer "not sure" instead of guessing:
+//   1. Leaf+crop (public/model/leafcrop/): ONE 4-class model
+//      (cotton / no_leaf / rice / wheat) trained on real field
+//      photos. It replaces the old two-model leaf gate (2-class)
+//      + crop gate (3-class) pair. Top-1 is no_leaf, or the top-1
+//      crop is below 90% confidence, and the answer is "not sure"
+//      — no crop is named and the disease model never runs, so a
+//      photo of soil, a wall, a hand or a dog can never be
+//      answered with a crop or a disease. Measured on the 216-photo
+//      field acceptance set: leaf detection 209/216 (the old leaf
+//      gate managed 185/216), and at the 90% gate 0/36 non-leaf
+//      photos pass. The gate is 90% (not 80%) because at 80% the
+//      model confidently mislabels 22 field photos (vs 9 at 90%)
+//      and one dog photo passes as wheat at 82% — at 90% the
+//      errors fall below the gate and become "not sure" instead.
+//      The model itself is 97.3% accurate on its held-out test
+//      set (n=1,890), so most real leaf photos still pass the
+//      gate; the ones that don't are answered "not sure" rather
+//      than risked. The old public/model/leaf/ and public/model/
+//      crop/ folders remain in the repo but are NO LONGER LOADED.
+//   2. Disease (public/model/rice|cotton|wheat/): one model per
+//      crop, run only for the decided crop, so a cotton leaf can
+//      never be answered with a wheat disease. Cotton 89.2%,
+//      wheat 83.3%, rice 86.6% on their held-out test sets.
+//      Confident threshold is 75% (see below).
+//   Crop pre-selection: the farmer picks the crop before scanning
+//      (wheat / cotton / rice, or Auto-detect). When a crop is
+//      picked, the leaf+crop model runs only as a disagree check:
+//      if it is 90%+ confident the photo is a DIFFERENT crop, the
+//      scan answers "not sure" with a message to check the crop,
+//      so a wrongly picked crop can never produce a confident
+//      disease answer. Otherwise the picked crop is trusted and
+//      its disease model runs directly. With Auto-detect the
+//      leaf+crop model's top-1 crop is the decision. Healthy wheat
 //      and healthy rice leaves look near-identical (long narrow
 //      grassy blades with no disease symptoms), which is why the
-//      gate alone could not be trusted for the crop decision.
-//   3. Disease (public/model/rice|cotton|wheat/): one model per
-//      crop, run only for the decided crop, so a cotton leaf can
-//      never be answered with a wheat disease. Wheat 95.2%,
-//      cotton 87.6%, rice 81.8% on their held-out test sets.
-//      Confident threshold is 75% (see below).
+//      90% gate — not the raw top-1 — is what the crop decision
+//      rests on.
 //
 // IMPORTANT: the files in /model/ are ALWAYS fetched first, and the
 // CDN only second. The CDN mirrors the main branch, so on a preview
@@ -66,12 +63,12 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 //
 // Speed: three things together make scans feel fast.
 //  1. Preload: preloadTfjsModel() is called when the app opens
-//     (AppProvider mount), so all five models download while the
+//     (AppProvider mount), so all four models download while the
 //     user is still on the home page, instead of only after they
 //     open Diagnose and press Scan. The Diagnose page calls it too,
 //     as a backup for direct links. Without this, a scan would wait
 //     on a model download; with it, every model is already in the
-//     browser cache by scan time (about 43 MB on the first visit,
+//     browser cache by scan time (about 34 MB on the first visit,
 //     then the IndexedDB cache skips the download on later visits).
 //  2. Same-origin first: the model files come from the deployment
 //     itself, and the split weight parts are fetched in parallel
@@ -92,32 +89,17 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 const CDN_BASE =
   "https://cdn.jsdelivr.net/gh/Shahbaz4462/AgroSight-Crop-Disease-Prediction@main/public/model";
 
-// Leaf gate: a 2-class model (leaf / no_leaf) in public/model/leaf/.
-// Runs first on every scan. Below 80% leaf confidence the answer is
-// "not sure" — no crop is named and the crop/disease models never run.
-// The gate was 90% until 2026-11-07; it was lowered to 80% because
-// live scans answered "not sure" too often. Measured on the 216-photo
-// field acceptance set: at 80%, 136/180 real leaf photos pass (vs
-// 124/180 at 90%) and still 0/36 non-leaf photos pass, so no new
-// confidently-wrong answers on field photos. On the 3,211-image
-// held-out test set the cost is 24 non-leaf photos passing (1.6%)
-// vs 7 (0.5%) at 90% — the crop gate below is a second net for
-// those, and the leaf-gate v5 retrain is meant to close the gap
-// properly.
-const LEAF_LOCAL_BASE = "/model/leaf";
-const LEAF_CDN_BASE = `${CDN_BASE}/leaf`;
-const LEAF_CACHE_KEY = "leaf-v4";
-const LEAF_GATE = 80;
-
-// Crop gate: a dedicated 3-class model (cotton / rice / wheat)
-// trained ONLY on real field photos, in public/model/crop/.
-// It runs second on every scan. The disease model below is then the
-// decided crop's own model, so a cotton leaf can never be answered
-// with a wheat disease.
-const CROP_LOCAL_BASE = "/model/crop";
-const CROP_CDN_BASE = `${CDN_BASE}/crop`;
-const CROP_CACHE_KEY = "crop-v2";
-const CROP_GATE = 90;
+// Leaf+crop: ONE 4-class model (cotton / no_leaf / rice / wheat) in
+// public/model/leafcrop/. Top-1 is no_leaf, or the top-1 crop is
+// below 90% confidence, and the answer is "not sure" — no crop is
+// named and the disease model never runs. The 90% gate is the
+// safety: measured on the 216-photo field acceptance set, at 90%
+// 0/36 non-leaf photos pass and only 9 field photos are confidently
+// wrong (vs 22 at 80%, including a dog photo passing as wheat).
+const LEAFCROP_LOCAL_BASE = "/model/leafcrop";
+const LEAFCROP_CDN_BASE = `${CDN_BASE}/leafcrop`;
+const LEAFCROP_CACHE_KEY = "leafcrop-v3";
+const LEAFCROP_GATE = 90;
 const CROP_DISPLAY: Record<string, string> = {
   cotton: "Cotton",
   rice: "Rice",
@@ -129,19 +111,21 @@ const CROP_DISPLAY: Record<string, string> = {
 // that crop's model changes, or returning visitors keep answering
 // with the stale cached model.
 const DISEASE_BASES: Record<string, { local: string; cdn: string; cacheKey: string }> = {
-  rice: { local: "/model/rice", cdn: `${CDN_BASE}/rice`, cacheKey: "rice-v2" },
-  cotton: { local: "/model/cotton", cdn: `${CDN_BASE}/cotton`, cacheKey: "cotton-v1" },
-  wheat: { local: "/model/wheat", cdn: `${CDN_BASE}/wheat`, cacheKey: "wheat-v1" },
+  rice: { local: "/model/rice", cdn: `${CDN_BASE}/rice`, cacheKey: "rice-v3" },
+  cotton: { local: "/model/cotton", cdn: `${CDN_BASE}/cotton`, cacheKey: "cotton-v3" },
+  wheat: { local: "/model/wheat", cdn: `${CDN_BASE}/wheat`, cacheKey: "wheat-v3" },
 };
 
 const DISPLAY: Record<string, [string, string]> = {
   cotton_aphids: ["Cotton", "Aphids"],
+  cotton_alternaria: ["Cotton", "Alternaria Leaf Spot"],
   cotton_army_worm: ["Cotton", "Army Worm"],
   cotton_bacterial_blight: ["Cotton", "Bacterial Blight"],
   cotton_curl_virus: ["Cotton", "Leaf Curl Virus"],
   cotton_fusarium_wilt: ["Cotton", "Fusarium Wilt"],
   cotton_powdery_mildew: ["Cotton", "Powdery Mildew"],
   cotton_target_spot: ["Cotton", "Target Spot"],
+  cotton_verticillium_wilt: ["Cotton", "Verticillium Wilt"],
   diseased_rice: ["Rice", "Diseased"],
   healthy_cotton: ["Cotton", "Healthy"],
   healthy_rice: ["Rice", "Healthy"],
@@ -161,6 +145,7 @@ const DISPLAY: Record<string, [string, string]> = {
   wheat_leaf_blight: ["Wheat", "Leaf Blight"],
   wheat_mildew: ["Wheat", "Mildew"],
   wheat_mite: ["Wheat", "Mite"],
+  wheat_powdery_mildew: ["Wheat", "Powdery Mildew"],
   wheat_septoria: ["Wheat", "Septoria"],
   wheat_smut: ["Wheat", "Smut"],
   wheat_stem_fly: ["Wheat", "Stem Fly"],
@@ -290,11 +275,9 @@ function artifactsFrom(modelJson: ModelJson, weightData: ArrayBuffer): tf.io.Mod
   } as tf.io.ModelArtifacts;
 }
 
-let leafModelPromise: Promise<tf.GraphModel> | null = null;
-let cropModelPromise: Promise<tf.GraphModel> | null = null;
+let leafcropModelPromise: Promise<tf.GraphModel> | null = null;
 const diseaseModelPromises: Record<string, Promise<tf.GraphModel>> = {};
-let leafClassNames: string[] | null = null;
-let cropClassNames: string[] | null = null;
+let leafcropClassNames: string[] | null = null;
 const diseaseClassNames: Record<string, string[]> = {};
 const diseaseSolutions: Record<string, Record<string, Solution>> = {};
 
@@ -336,45 +319,28 @@ async function loadGraphModelArtifacts(
   return artifactsFrom(modelJson, weightData.buffer);
 }
 
-async function loadLeafModelData() {
-  if (!leafModelPromise) {
-    leafModelPromise = tf.loadGraphModel({
-      load: () => loadGraphModelArtifacts(LEAF_LOCAL_BASE, LEAF_CDN_BASE, LEAF_CACHE_KEY),
+async function loadLeafcropModelData() {
+  if (!leafcropModelPromise) {
+    leafcropModelPromise = tf.loadGraphModel({
+      load: () => loadGraphModelArtifacts(LEAFCROP_LOCAL_BASE, LEAFCROP_CDN_BASE, LEAFCROP_CACHE_KEY),
     });
   }
-  if (!leafClassNames) {
-    leafClassNames = (await (await fetch("/model/leaf/leaf_class_names.json")).json()) as string[];
+  if (!leafcropClassNames) {
+    leafcropClassNames = (await (
+      await fetch("/model/leafcrop/leafcrop_class_names.json")
+    ).json()) as string[];
   }
-  const model = await leafModelPromise;
-  // Safety net: the leaf model must output exactly one probability
-  // per class name. If a wrong-branch model ever loads again, fail
-  // loudly instead of mislabelling.
+  const model = await leafcropModelPromise;
+  // Safety net: the leaf+crop model must output exactly one
+  // probability per class name. If a wrong-branch model ever loads
+  // again, fail loudly instead of mislabelling.
   const outputSize = (model.outputs?.[0]?.shape as number[] | undefined)?.[1];
-  if (outputSize !== undefined && outputSize !== leafClassNames.length) {
+  if (outputSize !== undefined && outputSize !== leafcropClassNames.length) {
     throw new Error(
-      `Leaf model mismatch: the model predicts ${outputSize} classes but the class list has ${leafClassNames.length}.`
+      `Leaf+crop model mismatch: the model predicts ${outputSize} classes but the class list has ${leafcropClassNames.length}.`
     );
   }
-  return { model, classNames: leafClassNames as string[] };
-}
-
-async function loadCropModelData() {
-  if (!cropModelPromise) {
-    cropModelPromise = tf.loadGraphModel({
-      load: () => loadGraphModelArtifacts(CROP_LOCAL_BASE, CROP_CDN_BASE, CROP_CACHE_KEY),
-    });
-  }
-  if (!cropClassNames) {
-    cropClassNames = (await (await fetch("/model/crop/crop_class_names.json")).json()) as string[];
-  }
-  const model = await cropModelPromise;
-  const outputSize = (model.outputs?.[0]?.shape as number[] | undefined)?.[1];
-  if (outputSize !== undefined && outputSize !== cropClassNames.length) {
-    throw new Error(
-      `Crop model mismatch: the model predicts ${outputSize} crops but the class list has ${cropClassNames.length}.`
-    );
-  }
-  return { model, classNames: cropClassNames as string[] };
+  return { model, classNames: leafcropClassNames as string[] };
 }
 
 async function loadDiseaseModelData(crop: string) {
@@ -449,13 +415,12 @@ export class TfjsPredictionService implements PredictionServiceInterface {
     image: File | Blob | string,
     onProgress?: (stage: ScanningStage) => void,
     // Crop the farmer picked before scanning ("wheat" | "cotton" |
-    // "rice"), or null/undefined for Auto-detect (the crop gate
-    // decides). See step 2 below for what the pick changes.
+    // "rice"), or null/undefined for Auto-detect (the leaf+crop
+    // model decides). See step 1 below for what the pick changes.
     selectedCrop?: string | null
   ): Promise<PredictionResult> {
     onProgress?.({ stage: "stage_loading", progress: 20, detail: "stage_loading_detail" });
-    const { model: leafModel, classNames: leafNames } = await loadLeafModelData();
-    const { model: cropModel, classNames: cropNames } = await loadCropModelData();
+    const { model: leafcropModel, classNames: leafcropNames } = await loadLeafcropModelData();
     onProgress?.({ stage: "stage_checking", progress: 70, detail: "stage_checking_detail" });
 
     const blob = await resolveToBlob(image);
@@ -469,23 +434,37 @@ export class TfjsPredictionService implements PredictionServiceInterface {
       return resized.div(127.5).sub(1).expandDims(0);
     });
 
-    // Step 1 — leaf gate: does this photo show a leaf at all? Below
-    // 80% leaf confidence it is "not sure" — no crop is named and
-    // the crop/disease models never run, so a photo of soil, a wall
-    // or a hand can never be answered with a crop or a disease.
-    const leafOutput = leafModel.execute(input) as tf.Tensor;
-    const leafProbs = (await leafOutput.data()) as Float32Array;
-    tf.dispose(leafOutput);
-    const leafIdx = leafNames.indexOf("leaf");
-    const leafConfidence = leafProbs[leafIdx] * 100;
-    if (leafConfidence < LEAF_GATE) {
+    // Step 1 — leaf+crop: does this photo show a leaf at all, and
+    // if so, which crop? Top-1 is no_leaf, or the top-1 crop is
+    // below 90% confidence, and the answer is "not sure" — no crop
+    // is named and the disease model never runs, so a photo of
+    // soil, a wall, a hand or a dog can never be answered with a
+    // crop or a disease. When the farmer picked a crop before
+    // scanning, this same output runs as the disagree check: if
+    // it is 90%+ confident the photo is a DIFFERENT crop, the pick
+    // was almost certainly wrong, so the answer is "not sure" with
+    // a message to check the crop — a wrongly picked crop can never
+    // produce a confident disease answer. Otherwise the picked crop
+    // is trusted (the farmer knows their own field) and its disease
+    // model runs directly. With no pick (Auto-detect) the top-1
+    // crop is the decision.
+    const leafcropOutput = leafcropModel.execute(input) as tf.Tensor;
+    const leafcropProbs = (await leafcropOutput.data()) as Float32Array;
+    tf.dispose(leafcropOutput);
+    const leafcropOrder = Array.from(leafcropProbs)
+      .map((p, i) => ({ i, p }))
+      .sort((a, b) => b.p - a.p);
+    const topCrop = leafcropNames[leafcropOrder[0].i];
+    const topConfidence = leafcropProbs[leafcropOrder[0].i] * 100;
+
+    if (topCrop === "no_leaf") {
       tf.dispose(input);
       onProgress?.({ stage: "stage_done", progress: 100, detail: "stage_done_detail" });
       return {
         id: `pred-${Date.now()}`,
         crop: "",
         disease: "",
-        confidence: Math.round(leafConfidence * 100) / 100,
+        confidence: Math.round(topConfidence * 100) / 100,
         status: "uncertain",
         topPredictions: [],
         organic_solution: [],
@@ -496,68 +475,50 @@ export class TfjsPredictionService implements PredictionServiceInterface {
         timestamp: new Date().toISOString(),
       };
     }
+    if (topConfidence < LEAFCROP_GATE) {
+      tf.dispose(input);
+      onProgress?.({ stage: "stage_done", progress: 100, detail: "stage_done_detail" });
+      return {
+        id: `pred-${Date.now()}`,
+        crop: "",
+        disease: "",
+        confidence: Math.round(topConfidence * 100) / 100,
+        status: "uncertain",
+        topPredictions: [],
+        organic_solution: [],
+        chemical_solution: [],
+        prevention: [],
+        message:
+          "The model is not sure enough about this photo, so no crop or disease is named as a confident answer. Take a closer, well-lit photo of a single leaf.",
+        timestamp: new Date().toISOString(),
+      };
+    }
 
-    // Step 2 — crop. When the farmer picked a crop before scanning,
-    // the crop gate runs only as a disagree check: if it is 90%+
-    // confident the photo is a DIFFERENT crop, the pick was almost
-    // certainly wrong, so the answer is "not sure" with a message
-    // to check the crop — a wrongly picked crop can never produce
-    // a confident disease answer. Otherwise the picked crop is
-    // trusted (the farmer knows their own field) and its disease
-    // model runs directly. With no pick (Auto-detect) the crop
-    // gate decides as before, and below 90% the answer is "not
-    // sure" with no crop named.
-    const cropOutput = cropModel.execute(input) as tf.Tensor;
-    const cropProbs = (await cropOutput.data()) as Float32Array;
-    tf.dispose(cropOutput);
-    const cropOrder = Array.from(cropProbs)
-      .map((p, i) => ({ i, p }))
-      .sort((a, b) => b.p - a.p);
-    const modelCrop = cropNames[cropOrder[0].i];
-    const cropConfidence = cropProbs[cropOrder[0].i] * 100;
     let decidedCrop: string;
     if (selectedCrop) {
-      if (modelCrop !== selectedCrop && cropConfidence >= CROP_GATE) {
+      if (topCrop !== selectedCrop) {
         tf.dispose(input);
         onProgress?.({ stage: "stage_done", progress: 100, detail: "stage_done_detail" });
         return {
           id: `pred-${Date.now()}`,
           crop: CROP_DISPLAY[selectedCrop] ?? selectedCrop,
           disease: "",
-          confidence: Math.round(cropConfidence * 100) / 100,
+          confidence: Math.round(topConfidence * 100) / 100,
           status: "uncertain",
           topPredictions: [],
           organic_solution: [],
           chemical_solution: [],
           prevention: [],
-          message: `You selected ${CROP_DISPLAY[selectedCrop] ?? selectedCrop}, but this photo looks like ${CROP_DISPLAY[modelCrop] ?? modelCrop}. Please check the crop and scan again.`,
+          message: `You selected ${CROP_DISPLAY[selectedCrop] ?? selectedCrop}, but this photo looks like ${CROP_DISPLAY[topCrop] ?? topCrop}. Please check the crop and scan again.`,
           timestamp: new Date().toISOString(),
         };
       }
       decidedCrop = selectedCrop;
     } else {
-      if (cropConfidence < CROP_GATE) {
-        tf.dispose(input);
-        onProgress?.({ stage: "stage_done", progress: 100, detail: "stage_done_detail" });
-        return {
-          id: `pred-${Date.now()}`,
-          crop: CROP_DISPLAY[modelCrop] ?? modelCrop,
-          disease: "",
-          confidence: Math.round(cropConfidence * 100) / 100,
-          status: "uncertain",
-          topPredictions: [],
-          organic_solution: [],
-          chemical_solution: [],
-          prevention: [],
-          message:
-            "The model is not sure enough about this photo, so no crop or disease is named as a confident answer. Take a closer, well-lit photo of a single leaf.",
-          timestamp: new Date().toISOString(),
-        };
-      }
-      decidedCrop = modelCrop;
+      decidedCrop = topCrop;
     }
 
-    // Step 3 — disease: the decided crop's own model. It only knows
+    // Step 2 — disease: the decided crop's own model. It only knows
     // that crop's classes, so no masking is needed — a cotton leaf
     // can never be answered with a wheat disease. The disease model
     // loads here, on the first scan of its crop, and is cached after.
@@ -617,21 +578,19 @@ export class TfjsPredictionService implements PredictionServiceInterface {
 
 export const tfjsPredictionService = new TfjsPredictionService();
 
-// Start loading all five models in the background (Diagnose
-// page mount). The leaf and crop gates load first; the three
-// disease models load right after, so that by the time the user
-// presses Scan every model is already in the browser cache and a
-// scan never waits on a download. This is about 43 MB on the first
-// visit, downloaded in the background while the user is still on
-// the home page; later visits use the IndexedDB cache and skip the
-// download entirely. Failures are ignored here on purpose: a real
-// scan will retry and show its normal error if a model still
-// cannot load.
+// Start loading all four models in the background (Diagnose
+// page mount). The leaf+crop model loads first; the three disease
+// models load right after, so that by the time the user presses
+// Scan every model is already in the browser cache and a scan never
+// waits on a download. This is about 34 MB on the first visit,
+// downloaded in the background while the user is still on the home
+// page; later visits use the IndexedDB cache and skip the download
+// entirely. Failures are ignored here on purpose: a real scan will
+// retry and show its normal error if a model still cannot load.
 export async function preloadTfjsModel(): Promise<void> {
   try {
     await Promise.allSettled([
-      loadLeafModelData(),
-      loadCropModelData(),
+      loadLeafcropModelData(),
       loadDiseaseModelData("rice"),
       loadDiseaseModelData("cotton"),
       loadDiseaseModelData("wheat"),

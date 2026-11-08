@@ -143,6 +143,19 @@ export const CHEMICALS_BY_CLASS: Record<string, Chemical[]> = {
     { name: "Carbendazim", type: "Fungicide", detail: "Seed treatment labelled for cotton fusarium wilt, before sowing. There is no cure once plants are infected. Use only at the dose on the product label." },
     { name: "Thiophanate-methyl", type: "Fungicide", detail: "Seed treatment labelled for cotton fusarium wilt, before sowing. Use only at the dose on the product label." },
   ],
+  wheat_powdery_mildew: [
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat powdery mildew. Spray soon after the disease appears. Use only at the dose on the product label." },
+    { name: "Tebuconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat powdery mildew. Use only at the dose on the product label." },
+    { name: "Sulphur", type: "Organic", detail: "Protective spray for powdery mildew. Do not spray in hot midday sun — it can scorch leaves. Use only at the dose on the product label." },
+  ],
+  cotton_alternaria: [
+    { name: "Mancozeb", type: "Fungicide", detail: "Protectant fungicide labelled for cotton Alternaria leaf spot. Spray at the first sign of spots. Use only at the dose on the product label." },
+    { name: "Propiconazole", type: "Fungicide", detail: "Systemic triazole fungicide labelled for cotton Alternaria leaf spot. Use only at the dose on the product label." },
+    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based protectant fungicide labelled for cotton leaf spot. Use only at the dose on the product label." },
+  ],
+  cotton_verticillium_wilt: [
+    { name: "Trichoderma viride", type: "Organic", detail: "Biological seed treatment that may reduce wilt severity in the next crop. There is no cure once plants are infected and no fungicide controls this disease. Use only at the dose on the product label." },
+  ],
   // wheat_blast: intentionally absent — exact cause not identified by the model.
   // wheat_septoria: intentionally absent — exact cause not identified by the model.
   // wheat_stem_fly: intentionally absent — exact pest not identified by the model.
@@ -183,6 +196,9 @@ export function classForDisplay(crop: string, disease: string): string | null {
     "rice|tungro": "rice_tungro",
     "cotton|leaf curl virus": "cotton_curl_virus",
     "cotton|fusarium wilt": "cotton_fusarium_wilt",
+    "wheat|powdery mildew": "wheat_powdery_mildew",
+    "cotton|alternaria leaf spot": "cotton_alternaria",
+    "cotton|verticillium wilt": "cotton_verticillium_wilt",
   };
   return map[key] ?? null;
 }

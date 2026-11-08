@@ -1702,4 +1702,108 @@ export const GUIDE_TRANSLATIONS: Record<string, Record<GuideLang, GuideTranslati
       ],
     },
   },
+  "kb-cotton-alternaria-leaf-spot": {
+    ur: {
+      cause: "یہ فنگس متاثرہ کپاس کے ملبے اور بیج پر زندہ رہتی ہے۔ یہ گرم اور نم موسم میں ہوا اور بارش کے چھینٹوں سے پھیلتی ہے، اور پتوں، بریکٹس اور ٹینڈوں پر حملہ کرتی ہے۔",
+      symptoms: [
+        "پتوں پر گہرے بھورے دھبے جن میں گول حلقے بنے ہوتے ہیں",
+        "دھبے بڑھ کر مل جاتے ہیں، پتے پیلے پڑ کر جلدی گر جاتے ہیں",
+        "ٹینڈوں پر چھوٹے سرخی مائل بھورے دھنسے ہوئے دھبے",
+        "ننھے پودوں کے بیج پتیوں اور پہلے پتوں پر چھوٹے سرخ دھبے",
+      ],
+      organicSolution: [
+        "متاثرہ پتے اور پودوں کا ملبہ کٹائی کے بعد جلا کر تلف کر دیں۔",
+        "بوائی سے پہلے بیج کا Pseudomonas fluorescens یا Trichoderma سے علاج کریں۔",
+        "نائٹروجن زیادہ نہ ڈالیں۔",
+        "فصلیں بدل بدل کر لگائیں اور ہر سال ایک ہی کھیت میں کپاس نہ لگائیں۔",
+      ],
+      chemicalSolution: [
+        "کپاس کی Alternaria Leaf Spot کے لیے لیبل شدہ Mancozeb یا Copper oxychloride، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "کپاس کی Alternaria Leaf Spot کے لیے لیبل شدہ Propiconazole، صرف لیبل پر لکھی مقدار کے مطابق۔",
+      ],
+      prevention: [
+        "صاف اور بیماری سے پاک بیج استعمال کریں۔",
+        "کٹائی کے بعد متاثرہ پودوں کا ملبہ جلا کر تلف کر دیں۔",
+        "فصلیں بدل بدل کر لگائیں۔",
+        "نائٹروجن زیادہ نہ ڈالیں اور پانی کی نکاسی بہتر کریں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye fungus mutasira kapas ke malbe aur beej par zinda rehti hai. Ye garam aur nam mausam mein hawa aur barish ke chheenton se phailti hai, aur patton, bracts aur tindon par hamla karti hai.",
+      symptoms: [
+        "Patton par gehre bhure dhabbe jin mein gol halqe bane hote hain",
+        "Dhabbe barh kar mil jate hain, patte peele par kar jaldi gir jate hain",
+        "Tindon par chhote surkhi mail bhure dhanse hue dhabbe",
+        "Nanhe podon ke beej pattiyon aur pehle patton par chhote surkh dhabbe",
+      ],
+      organicSolution: [
+        "Mutasira patte aur podon ka malba katai ke baad jala kar talaf kar dein.",
+        "Bawai se pehle beej ka Pseudomonas fluorescens ya Trichoderma se ilaaj karein.",
+        "Nitrogen zyada na dalein.",
+        "Faslein badal badal kar lagayein aur har saal ek hi khet mein kapas na lagayein.",
+      ],
+      chemicalSolution: [
+        "Kapas ki Alternaria Leaf Spot ke liye label shuda Mancozeb ya Copper oxychloride, sirf label par likhi miqdar ke mutabiq.",
+        "Kapas ki Alternaria Leaf Spot ke liye label shuda Propiconazole, sirf label par likhi miqdar ke mutabiq.",
+      ],
+      prevention: [
+        "Saaf aur bimari se pak beej istemal karein.",
+        "Katai ke baad mutasira podon ka malba jala kar talaf kar dein.",
+        "Faslein badal badal kar lagayein.",
+        "Nitrogen zyada na dalein aur pani ki nikasi behtar karein.",
+      ],
+    },
+  },
+  "kb-cotton-verticillium-wilt": {
+    ur: {
+      cause: "یہ مٹی سے پھیلنے والی فنگس ہے جو مٹی میں چھوٹی سیاہ آرام کرنے والی ساختوں (مائیکرو اسکلیروشیا) کی صورت میں سالوں تک زندہ رہتی ہے۔ یہ جڑوں سے داخل ہو کر پانی کی نالیاں بند کر دیتی ہے۔ یہ ٹھنڈے، گیلے موسم اور بھاری مٹی میں خوب بڑھتی ہے، اور متاثرہ مٹی اور جن کے کچرے سے پھیلتی ہے۔",
+      symptoms: [
+        "رگوں کے درمیان پیلا پن جبکہ رگیں سبز رہتی ہیں — شیر کی دھاری جیسا نمونہ",
+        "پتے کناروں سے اندر کی طرف خشک ہو کر جلدی گر جاتے ہیں",
+        "تنے کے اندر بھوری رنگت",
+        "پودے چھوٹے رہ جاتے ہیں، پھول آنے کے بعد مرجھا جاتے ہیں اور ننھے ٹینڈے گرا دیتے ہیں",
+      ],
+      organicSolution: [
+        "متاثرہ پودے اکھاڑ کر تلف کر دیں۔",
+        "اناج جیسی غیر میزبان فصلوں سے فصلیں بدل بدل کر لگائیں۔",
+        "گہرا ہل چلائیں اور کٹائی کے بعد متاثرہ پودوں کا ملبہ تلف کر دیں۔",
+        "بوائی سے پہلے بیج کا Trichoderma سے علاج کریں۔",
+      ],
+      chemicalSolution: [
+        "پودے متاثر ہونے کے بعد کوئی کیمیائی علاج نہیں، اور کوئی فنجیسائیڈ اس بیماری کو کنٹرول نہیں کرتی۔",
+        "بوائی سے پہلے بیج کے علاج کے طور پر Trichoderma viride اگلی فصل میں شدت کم کر سکتی ہے، صرف لیبل پر لکھی مقدار کے مطابق۔",
+      ],
+      prevention: [
+        "مدافعت رکھنے والی اقسام لگائیں — یہی سب سے اہم دفاع ہے۔",
+        "اناج جیسی غیر میزبان فصلوں سے فصلیں بدلیں اور ہر سال ایک ہی کھیت میں کپاس نہ لگائیں۔",
+        "صاف اور مصدقہ بیج استعمال کریں۔",
+        "نائٹروجن اور آبپاشی زیادہ نہ کریں۔",
+      ],
+    },
+    roman: {
+      cause: "Ye mitti se phailne wali fungus hai jo mitti mein chhoti siyah aaram karne wali sakhton (microsclerotia) ki surat mein saalon tak zinda rehti hai. Ye jadon se dakhil ho kar pani ki naliyan band kar deti hai. Ye thande, geele mausam aur bhari mitti mein khoob barhti hai, aur mutasira mitti aur gin ke kachre se phailti hai.",
+      symptoms: [
+        "Ragon ke darmiyan peela pan jabke ragein sabz rehti hain — sher ki dhari jaisa namuna",
+        "Patte kinaron se andar ki taraf khushk ho kar jaldi gir jate hain",
+        "Tane ke andar bhuri rangat",
+        "Poday chhote reh jate hain, phool aane ke baad murjha jate hain aur nanhe tinday gira dete hain",
+      ],
+      organicSolution: [
+        "Mutasira poday ukhaar kar talaf kar dein.",
+        "Anaaj jaisi ghair mezban faslon se faslein badal badal kar lagayein.",
+        "Gehra hal chalayein aur katai ke baad mutasira podon ka malba talaf kar dein.",
+        "Bawai se pehle beej ka Trichoderma se ilaaj karein.",
+      ],
+      chemicalSolution: [
+        "Poday mutasir hone ke baad koi chemical ilaaj nahi, aur koi fungicide is bimari ko control nahi karti.",
+        "Bawai se pehle beej ke ilaaj ke tor par Trichoderma viride agli fasal mein shiddat kam kar sakti hai, sirf label par likhi miqdar ke mutabiq.",
+      ],
+      prevention: [
+        "Mudafiat rakhne wali aqsaam lagayein — yehi sab se ahem difa hai.",
+        "Anaaj jaisi ghair mezban faslon se faslein badlein aur har saal ek hi khet mein kapas na lagayein.",
+        "Saaf aur musaddaqa beej istemal karein.",
+        "Nitrogen aur aabpashi zyada na karein.",
+      ],
+    },
+  },
 };

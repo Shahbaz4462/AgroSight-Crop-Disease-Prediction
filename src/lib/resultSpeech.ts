@@ -137,6 +137,18 @@ const SUMMARIES: Record<string, { ur: string; roman: string }> = {
     ur: "فیوزیریم ولٹ کا کوئی علاج نہیں۔ اگلی بار مدافعت رکھنے والی قسم لگائیں اور بیج کا علاج کریں۔",
     roman: "Fusarium wilt ka koi ilaaj nahi. Agli baar mudafiat rakhne wali qism lagayein aur beej ka ilaaj karein.",
   },
+  wheat_powdery_mildew: {
+    ur: "پاؤڈری ملڈیو کے لیے لیبل کے مطابق پروپیکونازول یا سلفر استعمال کریں، اور بیماری نظر آتے ہی اسپرے کریں۔",
+    roman: "Powdery mildew ke liye label ke mutabiq propiconazole ya sulphur istemal karein, aur bimari nazar aate hi spray karein.",
+  },
+  cotton_alternaria: {
+    ur: "الٹرنیریا لیف اسپاٹ کے لیے لیبل کے مطابق مینکوزیب یا پروپیکونازول استعمال کریں، اور متاثرہ پتے جلا کر تلف کر دیں۔",
+    roman: "Alternaria leaf spot ke liye label ke mutabiq mancozeb ya propiconazole istemal karein, aur mutasira patte jala kar talaf kar dein.",
+  },
+  cotton_verticillium_wilt: {
+    ur: "ورٹیسیلیم ولٹ کا کوئی علاج نہیں۔ متاثرہ پودے ہٹا دیں اور اگلی بار مدافعت رکھنے والی قسم لگائیں۔",
+    roman: "Verticillium wilt ka koi ilaaj nahi. Mutasira poday hata dein aur agli baar mudafiat rakhne wali qism lagayein.",
+  },
 
 };
 
