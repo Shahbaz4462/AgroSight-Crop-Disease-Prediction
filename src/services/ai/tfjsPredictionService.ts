@@ -63,13 +63,17 @@ import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 //
 // Speed: three things together make scans feel fast.
 //  1. Preload: preloadTfjsModel() is called when the app opens
-//     (AppProvider mount), so all four models download while the
-//     user is still on the home page, instead of only after they
-//     open Diagnose and press Scan. The Diagnose page calls it too,
-//     as a backup for direct links. Without this, a scan would wait
-//     on a model download; with it, every model is already in the
-//     browser cache by scan time (about 34 MB on the first visit,
-//     then the IndexedDB cache skips the download on later visits).
+//     (AppProvider mount), so the leaf+crop model and the picked
+//     crop's disease model download while the user is still on the
+//     home page, instead of only after they open Diagnose and press
+//     Scan. The Diagnose page calls it too, as a backup for direct
+//     links. Without this, a scan would wait on a model download;
+//     with it, the models for the first scan are already in the
+//     browser cache by scan time (about 11 MB on the first visit:
+//     leaf+crop + one disease model, float16-quantized; the other
+//     two disease models load only if a later scan picks a
+//     different crop, about 22 MB for all four; then the IndexedDB
+//     cache skips the download on later visits).
 //  2. Same-origin first: the model files come from the deployment
 //     itself, and the split weight parts are fetched in parallel
 //     instead of one by one (the old sequential fetch kept the
@@ -98,7 +102,7 @@ const CDN_BASE =
 // wrong (vs 22 at 80%, including a dog photo passing as wheat).
 const LEAFCROP_LOCAL_BASE = "/model/leafcrop";
 const LEAFCROP_CDN_BASE = `${CDN_BASE}/leafcrop`;
-const LEAFCROP_CACHE_KEY = "leafcrop-v3";
+const LEAFCROP_CACHE_KEY = "leafcrop-v3q16";
 const LEAFCROP_GATE = 90;
 const CROP_DISPLAY: Record<string, string> = {
   cotton: "Cotton",
@@ -111,9 +115,9 @@ const CROP_DISPLAY: Record<string, string> = {
 // that crop's model changes, or returning visitors keep answering
 // with the stale cached model.
 const DISEASE_BASES: Record<string, { local: string; cdn: string; cacheKey: string }> = {
-  rice: { local: "/model/rice", cdn: `${CDN_BASE}/rice`, cacheKey: "rice-v3" },
-  cotton: { local: "/model/cotton", cdn: `${CDN_BASE}/cotton`, cacheKey: "cotton-v3" },
-  wheat: { local: "/model/wheat", cdn: `${CDN_BASE}/wheat`, cacheKey: "wheat-v3" },
+  rice: { local: "/model/rice", cdn: `${CDN_BASE}/rice`, cacheKey: "rice-v3q16" },
+  cotton: { local: "/model/cotton", cdn: `${CDN_BASE}/cotton`, cacheKey: "cotton-v3q16" },
+  wheat: { local: "/model/wheat", cdn: `${CDN_BASE}/wheat`, cacheKey: "wheat-v3q16" },
 };
 
 const DISPLAY: Record<string, [string, string]> = {
@@ -659,23 +663,26 @@ export const tfjsPredictionService = new TfjsPredictionService();
 // gates every scan, and on a slow connection four models
 // downloading at once split the bandwidth four ways, so the
 // first scan waited on all of them. Loading it alone first makes
-// the first scan ready after ~8 MB instead of ~34 MB. The three
-// disease models follow in the background, so that by the time
-// the user presses Scan every model is already in the browser
-// cache and a scan never waits on a download. This is about
-// 34 MB on the first visit, downloaded in the background while
-// the user is still on the home page; later visits use the
-// IndexedDB cache and skip the download entirely. Failures are
-// ignored here on purpose: a real scan will retry and show its
-// normal error if a model still cannot load.
-export async function preloadTfjsModel(): Promise<void> {
+// the first scan ready after ~5.6 MB instead of ~22 MB. Then
+// ONLY the disease model for the crop being scanned loads: the
+// farmer picks the crop before scanning, so the other two disease
+// models are never needed for this scan and are not downloaded
+// up front — they load on demand if a later scan picks a
+// different crop. With Auto-detect (no pick) only the leaf+crop
+// model preloads, and the decided crop's disease model loads at
+// scan time. Either way the first scan needs ~11 MB
+// (leaf+crop + one disease model, float16-quantized), not ~45 MB.
+// Later visits use the IndexedDB cache and skip the download
+// entirely. Failures are ignored here on purpose: a real scan
+// will retry and show its normal error if a model still cannot
+// load.
+export async function preloadTfjsModel(selectedCrop?: string | null): Promise<void> {
   try {
     await loadLeafcropModelData().catch(() => undefined);
-    await Promise.allSettled([
-      loadDiseaseModelData("rice"),
-      loadDiseaseModelData("cotton"),
-      loadDiseaseModelData("wheat"),
-    ]);
+    const crop = typeof selectedCrop === "string" ? selectedCrop : null;
+    if (crop && DISEASE_BASES[crop]) {
+      await loadDiseaseModelData(crop).catch(() => undefined);
+    }
   } catch {
     // The scan itself will surface any load failure.
   }

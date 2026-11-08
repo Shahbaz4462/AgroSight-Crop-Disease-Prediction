@@ -58,10 +58,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // first Listen tap, instead of loading when Results opens. Both
   // preloads are singletons, so the Diagnose/Results calls stay as
   // harmless backups. First-ever visit still needs one download
-  // (about 9 MB) — that cannot be zero — but it happens in the
+  // (about 11 MB for the first scan: leaf+crop + one disease
+  // model) — that cannot be zero — but it happens in the
   // background from the moment the site opens.
   useEffect(() => {
-    preloadTfjsModel();
+    // The farmer's last picked crop is remembered, so the preload
+    // can fetch that crop's disease model too — the first scan
+    // then needs only the leaf+crop model plus one disease model.
+    let savedCrop: string | null = null;
+    try {
+      const saved = localStorage.getItem("agrosight-crop");
+      if (saved === "wheat" || saved === "cotton" || saved === "rice") savedCrop = saved;
+    } catch {
+      // A missing/blocked store must never break the preload.
+    }
+    preloadTfjsModel(savedCrop);
     void preloadVoices();
   }, []);
 
