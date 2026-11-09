@@ -11,6 +11,12 @@ import { useApp } from "../context/AppContext";
 
 const CROPS = ["Wheat", "Rice", "Cotton"];
 
+// The 3 crops alone are too narrow to fill the marquee strip, so repeat them
+// (8x per half) — the strip is rendered twice for a seamless -50% loop, and the
+// animation duration in tailwind.config.ts is scaled 2x (38s -> 76s) so the
+// scroll speed (px/s) stays exactly as it was with 12 crops.
+const TICKER_ITEMS = Array.from({ length: 8 }, () => CROPS).flat();
+
 const STEPS = [
   { n: "01", titleKey: "home_step1_t", textKey: "home_step1_x" },
   { n: "02", titleKey: "home_step2_t", textKey: "home_step2_x" },
@@ -68,8 +74,8 @@ export default function HomePage() {
         <div className="flex w-max animate-marquee py-3">
           {[0, 1].map((k) => (
             <div key={k} className="flex shrink-0">
-              {CROPS.map((c) => (
-                <span key={c + k} className="label !text-xs px-6 flex items-center gap-6">
+              {TICKER_ITEMS.map((c, i) => (
+                <span key={c + "-" + i + "-" + k} className="label !text-xs px-6 flex items-center gap-6">
                   {c} <span className="text-accent">✦</span>
                 </span>
               ))}

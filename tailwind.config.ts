@@ -57,7 +57,7 @@ const config: Config = {
         "hard-lg": "8px 8px 0 0 rgb(var(--ink))",
       },
       animation: {
-        marquee: "marquee 38s linear infinite",
+        marquee: "marquee 76s linear infinite",
         "scan-line": "scan 2.8s ease-in-out infinite",
         float: "float 6s ease-in-out infinite",
       },
