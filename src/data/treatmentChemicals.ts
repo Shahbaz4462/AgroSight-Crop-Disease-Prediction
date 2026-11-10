@@ -16,8 +16,10 @@
 
 export interface Chemical {
   name: string;
-  type: "Fungicide" | "Insecticide" | "Organic";
+  type: "Fungicide" | "Insecticide" | "Organic" | "Bactericide";
   detail: string;
+  /** Reference: institution/company + document/label the chemical was verified from. */
+  source?: string;
 }
 
 export interface Store {
@@ -57,13 +59,14 @@ export const CHEMICALS_BY_CLASS: Record<string, Chemical[]> = {
     { name: "Emamectin benzoate", type: "Insecticide", detail: "Insecticide labelled for caterpillars. Works best while larvae are still small. Use only at the dose on the product label." },
   ],
   wheat_brown_rust: [
-    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat rust. Use only at the dose on the product label." },
-    { name: "Tebuconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat rust. Use only at the dose on the product label." },
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat rust. Use only at the dose on the product label.", source: "Ayub Agricultural Research Institute (AARI), Faisalabad — wheat rust control recommendations (Tilt 200 ml/acre); AARI trial, cv. Akbar-19 (Tilt 88.9% disease decrease)" },
+    { name: "Tebuconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat rust. Use only at the dose on the product label.", source: "Ayub Agricultural Research Institute (AARI), Faisalabad — wheat rust control recommendations (Folicur)" },
+    { name: "Azoxystrobin + Difenoconazole", type: "Fungicide", detail: "Combination fungicide labelled for wheat rust, for longer residual control. Use only at the dose on the product label.", source: "Ayub Agricultural Research Institute (AARI), Faisalabad — leaf rust trial (Amistar Top 83.4% disease decrease)" },
   ],
   wheat_yellow_rust: [
-    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat yellow rust. Use only at the dose on the product label." },
-    { name: "Tebuconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat yellow rust. Use only at the dose on the product label." },
-    { name: "Azoxystrobin + Difenoconazole", type: "Fungicide", detail: "Combination fungicide labelled for wheat rust, for longer residual control. Use only at the dose on the product label." },
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat yellow rust. Use only at the dose on the product label.", source: "Ayub Agricultural Research Institute (AARI), Faisalabad — wheat rust control recommendations (Tilt); ICAR — stripe rust trial (propiconazole 25% EC economically best)" },
+    { name: "Tebuconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat yellow rust. Use only at the dose on the product label.", source: "Ayub Agricultural Research Institute (AARI), Faisalabad — wheat rust control recommendations (Folicur)" },
+    { name: "Azoxystrobin + Difenoconazole", type: "Fungicide", detail: "Combination fungicide labelled for wheat rust, for longer residual control. Use only at the dose on the product label.", source: "Syngenta Pakistan — Amistar Top 325 SC product label (wheat rust); Ayub Agricultural Research Institute (AARI), Faisalabad — wheat rust control recommendations" },
   ],
   wheat_aphid: [
     { name: "Acetamiprid", type: "Insecticide", detail: "Systemic insecticide labelled for wheat aphids. Use only at the dose on the product label." },
@@ -71,7 +74,7 @@ export const CHEMICALS_BY_CLASS: Record<string, Chemical[]> = {
   ],
 
   cotton_bacterial_blight: [
-    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based bactericide labelled for cotton bacterial blight. Use only at the dose on the product label." },
+    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based bactericide labelled for cotton bacterial blight. Use only at the dose on the product label.", source: "Plantix — Bacterial Blight of Cotton (plant disease library); UAF Faisalabad / AARI Dera Ghazi Khan field trials, Pakistan" },
   ],
   cotton_powdery_mildew: [
     { name: "Sulphur", type: "Organic", detail: "Protective spray for powdery mildew. Do not spray in hot midday sun — it can scorch leaves. Use only at the dose on the product label." },
@@ -82,8 +85,9 @@ export const CHEMICALS_BY_CLASS: Record<string, Chemical[]> = {
     { name: "Mancozeb", type: "Fungicide", detail: "Protective fungicide labelled for cotton leaf spots. Use only at the dose on the product label." },
   ],
   wheat_black_rust: [
-    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat black (stem) rust. Use only at the dose on the product label." },
-    { name: "Tebuconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat black (stem) rust. Use only at the dose on the product label." },
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat black (stem) rust. Use only at the dose on the product label.", source: "CABI Plantwise Plus Knowledge Bank — stem rust PMDG (propiconazole); FAO AGRIS stem-rust fungicide trial" },
+    { name: "Tebuconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat black (stem) rust. Use only at the dose on the product label.", source: "FAO AGRIS stem-rust fungicide trial (tebuconazole 74.92% incidence reduction); CABI Plantwise Plus Knowledge Bank — stem rust PMDG" },
+    { name: "Azoxystrobin + Difenoconazole", type: "Fungicide", detail: "Combination fungicide labelled for wheat stem rust, as an alternative to triazoles. Use only at the dose on the product label.", source: "Ayub Agricultural Research Institute (AARI), Faisalabad — wheat rust control recommendations (Amistar Top 200 ml/acre); FAO AGRIS stem-rust fungicide trial" },
   ],
   wheat_common_root_rot: [
     { name: "Tebuconazole", type: "Fungicide", detail: "Seed treatment for common root rot — applied to seed before sowing, not as a foliar spray. Use only at the dose on the product label." },
@@ -114,50 +118,60 @@ export const CHEMICALS_BY_CLASS: Record<string, Chemical[]> = {
     { name: "Azoxystrobin + Difenoconazole", type: "Fungicide", detail: "Combination fungicide labelled for wheat tan spot, for longer residual control. Use only at the dose on the product label." },
   ],
   rice_bacterial_blight: [
-    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based bactericide labelled for rice bacterial leaf blight. Use only at the dose on the product label." },
+    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based bactericide labelled for rice bacterial leaf blight. Use only at the dose on the product label.", source: "Punjab Agriculture Department, Pest Warning & Quality Control of Pesticides — bacterial leaf blight alert, 14 Sep 2026; Nasir et al. 2019, J. Agric. Res. (AARI Faisalabad trial, copper oxychloride 76.48% control)" },
+    { name: "Kasugamycin", type: "Bactericide", detail: "Antibiotic bactericide recommended by the Punjab Agriculture Department for rice bacterial leaf blight. Use only at the dose on the product label.", source: "Punjab Agriculture Department, Pest Warning & Quality Control of Pesticides — bacterial leaf blight alert, 14 Sep 2026 (kasugamycin first-listed); Nasir et al. 2019, J. Agric. Res. (Cordate 86.31%, Castle 87.97% control)" },
   ],
   rice_blast: [
-    { name: "Tricyclazole", type: "Fungicide", detail: "Systemic fungicide labelled for rice blast. Use only at the dose on the product label." },
-    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for rice blast. Use only at the dose on the product label." },
+    { name: "Tricyclazole", type: "Fungicide", detail: "Systemic fungicide labelled for rice blast. Use only at the dose on the product label.", source: "Punjab Agriculture Department advisory — Tricyclazole 75% WP for rice blast; IRRI Rice Knowledge Bank — Blast (leaf/collar)" },
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for rice blast. Use only at the dose on the product label.", source: "Syngenta Pakistan — Filia (tricyclazole + propiconazole) product label, rice blast; IRRI Rice Knowledge Bank — Blast (leaf/collar)" },
   ],
   rice_brown_spot: [
-    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for rice brown spot. Use only at the dose on the product label." },
-    { name: "Azoxystrobin", type: "Fungicide", detail: "Fungicide labelled for rice brown spot. Use only at the dose on the product label." },
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for rice brown spot. Use only at the dose on the product label.", source: "IRRI Rice Knowledge Bank — Brown Spot (propiconazole listed); Syngenta Pakistan — Tilt 250 EC product label" },
+    { name: "Azoxystrobin", type: "Fungicide", detail: "Fungicide labelled for rice brown spot. Use only at the dose on the product label.", source: "IRRI Rice Knowledge Bank — Brown Spot (azoxystrobin listed); Syngenta Pakistan — Amistar Top (azoxystrobin + difenoconazole) product label" },
   ],
   rice_tungro: [
-    { name: "Imidacloprid", type: "Insecticide", detail: "Controls the green leafhopper that spreads tungro virus. There is no cure for the virus itself. Use only at the dose on the product label." },
+    { name: "Imidacloprid", type: "Insecticide", detail: "Controls the green leafhopper that spreads tungro virus — but insecticides often do NOT prevent tungro, because leafhoppers spread it in very short feeding times. Resistant varieties and synchronous planting are the main control. Use only at the dose on the product label, and only if leafhoppers cross the threshold.", source: "TNAU — Tungro management (imidacloprid 17.8 SL for vector control); Bayer — Confidor 20 SL product label (rice, green leafhopper); IRRI Rice Knowledge Bank — Tungro (insecticides often not effective)" },
   ],
   rice_leaf_scald: [
-    { name: "Propiconazole", type: "Fungicide", detail: "Systemic fungicide labelled for rice leaf scald. Use only at the dose on the product label." },
-    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based fungicide labelled for rice. Use only at the dose on the product label." },
+    { name: "Propiconazole", type: "Fungicide", detail: "Systemic fungicide labelled for rice leaf scald. Use only at the dose on the product label.", source: "Syngenta — Armure 300 EC product label (paddy leaf scald listed as target)" },
+    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based fungicide labelled for rice. Use only at the dose on the product label.", source: "IRRI Rice Knowledge Bank — Leaf Scald (copper oxychloride foliar application)" },
+    { name: "Carbendazim", type: "Fungicide", detail: "Systemic fungicide labelled for rice leaf scald, as a seed treatment or foliar spray. Use only at the dose on the product label.", source: "IRRI Rice Knowledge Bank — Leaf Scald (carbendazim listed)" },
+    { name: "Validamycin", type: "Fungicide", detail: "Antibiotic fungicide labelled for rice leaf scald. Use only at the dose on the product label.", source: "IRRI Rice Knowledge Bank — Leaf Scald (validamycin listed)" },
   ],
   rice_sheath_blight: [
-    { name: "Validamycin", type: "Fungicide", detail: "Systemic fungicide labelled for rice sheath blight — the standard treatment. Use only at the dose on the product label." },
-    { name: "Hexaconazole", type: "Fungicide", detail: "Triazole fungicide labelled for rice sheath blight. Use only at the dose on the product label." },
+    { name: "Validamycin", type: "Fungicide", detail: "Systemic fungicide labelled for rice sheath blight — the standard treatment. Use only at the dose on the product label.", source: "IRRI Odisha — Handbook on Quality Seed Production in Rice (Validamycin 3 L); Punjab Agriculture Department, Pest Warning alert, 27 Aug 2026 (Validamycin 5% SL first)" },
+    { name: "Hexaconazole", type: "Fungicide", detail: "Triazole fungicide labelled for rice sheath blight. Use only at the dose on the product label.", source: "IRRI Odisha — Handbook on Quality Seed Production in Rice (Hexaconazole 5 EC)" },
   ],
   cotton_curl_virus: [
-    { name: "Imidacloprid", type: "Insecticide", detail: "Controls the whitefly that spreads cotton leaf curl virus. There is no cure for the virus itself. Use only at the dose on the product label." },
-    { name: "Acetamiprid", type: "Insecticide", detail: "Controls the whitefly that spreads cotton leaf curl virus. There is no cure for the virus itself. Use only at the dose on the product label." },
+    { name: "Imidacloprid", type: "Insecticide", detail: "Controls the whitefly that spreads cotton leaf curl virus. There is no cure for the virus itself. Use only at the dose on the product label.", source: "CABI Plantwise Plus Knowledge Bank — Pakistan factsheet: Cotton leaf curl virus (20147801354)" },
+    { name: "Acetamiprid", type: "Insecticide", detail: "Controls the whitefly that spreads cotton leaf curl virus. There is no cure for the virus itself. Use only at the dose on the product label.", source: "CABI Plantwise Plus Knowledge Bank — Pakistan factsheet: Cotton leaf curl virus (20147801354)" },
+    { name: "Diafenthiuron", type: "Insecticide", detail: "Insecticide for whitefly control; a rotation partner for neonicotinoids (imidacloprid/acetamiprid) to slow resistance. Use only at the dose on the product label.", source: "CABI Plantwise Plus Knowledge Bank — Pakistan factsheet: Cotton leaf curl virus (20147801354)" },
+    { name: "Buprofezin", type: "Insecticide", detail: "Insect growth regulator for whitefly nymphs; a rotation partner for neonicotinoids. Use only at the dose on the product label.", source: "CABI Plantwise Plus Knowledge Bank — Pakistan factsheet: Cotton leaf curl virus (20147801354)" },
   ],
   cotton_fusarium_wilt: [
-    { name: "Carbendazim", type: "Fungicide", detail: "Seed treatment labelled for cotton fusarium wilt, before sowing. There is no cure once plants are infected. Use only at the dose on the product label." },
-    { name: "Thiophanate-methyl", type: "Fungicide", detail: "Seed treatment labelled for cotton fusarium wilt, before sowing. Use only at the dose on the product label." },
+    { name: "Carbendazim", type: "Fungicide", detail: "Seed treatment labelled for cotton fusarium wilt, before sowing. There is no cure once plants are infected. Check current registration — Punjab has restricted carbendazim on paddy. Use only at the dose on the product label.", source: "PARC — Handbook on Agriculture Pesticides 2018 (Dr Muhammad Anjum Ali): Carbendazim registered in Pakistan (Derosal 60 WP, Bavistin 50% WP)" },
+    { name: "Thiophanate-methyl", type: "Fungicide", detail: "Seed treatment labelled for cotton fusarium wilt, before sowing. Use only at the dose on the product label.", source: "Arysta/UPL Pakistan — Topsin-M 70 WP (thiophanate-methyl) product label, Pakistan" },
   ],
   wheat_powdery_mildew: [
-    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat powdery mildew. Spray soon after the disease appears. Use only at the dose on the product label." },
-    { name: "Tebuconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat powdery mildew. Use only at the dose on the product label." },
+    { name: "Propiconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat powdery mildew. Spray soon after the disease appears. Use only at the dose on the product label.", source: "Pacific Northwest Plant Disease Management Handbook (rev. Mar 2026) — Wheat Powdery Mildew; Crop Protection Network fungicide efficacy table 2026 (Tilt 'Very Good')" },
+    { name: "Tebuconazole", type: "Fungicide", detail: "Triazole fungicide labelled for wheat powdery mildew. Use only at the dose on the product label.", source: "Pacific Northwest Plant Disease Management Handbook (rev. Mar 2026) — Wheat Powdery Mildew" },
+    { name: "Azoxystrobin", type: "Fungicide", detail: "Strobilurin fungicide labelled for wheat powdery mildew, often used in combination with a triazole. Use only at the dose on the product label.", source: "University of Agriculture Faisalabad (UAF) 2026 review — strobilurin + triazole for powdery mildew at heading" },
     { name: "Sulphur", type: "Organic", detail: "Protective spray for powdery mildew. Do not spray in hot midday sun — it can scorch leaves. Use only at the dose on the product label." },
   ],
   cotton_alternaria: [
-    { name: "Mancozeb", type: "Fungicide", detail: "Protectant fungicide labelled for cotton Alternaria leaf spot. Spray at the first sign of spots. Use only at the dose on the product label." },
-    { name: "Propiconazole", type: "Fungicide", detail: "Systemic triazole fungicide labelled for cotton Alternaria leaf spot. Use only at the dose on the product label." },
-    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based protectant fungicide labelled for cotton leaf spot. Use only at the dose on the product label." },
+    { name: "Mancozeb", type: "Fungicide", detail: "Protectant fungicide labelled for cotton Alternaria leaf spot. Spray at the first sign of spots. Use only at the dose on the product label.", source: "Plantix — Alternaria Leaf Spot of Cotton (plant disease library)" },
+    { name: "Propiconazole", type: "Fungicide", detail: "Systemic triazole fungicide labelled for cotton Alternaria leaf spot. Use only at the dose on the product label.", source: "Bhattiprolu et al. — field evaluation of fungicides against Alternaria leaf spot on cotton (propiconazole 0.1%, Tilt 25% EC, most effective)" },
+    { name: "Copper oxychloride", type: "Fungicide", detail: "Copper-based protectant fungicide labelled for cotton leaf spot. Use only at the dose on the product label.", source: "Bhattiprolu et al. — field evaluation of fungicides against Alternaria leaf spot on cotton (Blitox 0.3%)" },
   ],
   cotton_verticillium_wilt: [
-    { name: "Trichoderma viride", type: "Organic", detail: "Biological seed treatment that may reduce wilt severity in the next crop. There is no cure once plants are infected and no fungicide controls this disease. Use only at the dose on the product label." },
+    { name: "Trichoderma spp.", type: "Organic", detail: "Biological seed treatment (for example T. virens or T. harzianum) that may reduce wilt severity in the next crop. There is no cure once plants are infected and no fungicide controls this disease. Use only at the dose on the product label.", source: "Journal of Cotton Science (Hanson, 2000) — Trichoderma virens seed treatment reduced Verticillium wilt severity in cotton; Oklahoma State Extension — Verticillium wilt (no effective chemical control)" },
   ],
   // wheat_blast: intentionally absent — exact cause not identified by the model.
-  // wheat_septoria: intentionally absent — exact cause not identified by the model.
+  wheat_septoria: [
+    { name: "Propiconazole", type: "Fungicide", detail: "Systemic fungicide (triazole) labelled for wheat Septoria leaf blotch. Spray at early flag-leaf emergence. Use only at the dose on the product label.", source: "Pacific Northwest Plant Disease Management Handbook (rev. Mar 2026) — Wheat Septoria Tritici Blotch" },
+    { name: "Tebuconazole", type: "Fungicide", detail: "Systemic fungicide (triazole) labelled for wheat Septoria leaf blotch. Spray at early flag-leaf emergence. Use only at the dose on the product label.", source: "Pacific Northwest Plant Disease Management Handbook (rev. Mar 2026) — Wheat Septoria Tritici Blotch" },
+    { name: "Azoxystrobin + Propiconazole", type: "Fungicide", detail: "Combination fungicide labelled for wheat Septoria leaf blotch. Use only at the dose on the product label.", source: "Pacific Northwest Plant Disease Management Handbook (rev. Mar 2026) — Wheat Septoria Tritici Blotch" },
+  ],
   // wheat_stem_fly: intentionally absent — exact pest not identified by the model.
   // diseased_rice: intentionally absent — the disease is unspecified.
   // healthy_*: intentionally absent — no chemical is needed.

@@ -15,19 +15,21 @@
     "disease": "brown rust",
     "type": "fungal",
     "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
-    "treatment": "A fungicide labelled for this crop and disease may help — always follow the product label and local agricultural advice. Organic options such as sulphur or neem-based sprays are used for some fungal diseases.",
+    "treatment": "A triazole fungicide such as propiconazole (Tilt) or tebuconazole (Folicur), or azoxystrobin + difenoconazole (Amistar Top), labelled for wheat leaf rust, may help — always follow the product label and local agricultural advice. Apply at the first sign of rust pustules.",
     "prevention": "Water at the base, space plants for airflow, rotate crops, and clean up fallen leaves.",
-    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "source": "Ayub Agricultural Research Institute (AARI), Faisalabad — wheat rust control recommendations; AARI trial, cv. Akbar-19"
   },
   "wheat_septoria": {
     "class": "wheat_septoria",
     "crop": "wheat",
     "disease": "septoria",
-    "type": "other",
-    "immediate_steps": "Remove affected leaves and monitor whether the problem spreads.",
-    "treatment": "Identify the exact cause first — treatment depends on whether it is fungal, bacterial, viral or a nutrient issue. Seek local agricultural advice if it spreads quickly.",
-    "prevention": "Keep plants well fed and watered, improve airflow, and check leaves regularly.",
-    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+    "type": "fungal",
+    "immediate_steps": "Remove affected leaves, avoid excess nitrogen, and spray at early flag-leaf emergence if the disease is spreading.",
+    "treatment": "A triazole fungicide such as propiconazole or tebuconazole, labelled for wheat Septoria leaf blotch, may help — always follow the product label and local agricultural advice. Spray at early flag-leaf emergence, before the disease reaches the flag leaf.",
+    "prevention": "Use resistant varieties where available, avoid excess nitrogen, rotate crops, and bury or remove infected stubble.",
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "source": "Pacific Northwest Plant Disease Management Handbook (rev. Mar 2026) — Wheat Septoria Tritici Blotch; Agriculture Victoria — Septoria Tritici Blotch of Wheat"
   },
   "wheat_yellow_rust": {
     "class": "wheat_yellow_rust",
@@ -35,9 +37,10 @@
     "disease": "yellow rust",
     "type": "fungal",
     "immediate_steps": "Remove severely infected leaves, improve air circulation, and avoid wetting leaves when watering. Check the flag leaf first, as it matters most for yield.",
-    "treatment": "A fungicide labelled for wheat yellow rust may help — for example propiconazole or tebuconazole, always following the product label and local agricultural advice. Apply at the first sign of yellow stripes.",
+    "treatment": "A fungicide labelled for wheat yellow rust may help — for example propiconazole or tebuconazole, or azoxystrobin + difenoconazole (Amistar Top), always following the product label and local agricultural advice. Apply at the first sign of yellow stripes.",
     "prevention": "Use rust-resistant wheat varieties where available, avoid late sowing, scout weekly in early spring, and remove volunteer wheat plants.",
-    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "source": "Ayub Agricultural Research Institute (AARI), Faisalabad — wheat rust control recommendations; ICAR — stripe rust trial"
   },
   "wheat_black_rust": {
     "class": "wheat_black_rust",
@@ -47,7 +50,8 @@
     "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
     "prevention": "Sow resistant varieties, remove volunteer wheat and barberry near fields, avoid late sowing, and rotate crops.",
     "treatment": "A triazole fungicide such as propiconazole or tebuconazole, or a strobilurin mix such as azoxystrobin + difenoconazole, labelled for wheat stem rust, may help — always follow the product label and local agricultural advice. Resistant varieties are the main defence.",
-    "type": "fungal"
+    "type": "fungal",
+    "source": "CABI Plantwise Plus Knowledge Bank — stem rust PMDG; FAO AGRIS stem-rust fungicide trial"
   },
   "wheat_powdery_mildew": {
     "class": "wheat_powdery_mildew",
@@ -57,6 +61,7 @@
     "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
     "prevention": "Sow resistant varieties, avoid excess nitrogen and dense sowing, space plants for airflow, and rotate crops.",
     "treatment": "A triazole fungicide such as propiconazole or tebuconazole, or sulphur, labelled for wheat powdery mildew, may help — always follow the product label and local agricultural advice. Spray soon after the disease appears.",
-    "type": "fungal"
+    "type": "fungal",
+    "source": "Pacific Northwest Plant Disease Management Handbook (rev. Mar 2026) — Wheat Powdery Mildew; Crop Protection Network fungicide efficacy table 2026"
   }
 }

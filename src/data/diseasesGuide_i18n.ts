@@ -28,7 +28,7 @@ export const GUIDE_TRANSLATIONS: Record<string, Record<GuideLang, GuideTranslati
         "شدید حملے میں بالیوں پر بھی پیلے دانے بن جاتے ہیں",
       ],
       organicSolution: [
-        "بیج کو Trichoderma viride سے تیار کریں۔",
+        "بیج کو Trichoderma spp. سے تیار کریں۔",
         "سمندری جڑی بوٹیوں سے بنا محلول پتوں پر چھڑکیں تاکہ پودے کی قدرتی مدافعت بڑھے۔",
         "گندم کے ساتھ چنا یا مسور لگائیں تاکہ بیماری کا پھیلاؤ رکے۔",
       ],
@@ -53,7 +53,7 @@ export const GUIDE_TRANSLATIONS: Record<string, Record<GuideLang, GuideTranslati
         "Shadeed hamle mein baliyon par bhi peele dane ban jate hain",
       ],
       organicSolution: [
-        "Beej ko Trichoderma viride se tayyar karein.",
+        "Beej ko Trichoderma spp. se tayyar karein.",
         "Samundari jari bootion se bana mehlool patton par chharkein taake poday ki qudrati mudafiat barhe.",
         "Gandum ke saath chana ya masoor lagayein taake bimari ka phailao ruke.",
       ],
@@ -1314,7 +1314,7 @@ export const GUIDE_TRANSLATIONS: Record<string, Record<GuideLang, GuideTranslati
       ],
       chemicalSolution: [
         "چاول کی Bacterial Leaf Blight کے لیے لیبل شدہ Copper oxychloride، صرف لیبل پر لکھی مقدار کے مطابق۔",
-        "جہاں رجسٹرڈ ہو وہاں Streptocycline، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "چاول کی Bacterial Leaf Blight کے لیے تجویز کردہ اینٹی بائیوٹک Kasugamycin، صرف لیبل پر لکھی مقدار کے مطابق۔",
       ],
       prevention: [
         "جہاں دستیاب ہو مدافعت رکھنے والی اقسام لگائیں۔",
@@ -1338,7 +1338,7 @@ export const GUIDE_TRANSLATIONS: Record<string, Record<GuideLang, GuideTranslati
       ],
       chemicalSolution: [
         "Chawal ki Bacterial Leaf Blight ke liye label shuda Copper oxychloride, sirf label par likhi miqdar ke mutabiq.",
-        "Jahan registered ho wahan Streptocycline, sirf label par likhi miqdar ke mutabiq.",
+        "Chawal ki Bacterial Leaf Blight ke liye tajweez kardah antibiotic Kasugamycin, sirf label par likhi miqdar ke mutabiq.",
       ],
       prevention: [
         "Jahan dastiyab ho mudafiat rakhne wali aqsaam lagayein.",
@@ -1771,7 +1771,7 @@ export const GUIDE_TRANSLATIONS: Record<string, Record<GuideLang, GuideTranslati
       ],
       chemicalSolution: [
         "پودے متاثر ہونے کے بعد کوئی کیمیائی علاج نہیں، اور کوئی فنجیسائیڈ اس بیماری کو کنٹرول نہیں کرتی۔",
-        "بوائی سے پہلے بیج کے علاج کے طور پر Trichoderma viride اگلی فصل میں شدت کم کر سکتی ہے، صرف لیبل پر لکھی مقدار کے مطابق۔",
+        "بوائی سے پہلے بیج کے علاج کے طور پر Trichoderma spp. (جیسے T. virens یا T. harzianum) اگلی فصل میں شدت کم کر سکتی ہے، صرف لیبل پر لکھی مقدار کے مطابق۔",
       ],
       prevention: [
         "مدافعت رکھنے والی اقسام لگائیں — یہی سب سے اہم دفاع ہے۔",
@@ -1796,7 +1796,7 @@ export const GUIDE_TRANSLATIONS: Record<string, Record<GuideLang, GuideTranslati
       ],
       chemicalSolution: [
         "Poday mutasir hone ke baad koi chemical ilaaj nahi, aur koi fungicide is bimari ko control nahi karti.",
-        "Bawai se pehle beej ke ilaaj ke tor par Trichoderma viride agli fasal mein shiddat kam kar sakti hai, sirf label par likhi miqdar ke mutabiq.",
+        "Bawai se pehle beej ke ilaaj ke tor par Trichoderma spp. (masalan T. virens ya T. harzianum) agli fasal mein shiddat kam kar sakti hai, sirf label par likhi miqdar ke mutabiq.",
       ],
       prevention: [
         "Mudafiat rakhne wali aqsaam lagayein — yehi sab se ahem difa hai.",

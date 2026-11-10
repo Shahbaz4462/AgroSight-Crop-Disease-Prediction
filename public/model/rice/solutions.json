@@ -15,9 +15,10 @@
     "disease": "bacterial leaf blight",
     "type": "bacterial",
     "immediate_steps": "Remove infected leaves carefully, do not compost them, and clean tools after handling the plant. Avoid working with wet plants.",
-    "treatment": "A copper-based bactericide (copper oxychloride) labelled for rice bacterial blight may help — always follow the product label and local agricultural advice. Antibiotics such as streptocycline are used where registered.",
+    "treatment": "A copper-based bactericide (copper oxychloride) or an antibiotic bactericide such as kasugamycin, labelled for rice bacterial blight, may help — always follow the product label and local agricultural advice. Chemicals only partly suppress this disease; resistant varieties are the main control.",
     "prevention": "Use disease-free seed and resistant varieties where available, avoid excess nitrogen, improve drainage, and rotate crops.",
-    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "source": "Punjab Agriculture Department, Pest Warning & Quality Control of Pesticides — bacterial leaf blight alert, 14 Sep 2026; Nasir et al. 2019, J. Agric. Res."
   },
   "rice_blast": {
     "class": "rice_blast",
@@ -27,7 +28,8 @@
     "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
     "treatment": "A fungicide labelled for rice blast, such as tricyclazole or propiconazole, may help — always follow the product label and local agricultural advice.",
     "prevention": "Use resistant varieties and certified seed, avoid excess nitrogen applied at once, water at the base, and clean up infected straw.",
-    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "source": "Punjab Agriculture Department advisory — Tricyclazole 75% WP; IRRI Rice Knowledge Bank — Blast (leaf/collar)"
   },
   "rice_brown_spot": {
     "class": "rice_brown_spot",
@@ -35,9 +37,10 @@
     "disease": "brown spot",
     "type": "fungal",
     "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
-    "treatment": "A fungicide labelled for rice brown spot, such as propiconazole or azoxystrobin, may help — always follow the product label and local agricultural advice. Seed treatment helps against seed-borne infection.",
+    "treatment": "Improve soil fertility and use a seed treatment first — these matter more than spraying. A fungicide labelled for rice brown spot, such as propiconazole or azoxystrobin, may help as a foliar spray — always follow the product label and local agricultural advice.",
     "prevention": "Use disease-free seed, keep plants well fed (balanced potash), improve drainage, and rotate crops.",
-    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "source": "IRRI Rice Knowledge Bank — Brown Spot; Sindh Agriculture Extension pest alert, Sep 2026"
   },
   "rice_leaf_scald": {
     "class": "rice_leaf_scald",
@@ -46,8 +49,9 @@
     "immediate_steps": "Remove infected leaves, improve air circulation, and avoid wetting leaves when watering.",
     "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
     "prevention": "Use resistant varieties and certified seed, avoid excess nitrogen, and clean up infected straw.",
-    "treatment": "A fungicide labelled for rice leaf scald, such as propiconazole or copper oxychloride, may help — always follow the product label and local agricultural advice.",
-    "type": "fungal"
+    "treatment": "A fungicide labelled for rice leaf scald, such as carbendazim, validamycin, propiconazole or copper oxychloride, may help — always follow the product label and local agricultural advice.",
+    "type": "fungal",
+    "source": "IRRI Rice Knowledge Bank — Leaf Scald; Syngenta — Armure 300 EC product label"
   },
   "rice_sheath_blight": {
     "class": "rice_sheath_blight",
@@ -57,7 +61,8 @@
     "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
     "prevention": "Space plants for airflow, apply nitrogen in split doses, drain excess water, and rotate crops.",
     "treatment": "A fungicide labelled for rice sheath blight, such as validamycin or hexaconazole, may help — always follow the product label and local agricultural advice.",
-    "type": "fungal"
+    "type": "fungal",
+    "source": "IRRI Odisha — Handbook on Quality Seed Production in Rice; Punjab Agriculture Department, Pest Warning alert, 27 Aug 2026"
   },
   "rice_tungro": {
     "class": "rice_tungro",
@@ -65,8 +70,9 @@
     "disease": "tungro",
     "type": "viral",
     "immediate_steps": "Remove severely infected plants so the virus does not spread, and control the green leafhoppers that carry it.",
-    "treatment": "There is no chemical cure for tungro virus. Focus on controlling the leafhopper vector and removing infected material.",
+    "treatment": "There is no chemical cure for tungro virus. Grow resistant varieties and plant at the same time as neighbouring fields — these matter more than spraying. Controlling the leafhopper vector with insecticide often does not prevent tungro, because leafhoppers spread it in very short feeding times.",
     "prevention": "Use resistant varieties where available, plant at the same time as neighbouring fields, control leafhoppers, and keep bunds free of weeds that host the virus.",
-    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice."
+    "note": "General guidance only. For chemical use, always follow the product label and local agricultural extension advice.",
+    "source": "IRRI Rice Knowledge Bank — Tungro; TNAU — Tungro management; Bayer — Confidor 20 SL product label"
   }
 }

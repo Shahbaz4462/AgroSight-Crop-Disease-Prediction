@@ -171,15 +171,11 @@ export const PakistanMapInteractive: React.FC = () => {
           <span className={`label !text-[10px] px-2 py-1.5 border-2 border-ink text-[#0b1a12] ${riskBg[sel.riskLevel] ?? "bg-warn"}`}>{sel.riskLevel} {t("risk_label")}</span>
         </div>
 
-        <dl className="grid grid-cols-3 border-2 border-ink divide-x-2 divide-ink text-center">
-          {[
-            [t("province_scans"), sel.totalDiagnoses.toLocaleString()],
-            [t("province_healthy"), `${sel.healthyPercentage}%`],
-            [t("province_output"), `${sel.cropProductionShare}%`],
-          ].map(([k, v]) => (
-            <div key={k} className="py-3">
-              <dt className="label !text-[10px] text-muted">{k}</dt>
-              <dd className="mt-1.5 font-mono text-lg font-medium">{v}</dd>
+        <dl className={`grid ${sel.keyFacts.length === 2 ? "grid-cols-2" : "grid-cols-3"} border-2 border-ink divide-x-2 divide-ink text-center`}>
+          {sel.keyFacts.map((f) => (
+            <div key={f.labelKey} className="py-3">
+              <dt className="label !text-[10px] text-muted">{t(f.labelKey)}</dt>
+              <dd className="mt-1.5 font-mono text-lg font-medium">{f.value}</dd>
             </div>
           ))}
         </dl>
@@ -196,19 +192,27 @@ export const PakistanMapInteractive: React.FC = () => {
         <div>
           <p className="label text-muted mb-3">{t("province_diseases")}</p>
           <ul className="space-y-3.5">
-            {sel.topDiseases.map((d) => (
+            {sel.topDiseases.map((d, i) => (
               <li key={d.name}>
-                <div className="flex justify-between gap-3 text-sm font-medium">
-                  <span className="truncate">{d.name}</span>
-                  <span className="font-mono">{d.percentage}%</span>
-                </div>
-                <div className="mt-1.5 h-3 border-2 border-ink">
-                  <div className="h-full bg-ink" style={{ width: `${Math.min(100, d.percentage * 2.5)}%` }} />
-                </div>
+                <p className="text-sm font-medium">
+                  {i + 1}. {d.name}
+                </p>
+                <p className="mt-1 text-sm text-muted">{d.source}</p>
               </li>
             ))}
           </ul>
         </div>
+
+        {sel.currentAlert && (
+          <p className="text-sm">
+            <span className="label text-muted">{t("alert_label")} · </span>
+            {sel.currentAlert.text} <span className="text-muted">— {sel.currentAlert.source}</span>
+          </p>
+        )}
+
+        <p className="text-xs text-muted">
+          {t("sources_label")}: {sel.sources} · {t("updated_label")} {sel.lastUpdated}
+        </p>
       </div>
     </div>
   );
