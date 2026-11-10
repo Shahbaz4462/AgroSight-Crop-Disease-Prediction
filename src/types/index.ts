@@ -66,23 +66,38 @@ export interface ProvinceStatistic {
   urduName: string;
   capital: string;
   majorCrops: string[];
-  totalDiagnoses: number;
-  healthyPercentage: number;
-  diseasedPercentage: number;
-  topDiseases: { name: string; percentage: number }[];
-  cropProductionShare: number; // in %
+  // Ranked by documented importance. No percentages: no institution
+  // publishes province-level disease-share percentages, so the list is
+  // qualitative — disease name + a complete source reference.
+  topDiseases: { name: string; source: string }[];
+  // Verified key facts only (each with a complete reference in `sources`).
+  // Rendered in the same 3-cell grid as before; a province with fewer
+  // verified facts shows fewer cells. `labelKey` is an i18n key.
+  keyFacts: { labelKey: string; value: string }[];
   riskLevel: "Low" | "Medium" | "High" | "Alert";
-  coordinates: { x: number; y: number }; // Relative SVG positioning
+  // Most recent significant official alert, if one exists.
+  currentAlert?: { text: string; source: string };
+  // Complete references (institution + document + date/year) for every
+  // fact and disease above, plus the verification date.
+  sources: string;
+  lastUpdated: string;
 }
 
 export interface GlobalRegionStatistic {
   id: string;
   region: "Asia" | "Europe" | "Africa" | "North America" | "South America" | "Oceania";
-  totalDiagnosesSample: number;
+  // One real published figure per region (value + what it means + source).
+  // Replaces the invented totalDiagnosesSample number.
+  headlineStat: { value: string; label: string; source: string };
   primaryCropThreats: string[];
-  prevalentDiseases: { disease: string; crop: string; rate: number }[];
-  climateImpactIndex: number; // 0-100
-  adoptionScore: number;
+  // Ranked by documented importance. No rates: no institution publishes
+  // regional disease-share percentages, so the list is qualitative —
+  // disease + crop + a complete source reference.
+  prevalentDiseases: { disease: string; crop: string; source: string }[];
+  // Complete references (institution + document + date/year) for every
+  // fact above, plus the verification date.
+  sources: string;
+  lastUpdated: string;
 }
 
 export interface ModelVersion {

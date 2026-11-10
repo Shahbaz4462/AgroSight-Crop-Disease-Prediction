@@ -8,6 +8,7 @@ import { speak, stopSpeaking, preloadVoices, resolveSpeakLang } from "../../lib/
 import { spokenResult } from "../../lib/resultSpeech";
 import { detectDiseaseFamily, DISEASE_FAMILIES } from "../../lib/diseaseGroups";
 import { CHEMICALS_BY_CLASS, STORES, classForDisplay } from "../../data/treatmentChemicals";
+import { renderResultCardImage, type ResultCardData } from "../../lib/resultCardImage";
 import { SAMPLE_LEAVES } from "../../data/sampleLeaves";
 import { historyService } from "../../services/api/historyService";
 import { PredictionResult } from "../../services/ai/types";
@@ -61,6 +62,8 @@ function ResultContent() {
   const [copied, setCopied] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [voiceNote, setVoiceNote] = useState("");
+  const [sharing, setSharing] = useState(false);
+  const [shareNote, setShareNote] = useState("");
 
   useEffect(() => () => stopSpeaking(), []);
 
@@ -180,6 +183,87 @@ function ResultContent() {
     : `AgroSight: ${result.crop} · ${result.disease} (${pct}% sure).`;
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(whatsappText)}`;
 
+  // Data for the printable result-card image shared to WhatsApp.
+  // Chemicals come from the same per-class list the page shows, so
+  // they only ever appear for a confident diseased result.
+  const cardChemicals = (() => {
+    if (!diseased) return [] as { name: string; type: string }[];
+    const cls = result.topPredictions?.[0]?.className ?? classForDisplay(result.crop, result.disease);
+    const list = cls ? CHEMICALS_BY_CLASS[cls] : undefined;
+    return (list ?? []).slice(0, 3).map((c) => ({ name: c.name, type: c.type }));
+  })();
+
+  const cardData: ResultCardData = {
+    verdict: verdict.word,
+    verdictSub: verdict.sub,
+    verdictKind: uncertain ? "uncertain" : healthy ? "healthy" : "disease",
+    crop: result.crop,
+    disease: diseased ? result.disease : null,
+    scientificName: diseased ? result.scientificName ?? null : null,
+    confidence: pct,
+    photoUrl: result.imageUrl ?? null,
+    stepsHeading: uncertain ? t("try_again") : healthy ? t("keep_that_way") : t("what_to_do"),
+    steps: uncertain
+      ? ["Take it in daylight, without shadow", "Fill the frame with a single leaf", "Hold steady so it isn't blurry"]
+      : healthy
+      ? (result.prevention?.length ? result.prevention : ["Check your crop every week", "Avoid standing water around plants"]).slice(0, 3)
+      : (result.organic_solution?.length ? result.organic_solution : result.chemical_solution ?? []).slice(0, 3),
+    chemicals: cardChemicals,
+    disclaimer: "This is an AI estimate. Please confirm with an agriculture expert before using any treatment.",
+    date: result.timestamp ? new Date(result.timestamp).toLocaleDateString() : "Today",
+  };
+
+  // WhatsApp share as a printable IMAGE of the result, not text.
+  // 1) Native share sheet with the PNG file (phones) so the user
+  //    picks WhatsApp and the image goes as an attachment.
+  // 2) If file sharing is not supported, the PNG is downloaded so
+  //    the user can attach it in WhatsApp manually.
+  // 3) If the image itself cannot be made, fall back to the old
+  //    wa.me text link — the button never ends up dead.
+  // An uncertain result is never shared as a diagnosis, in image
+  // or text: the card says "Not sure" and names no disease.
+  const shareWhatsAppImage = async () => {
+    if (sharing) return;
+    setSharing(true);
+    setShareNote("");
+    let blob: Blob;
+    try {
+      blob = await renderResultCardImage(cardData);
+    } catch {
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      setSharing(false);
+      return;
+    }
+    const file = new File([blob], "agrosight-result.png", { type: "image/png" });
+    const canShareFiles =
+      typeof navigator.canShare === "function" ? navigator.canShare({ files: [file] }) : !!navigator.share;
+    if (canShareFiles && navigator.share) {
+      try {
+        await navigator.share({ files: [file], title: "AgroSight result", text: whatsappText });
+        setSharing(false);
+        return;
+      } catch (err) {
+        // The user cancelled the share sheet: do nothing. Any other
+        // error (e.g. file sharing rejected) falls through to the
+        // download fallback below.
+        if (err instanceof DOMException && err.name === "AbortError") {
+          setSharing(false);
+          return;
+        }
+      }
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "agrosight-result.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 5000);
+    setShareNote(t("whatsapp_image_saved"));
+    setSharing(false);
+  };
+
   return (
     <div className="w-full">
       {/* Verdict banner */}
@@ -222,9 +306,10 @@ function ResultContent() {
             <button onClick={share} className="btn btn-ink !min-h-[3rem] !text-base">{copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />} {copied ? "Copied" : t("share")}</button>
             <button onClick={() => window.print()} className="btn btn-paper !min-h-[3rem] !text-base"><Printer className="w-4 h-4" /> {t("print")}</button>
             <button onClick={listen} className="btn btn-paper !min-h-[3rem] !text-base">{speaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />} {speaking ? t("stop_listen") : t("listen")}</button>
-            <a href={whatsappUrl} target="_blank" rel="noreferrer" className="btn btn-paper !min-h-[3rem] !text-base"><MessageCircle className="w-4 h-4" /> {t("whatsapp")}</a>
+            <button onClick={shareWhatsAppImage} disabled={sharing} className="btn btn-paper !min-h-[3rem] !text-base"><MessageCircle className="w-4 h-4" /> {t("whatsapp")}</button>
           </div>
           {voiceNote && <p className="text-sm text-muted">{voiceNote}</p>}
+          {shareNote && <p className="text-sm text-muted">{shareNote}</p>}
         </aside>
 
         {/* Right column */}

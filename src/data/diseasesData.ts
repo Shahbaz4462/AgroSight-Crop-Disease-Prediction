@@ -29,7 +29,7 @@ export const DISEASES_KNOWLEDGE_BASE: KnowledgeBaseEntry[] = [
       "Glume infection in severe cases with yellow pustules on spikelets",
     ],
     organicSolution: [
-      "Bio-priming seeds with antagonistic Trichoderma viride formulations.",
+      "Bio-priming seeds with antagonistic Trichoderma spp. formulations.",
       "Foliar application of diluted liquid seaweed bio-stimulant to boost systemic acquired resistance (SAR).",
       "Intercropping with legumes (chickpea/lentil) to disrupt spore transmission corridors.",
     ],
@@ -838,7 +838,7 @@ export const DISEASES_KNOWLEDGE_BASE: KnowledgeBaseEntry[] = [
     ],
     chemicalSolution: [
       "A copper-based bactericide (copper oxychloride) labelled for rice bacterial blight, at the dose on the product label.",
-      "Streptocycline where registered, at the dose on the product label.",
+      "Kasugamycin, an antibiotic bactericide recommended for rice bacterial blight, at the dose on the product label.",
     ],
     prevention: [
       "Sow resistant varieties where available.",
@@ -1121,7 +1121,7 @@ export const DISEASES_KNOWLEDGE_BASE: KnowledgeBaseEntry[] = [
     ],
     chemicalSolution: [
       "There is no chemical cure once plants are infected, and no fungicide controls this disease.",
-      "Trichoderma viride as a seed treatment before sowing may reduce severity in the next crop, at the dose on the product label.",
+      "Trichoderma spp. (for example T. virens or T. harzianum) as a seed treatment before sowing may reduce severity in the next crop, at the dose on the product label.",
     ],
     prevention: [
       "Use resistant or tolerant varieties — the main defence.",
