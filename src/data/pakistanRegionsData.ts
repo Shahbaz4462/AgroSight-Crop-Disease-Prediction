@@ -25,23 +25,23 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     topDiseases: [
       {
         name: "Wheat stripe (yellow) rust",
-        source: "CIMMYT — Nationwide assessment of wheat diseases and pests in Pakistan, expert elicitation 2018–2022",
+        source: "CIMMYT — Nationwide assessment of wheat diseases and pests in Pakistan, expert elicitation 2018–2022", sourceUrl: "https://apsjournals.apsnet.org/doi/10.1094/PHYTO-11-25-0365-R",
       },
       {
         name: "Wheat leaf (brown) rust",
-        source: "CIMMYT — Nationwide assessment of wheat diseases and pests in Pakistan, expert elicitation 2018–2022",
+        source: "CIMMYT — Nationwide assessment of wheat diseases and pests in Pakistan, expert elicitation 2018–2022", sourceUrl: "https://apsjournals.apsnet.org/doi/10.1094/PHYTO-11-25-0365-R",
       },
       {
         name: "Cotton leaf curl virus (CLCuV)",
-        source: "Central Cotton Research Institute Multan, Plant Pathology Section; Dawn, 11 Feb 2002",
+        source: "Central Cotton Research Institute Multan, Plant Pathology Section; Dawn, 11 Feb 2002", sourceUrl: "http://www.ccri.gov.pk/Introduction.html",
       },
       {
         name: "Rice bacterial leaf blight",
-        source: "CDRI/PARC survey 2019–20 (Shahzad Asad) — Gujranwala 55%, Hafizabad 36%, Sialkot 29%",
+        source: "CDRI/PARC survey 2019–20 (Shahzad Asad) — Gujranwala 55%, Hafizabad 36%, Sialkot 29%", sourceUrl: "https://mail.researcherslinks.com/articles/assessment-bacterial-leaf-blight-incidence-and-severity-4116",
       },
       {
         name: "Potato early blight",
-        source: "Journal of Animal & Plant Sciences, 2026 — GIS study, 40 sites, Multan/Khanewal/Sahiwal/Okara",
+        source: "Journal of Animal & Plant Sciences, 2026 — GIS study, 40 sites, Multan/Khanewal/Sahiwal/Okara", sourceUrl: "https://thejaps.org.pk/AbstractView.aspx?mid=2026-JAPS-89",
       },
     ],
     keyFacts: [
@@ -70,23 +70,23 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     topDiseases: [
       {
         name: "Banana Panama wilt (Fusarium TR4)",
-        source: "Dawn, 10 Nov 2025; PARC molecular identification (Thatta, Tando Allahyar, Mirpurkhas, Hyderabad, Sanghar)",
+        source: "Dawn, 10 Nov 2025; PARC molecular identification (Thatta, Tando Allahyar, Mirpurkhas, Hyderabad, Sanghar)", sourceUrl: "https://www.dawn.com/news/1954091",
       },
       {
         name: "Rice bacterial leaf blight",
-        source: "CDRI/PARC survey 2019–20 (Shahzad Asad)",
+        source: "CDRI/PARC survey 2019–20 (Shahzad Asad)", sourceUrl: "https://mail.researcherslinks.com/articles/assessment-bacterial-leaf-blight-incidence-and-severity-4116",
       },
       {
         name: "Rice blast / brown spot",
-        source: "Dawn, 29 Oct 2001; IRRI Rice Knowledge Bank",
+        source: "Dawn, 29 Oct 2001; IRRI Rice Knowledge Bank", sourceUrl: "http://knowledgebank.irri.org/index.php?option=com_zoo&task=item&item_id=808&itemid=739",
       },
       {
         name: "Wheat leaf rust",
-        source: "CIMMYT — Nationwide assessment of wheat diseases and pests in Pakistan, expert elicitation 2018–2022",
+        source: "CIMMYT — Nationwide assessment of wheat diseases and pests in Pakistan, expert elicitation 2018–2022", sourceUrl: "https://apsjournals.apsnet.org/doi/10.1094/PHYTO-11-25-0365-R",
       },
       {
         name: "Mango malformation & sudden death",
-        source: "Dawn, 22 June 2026; CDRI (Shahzad Asad)",
+        source: "Dawn, 22 June 2026; CDRI (Shahzad Asad)", sourceUrl: "https://www.dawn.com/news/2009884",
       },
     ],
     keyFacts: [
@@ -99,7 +99,7 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
       text: "Banana Panama wilt (TR4) outbreak — Tando Allahyar",
       textUr: "کیلے کی پاناما مرجھاؤ (TR4) کی وبا — ٹنڈو الہ یار",
       textRoman: "Kelay ki Panama murjhao (TR4) ki waba — Tando Allahyar",
-      source: "Dawn, 10 Nov 2025; PARC confirmed",
+      source: "Dawn, 10 Nov 2025; PARC confirmed", sourceUrl: "https://www.dawn.com/news/1954091",
     },
     sources:
       "Pakistan Bureau of Statistics, 7th Agriculture Census 2024, Table 4.3; Dawn, 22 June 2026 (Sindh budget speech); Dawn, 10 Nov 2025; PARC; CDRI/PARC survey 2019–20; CIMMYT assessment 2018–2022; IRRI Rice Knowledge Bank",
@@ -115,23 +115,23 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     topDiseases: [
       {
         name: "Wheat stripe (yellow) rust",
-        source: "Khyber Pakhtunkhwa Agriculture Dept wheat disease chart, reported PakEra, 20 Oct 2026; CIMMYT assessment 2018–2022",
+        source: "Khyber Pakhtunkhwa Agriculture Dept wheat disease chart, reported PakEra, 20 Oct 2026; CIMMYT assessment 2018–2022", sourceUrl: "https://pakera.pk/wheat-sowing-khyber-pakhtunkhwa-2026-dates-seed-rate-fertiliser/",
       },
       {
         name: "Wheat leaf (brown) rust & stem (black) rust",
-        source: "Khyber Pakhtunkhwa Agriculture Dept wheat disease chart, reported PakEra, 20 Oct 2026; CIMMYT assessment 2018–2022",
+        source: "Khyber Pakhtunkhwa Agriculture Dept wheat disease chart, reported PakEra, 20 Oct 2026; CIMMYT assessment 2018–2022", sourceUrl: "https://pakera.pk/wheat-sowing-khyber-pakhtunkhwa-2026-dates-seed-rate-fertiliser/",
       },
       {
         name: "Maize southern leaf blight & Alternaria leaf blight",
-        source: "Acta Scientific Agriculture 5(8), Aug 2021 — Havelian, Abbottabad survey",
+        source: "Acta Scientific Agriculture 5(8), Aug 2021 — Havelian, Abbottabad survey", sourceUrl: "https://www.academia.edu/73987313/Isolation_and_Identification_of_Most_Prevailing_Fungal_Diseases_of_Wheat_and_Maize_in_Tehsil_Havelian_District_Abbottabad",
       },
       {
         name: "Wheat Fusarium head blight",
-        source: "CIMMYT — Nationwide assessment of wheat diseases and pests in Pakistan, expert elicitation 2018–2022",
+        source: "CIMMYT — Nationwide assessment of wheat diseases and pests in Pakistan, expert elicitation 2018–2022", sourceUrl: "https://apsjournals.apsnet.org/doi/10.1094/PHYTO-11-25-0365-R",
       },
       {
         name: "Wheat Karnal bunt",
-        source: "CIMMYT — Nationwide assessment of wheat diseases and pests in Pakistan, expert elicitation 2018–2022",
+        source: "CIMMYT — Nationwide assessment of wheat diseases and pests in Pakistan, expert elicitation 2018–2022", sourceUrl: "https://apsjournals.apsnet.org/doi/10.1094/PHYTO-11-25-0365-R",
       },
     ],
     keyFacts: [
@@ -160,19 +160,19 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     topDiseases: [
       {
         name: "Apple fire blight",
-        source: "Balochistan Agriculture College Quetta survey, published 30 Apr 2025 — incidence 12.33–18.75%",
+        source: "Balochistan Agriculture College Quetta survey, published 30 Apr 2025 — incidence 12.33–18.75%", sourceUrl: "https://www.jkjagri.com/index.php/journal/article/view/247",
       },
       {
         name: "Apple scab",
-        source: "AGES Austria, Apple scab profile, updated 11 Apr 2023; Pakistan J. Agricultural Research 35(3), Sept 2022 (Balochistan 34% of national apples)",
+        source: "AGES Austria, Apple scab profile, updated 11 Apr 2023; Pakistan J. Agricultural Research 35(3), Sept 2022 (Balochistan 34% of national apples)", sourceUrl: "https://www.ages.at/en/plant/plant-health/pests-from-a-to-z/apple-scab-disease",
       },
       {
         name: "Wheat rusts (stripe/leaf/stem)",
-        source: "Bux et al., 2012, cited in Preprints.org review, 2026",
+        source: "Bux et al., 2012, cited in Preprints.org review, 2026", sourceUrl: "https://www.preprints.org/manuscript/202609.1926",
       },
       {
         name: "Grape powdery & downy mildew",
-        source: "Punjab Agricultural University, Ludhiana, plant pathology syllabus; Pakistan J. Agricultural Research 35(3), Sept 2022 (Balochistan 90% of national grapes)",
+        source: "Punjab Agricultural University, Ludhiana, plant pathology syllabus; Pakistan J. Agricultural Research 35(3), Sept 2022 (Balochistan 90% of national grapes)", sourceUrl: "https://researcherslinks.com/articles/a-review-fruit-production-industry-5602",
       },
     ],
     keyFacts: [
@@ -195,11 +195,11 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     topDiseases: [
       {
         name: "Apricot shot-hole disease",
-        source: "Azhar et al., 2023; Muhammad et al., 2022 — prevalence over 70% in GB apricot valleys",
+        source: "Azhar et al., 2023; Muhammad et al., 2022 — prevalence over 70% in GB apricot valleys", sourceUrl: "https://www.researchgate.net/publication/370716927_Spatial_distribution_and_risk_associated_with_shot_hole_disease_in_apricot_Prunus_armeniaca_L_in_Northern_Pakistan",
       },
       {
         name: "Cherry shot-hole disease",
-        source: "Prevalence and Characteristics of Cherry Shot-Hole Disease in Gilgit-Baltistan (ResearchGate)",
+        source: "Prevalence and Characteristics of Cherry Shot-Hole Disease in Gilgit-Baltistan (ResearchGate)", sourceUrl: "http://pjp.pakps.com/index.php/PJP/article/view/934",
       },
       {
         name: "Potato black scurf",
@@ -211,7 +211,7 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
       },
       {
         name: "Potato late blight",
-        source: "GB disease inventory (ResearchGate, cherry shot-hole paper)",
+        source: "GB disease inventory (ResearchGate, cherry shot-hole paper)", sourceUrl: "http://pjp.pakps.com/index.php/PJP/article/view/934",
       },
     ],
     keyFacts: [
@@ -234,15 +234,15 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     topDiseases: [
       {
         name: "Wheat Fusarium head blight",
-        source: "Hussain et al., Journal of Plant & Environment 06(01): 27–40, 2024 (Mirpur University of Science & Technology, AJK)",
+        source: "Hussain et al., Journal of Plant & Environment 06(01): 27–40, 2024 (Mirpur University of Science & Technology, AJK)", sourceUrl: "https://esciencepress.net/journals/index.php/JPE/article/view/4416",
       },
       {
         name: "Wheat Alternaria leaf blight / spot blotch",
-        source: "Hussain et al., Journal of Plant & Environment 06(01): 27–40, 2024 (Mirpur University of Science & Technology, AJK)",
+        source: "Hussain et al., Journal of Plant & Environment 06(01): 27–40, 2024 (Mirpur University of Science & Technology, AJK)", sourceUrl: "https://esciencepress.net/journals/index.php/JPE/article/view/4416",
       },
       {
         name: "Wheat stem rust & loose smut",
-        source: "Hussain et al., Journal of Plant & Environment 06(01): 27–40, 2024 (Mirpur University of Science & Technology, AJK)",
+        source: "Hussain et al., Journal of Plant & Environment 06(01): 27–40, 2024 (Mirpur University of Science & Technology, AJK)", sourceUrl: "https://esciencepress.net/journals/index.php/JPE/article/view/4416",
       },
     ],
     keyFacts: [
