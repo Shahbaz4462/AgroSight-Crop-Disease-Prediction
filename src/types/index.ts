@@ -70,7 +70,7 @@ export interface ProvinceStatistic {
   // Ranked by documented importance. No percentages: no institution
   // publishes province-level disease-share percentages, so the list is
   // qualitative — disease name + a complete source reference.
-  topDiseases: { name: string; source: string }[];
+  topDiseases: { name: string; source: string; sourceUrl?: string }[];
   // Verified key facts only (each with a complete reference in `sources`).
   // Rendered in the same 3-cell grid as before; a province with fewer
   // verified facts shows fewer cells. `labelKey` is an i18n key.
@@ -78,7 +78,7 @@ export interface ProvinceStatistic {
   riskLevel: "Low" | "Medium" | "High" | "Alert";
   // Most recent significant official alert, if one exists.
   // textUr/textRoman are the same alert translated for Urdu/Roman Urdu.
-  currentAlert?: { text: string; source: string; textUr?: string; textRoman?: string };
+  currentAlert?: { text: string; source: string; sourceUrl?: string; textUr?: string; textRoman?: string };
   // Complete references (institution + document + date/year) for every
   // fact and disease above, plus the verification date.
   sources: string;
@@ -91,12 +91,12 @@ export interface GlobalRegionStatistic {
   // One real published figure per region (value + what it means + source).
   // Replaces the invented totalDiagnosesSample number.
   // labelUr/labelRoman are the same label translated for Urdu/Roman Urdu.
-  headlineStat: { value: string; label: string; source: string; labelUr?: string; labelRoman?: string };
+  headlineStat: { value: string; label: string; source: string; sourceUrl?: string; labelUr?: string; labelRoman?: string };
   primaryCropThreats: string[];
   // Ranked by documented importance. No rates: no institution publishes
   // regional disease-share percentages, so the list is qualitative —
   // disease + crop + a complete source reference.
-  prevalentDiseases: { disease: string; crop: string; source: string }[];
+  prevalentDiseases: { disease: string; crop: string; source: string; sourceUrl?: string }[];
   // Complete references (institution + document + date/year) for every
   // fact above, plus the verification date.
   sources: string;
