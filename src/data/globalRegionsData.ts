@@ -20,29 +20,29 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
       label: "people who could be fed by the rice lost to rice blast each year",
       labelUr: "وہ لوگ جنہیں ہر سال چاول کی بلاسٹ سے ضائع ہونے والے چاول سے کھانا کھلایا جا سکتا تھا",
       labelRoman: "Wo log jinhein har saal chawal ki blast se zaya honay walay chawal se khana khilaya ja sakta tha",
-      source: "IRRI — Rice Today, 2026 (IRRI/Bangladesh Rice Research Institute/UPLB study, The Plant Genome, 2026)",
+      source: "IRRI — Rice Today, 2026 (IRRI/Bangladesh Rice Research Institute/UPLB study, The Plant Genome, 2026)", sourceUrl: "https://ricetoday.irri.org/new-genetic-discovery-holds-promise-of-broad-spectrum-defense-against-rices-deadliest-pathogen/",
     },
     primaryCropThreats: ["Rice Blast", "Cotton Leaf Curl Disease", "Wheat Stripe Rust", "Potato Late Blight"],
     prevalentDiseases: [
       {
         disease: "Rice blast",
         crop: "Rice",
-        source: "CABI Plantwise Knowledge Bank — Paddy Blast factsheet, 2015",
+        source: "CABI Plantwise Knowledge Bank — Paddy Blast factsheet, 2015", sourceUrl: "https://plantwiseplusknowledgebank.org/doi/full/10.1079/pwkb.20157800544",
       },
       {
         disease: "Rice brown spot",
         crop: "Rice",
-        source: "IRRI Rice Knowledge Bank — Brown spot factsheet",
+        source: "IRRI Rice Knowledge Bank — Brown spot factsheet", sourceUrl: "http://www.knowledgebank.irri.org/decision-tools/rice-doctor/rice-doctor-fact-sheets/item/brown-spot",
       },
       {
         disease: "Cotton leaf curl disease",
         crop: "Cotton",
-        source: "Punjab Agricultural University / ICAC, 2024",
+        source: "Punjab Agricultural University / ICAC, 2024", sourceUrl: "https://pau.edu/index.php?_act=manageEvent&DO=viewEventDetail&dataE=datae&intID=9404",
       },
       {
         disease: "Wheat stripe rust",
         crop: "Wheat",
-        source: "FAO feature story, 12 May 2025",
+        source: "FAO feature story, 12 May 2025", sourceUrl: "https://www.fao.org/north-america/news/details/cooperation-at-all-levels-and-funding--critical--for-plant-health-and-food-security--fao-says/en",
       },
     ],
     sources:
@@ -57,7 +57,7 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
       label: "spent on fungicides for Septoria tritici blotch in Europe each year",
       labelUr: "یورپ میں ہر سال سیپٹوریا ٹریٹسی بلاچ کے لیے فنگس کش ادویات پر خرچ",
       labelRoman: "Europe mein har saal Septoria tritici blotch ke liye fungicide par kharch",
-      source: "Frontiers in Plant Science, 2016 (via FAO AGRIS)",
+      source: "Frontiers in Plant Science, 2016 (via FAO AGRIS)", sourceUrl: "https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2016.00508/full",
     },
     primaryCropThreats: ["Septoria Tritici Blotch", "Wheat Stripe Rust", "Potato Late Blight", "Grapevine Downy Mildew"],
     prevalentDiseases: [
@@ -69,17 +69,17 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
       {
         disease: "Apple scab",
         crop: "Apple",
-        source: "Austrian Agency for Health and Food Safety (AGES), updated 11 Apr 2023",
+        source: "Austrian Agency for Health and Food Safety (AGES), updated 11 Apr 2023", sourceUrl: "https://www.ages.at/en/plant/plant-health/pests-from-a-to-z/apple-scab-disease",
       },
       {
         disease: "Grapevine downy mildew",
         crop: "Grapevine",
-        source: "Frontiers in Microbiology, 2022 (Koledenkova et al.)",
+        source: "Frontiers in Microbiology, 2022 (Koledenkova et al.)", sourceUrl: "https://www.frontiersin.org/journals/microbiology/articles/10.3389/fmicb.2022.889472",
       },
       {
         disease: "Barley scald",
         crop: "Barley",
-        source: "Heliyon, 2023",
+        source: "Heliyon, 2023", sourceUrl: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10018571/",
       },
     ],
     sources:
@@ -101,22 +101,22 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
       {
         disease: "Cassava mosaic disease",
         crop: "Cassava",
-        source: "CABI Crop Protection Compendium / FAO, cited 19 Apr 2024",
+        source: "CABI Crop Protection Compendium / FAO, cited 19 Apr 2024", sourceUrl: "https://reliefweb.int/report/burundi/great-lakes-combating-cassava-mosaic",
       },
       {
         disease: "Maize streak virus",
         crop: "Maize",
-        source: "Frontiers in Plant Science, 3 June 2025 (Mushayi et al.)",
+        source: "Frontiers in Plant Science, 3 June 2025 (Mushayi et al.)", sourceUrl: "https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2025.1590870/full",
       },
       {
         disease: "Coffee leaf rust",
         crop: "Coffee",
-        source: "FAO — Effects of climate change on plant pests",
+        source: "FAO — Effects of climate change on plant pests", sourceUrl: "https://openknowledge.fao.org/server/api/core/bitstreams/fe50815a-fe81-467f-bc06-e15d68dd4e04/content/src/html/case-studies-of-individual-pest-species.html",
       },
       {
         disease: "Banana Xanthomonas wilt",
         crop: "Banana",
-        source: "FAO diagnostic survey, Tanzania/Uganda, 2009",
+        source: "FAO diagnostic survey, Tanzania/Uganda, 2009", sourceUrl: "https://www.fao.org/4/i0759e/i0759e00.pdf",
       },
     ],
     sources:
@@ -131,29 +131,29 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
       label: "bushels of US corn lost to disease in 2025 (7.0% of yield)",
       labelUr: "2025 میں بیماری سے ضائع ہونے والے امریکی مکئی کے بشل (پیداوار کا 7.0٪)",
       labelRoman: "2025 mein bimari se zaya honay walay Amriki makai ke bushel (paidawar ka 7.0%)",
-      source: "Crop Protection Network — Corn Disease Loss Estimates, 2025",
+      source: "Crop Protection Network — Corn Disease Loss Estimates, 2025", sourceUrl: "https://cropprotectionnetwork.org/publications/corn-disease-loss-estimates-from-the-united-states-and-ontario-canada-2025",
     },
     primaryCropThreats: ["Corn Tar Spot", "Corn Southern Rust", "Soybean Cyst Nematode", "Citrus Greening"],
     prevalentDiseases: [
       {
         disease: "Corn tar spot",
         crop: "Corn",
-        source: "Crop Protection Network, 2025",
+        source: "Crop Protection Network, 2025", sourceUrl: "https://cropprotectionnetwork.org/publications/corn-disease-loss-estimates-from-the-united-states-and-ontario-canada-2025",
       },
       {
         disease: "Soybean cyst nematode & sudden death syndrome",
         crop: "Soybean",
-        source: "Crop Protection Network, 2024 (published 14 Mar 2025)",
+        source: "Crop Protection Network, 2024 (published 14 Mar 2025)", sourceUrl: "https://cropprotectionnetwork.org/publications/soybean-disease-loss-estimates-from-the-united-states-and-ontario-canada-2024",
       },
       {
         disease: "Citrus Huanglongbing (citrus greening)",
         crop: "Citrus",
-        source: "USDA Animal and Plant Health Inspection Service, 2022",
+        source: "USDA Animal and Plant Health Inspection Service, 2022", sourceUrl: "https://www.aphis.usda.gov/aphis/ourfocus/planthealth/plant-pest-and-disease-programs/pests-and-diseases/citrus/citrus-greening",
       },
       {
         disease: "Apple fire blight",
         crop: "Apple",
-        source: "Cornell University IPM, updated 2024",
+        source: "Cornell University IPM, updated 2024", sourceUrl: "https://cals.cornell.edu/new-york-state-integrated-pest-management/outreach-education/fact-sheets/fire-blight-fact-sheet",
       },
     ],
     sources:
@@ -168,14 +168,14 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
       label: "lost by Brazil to Asian soybean rust in the 2013–14 season alone",
       labelUr: "صرف 2013–14 کے سیزن میں برازیل کو ایشیائی سویا بین زنگ سے نقصان",
       labelRoman: "Sirf 2013–14 ke season mein Brazil ko Asian soybean rust se nuqsan",
-      source: "Godoy et al., 2016 (via SciELO systematic review, 2025)",
+      source: "Godoy et al., 2016 (via SciELO systematic review, 2025)", sourceUrl: "http://www.scielo.br/j/pab/a/X34LY9zyrpFmh6y59syDsRx/?format=pdf&lang=en&ilang=en",
     },
     primaryCropThreats: ["Soybean Asian Rust", "Coffee Leaf Rust", "Sugarcane Smut", "Citrus Canker"],
     prevalentDiseases: [
       {
         disease: "Asian soybean rust",
         crop: "Soybean",
-        source: "Godoy et al., 2016 (via SciELO systematic review, 2025)",
+        source: "Godoy et al., 2016 (via SciELO systematic review, 2025)", sourceUrl: "http://www.scielo.br/j/pab/a/X34LY9zyrpFmh6y59syDsRx/?format=pdf&lang=en&ilang=en",
       },
       {
         disease: "Coffee leaf rust",
@@ -185,12 +185,12 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
       {
         disease: "Sugarcane smut",
         crop: "Sugarcane",
-        source: "Scientific Reports, 2016 (Su et al.)",
+        source: "Scientific Reports, 2016 (Su et al.)", sourceUrl: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4817513/",
       },
       {
         disease: "Citrus canker",
         crop: "Citrus",
-        source: "American Phytopathological Society, PhytoFrontiers; MDPI Agronomy, 2023",
+        source: "American Phytopathological Society, PhytoFrontiers; MDPI Agronomy, 2023", sourceUrl: "https://www.mdpi.com/2073-4395/13/4/1112/pdf",
       },
     ],
     sources:
@@ -205,29 +205,29 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
       label: "lost by Australian growers to wheat stripe rust each year (+ AU$150M in control)",
       labelUr: "آسٹریلوی کاشتکاروں کو ہر سال گندم کی پٹی والی زنگ سے نقصان (+ کنٹرول پر AU$150M)",
       labelRoman: "Australian kashtkaron ko har saal gandum ki patti wali zang se nuqsan (+ control par AU$150M)",
-      source: "GRDC GroundCover, 2025",
+      source: "GRDC GroundCover, 2025", sourceUrl: "https://groundcover.grdc.com.au/weeds-pests-diseases/diseases/monitoring-intensifies-as-virulent-new-stripe-rust-emerges-in-europe",
     },
     primaryCropThreats: ["Wheat Stripe Rust", "Canola Blackleg", "Barley Spot-Form Net Blotch", "Grapevine Downy Mildew"],
     prevalentDiseases: [
       {
         disease: "Wheat stripe rust",
         crop: "Wheat",
-        source: "GRDC GroundCover, 2025",
+        source: "GRDC GroundCover, 2025", sourceUrl: "https://groundcover.grdc.com.au/weeds-pests-diseases/diseases/monitoring-intensifies-as-virulent-new-stripe-rust-emerges-in-europe",
       },
       {
         disease: "Canola blackleg",
         crop: "Canola",
-        source: "GRDC — Fungicide Resistance Management in Australian Grain Crops, Jan 2026",
+        source: "GRDC — Fungicide Resistance Management in Australian Grain Crops, Jan 2026", sourceUrl: "https://grdc.com.au/__data/assets/pdf_file/0030/632388/fungicide-resistance-management-in-australian-grain-crops-grdc-20260206.pdf",
       },
       {
         disease: "Grape powdery mildew",
         crop: "Grapevine",
-        source: "Australian Wine Research Institute eBulletin, 24 Oct 2025",
+        source: "Australian Wine Research Institute eBulletin, 24 Oct 2025", sourceUrl: "https://www.awri.com.au/information_services/ebulletin/2025/10/24/agrochemical-update-avoiding-fungicide-resistance-in-powdery-mildew/",
       },
       {
         disease: "Barley net blotch",
         crop: "Barley",
-        source: "Curtin University / Australian Centre for Necrotrophic Fungal Pathogens",
+        source: "Curtin University / Australian Centre for Necrotrophic Fungal Pathogens", sourceUrl: "https://www.researchgate.net/publication/230592011",
       },
     ],
     sources:

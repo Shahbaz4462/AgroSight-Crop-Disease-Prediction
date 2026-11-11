@@ -5,6 +5,7 @@ import { PAKISTAN_REGIONS_DATA } from "../../data/pakistanRegionsData";
 import { PAKISTAN_BOUNDARIES } from "../../data/pakistanBoundaries";
 import { ProvinceStatistic } from "../../types";
 import { useApp } from "../../context/AppContext";
+import { ArrowUpRight } from "lucide-react";
 
 // Real boundaries, not hand-drawn shapes.
 // PAKISTAN_BOUNDARIES is generated from geoBoundaries gbOpen, Pakistan
@@ -202,17 +203,34 @@ export const PakistanMapInteractive: React.FC = () => {
                 <p className="text-sm font-medium">
                   {i + 1}. {d.name}
                 </p>
-                <p className="mt-1 text-sm text-muted">{d.source}</p>
+                <div className="mt-1 bg-accent/25 px-3 py-2">
+                  <p className="text-sm text-muted">{d.source}</p>
+                  {d.sourceUrl && (
+                    <a href={d.sourceUrl} target="_blank" rel="noreferrer" className="btn btn-paper mt-2 !min-h-[2rem] !px-3 !py-1 !text-xs">
+                      {t("view_source")} <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
         </div>
 
         {sel.currentAlert && (
-          <p className="text-sm">
-            <span className="label text-muted">{t("alert_label")} · </span>
-            {langText(sel.currentAlert.text, sel.currentAlert.textUr, sel.currentAlert.textRoman)} <span className="text-muted">— {sel.currentAlert.source}</span>
-          </p>
+          <div>
+            <p className="text-sm">
+              <span className="label text-muted">{t("alert_label")} · </span>
+              {langText(sel.currentAlert.text, sel.currentAlert.textUr, sel.currentAlert.textRoman)}
+            </p>
+            <div className="mt-2 bg-accent/25 px-3 py-2">
+              <p className="text-xs leading-relaxed text-muted">{sel.currentAlert.source}</p>
+              {sel.currentAlert.sourceUrl && (
+                <a href={sel.currentAlert.sourceUrl} target="_blank" rel="noreferrer" className="btn btn-paper mt-2 !min-h-[2rem] !px-3 !py-1 !text-xs">
+                  {t("view_source")} <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              )}
+            </div>
+          </div>
         )}
 
         <p className="text-xs text-muted">

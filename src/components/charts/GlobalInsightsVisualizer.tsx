@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { GLOBAL_REGIONS_DATA } from "../../data/globalRegionsData";
 import { useApp } from "../../context/AppContext";
+import { ArrowUpRight } from "lucide-react";
 
 const regionKey: Record<string, string> = {
   Asia: "region_asia",
@@ -43,7 +44,14 @@ export const GlobalInsightsVisualizer: React.FC = () => {
             <p className="label text-muted">{t("headline_label")}</p>
             <p className="mt-2 font-mono text-4xl font-medium">{active.headlineStat.value}</p>
             <p className="mt-2 text-sm">{langText(active.headlineStat.label, active.headlineStat.labelUr, active.headlineStat.labelRoman)}</p>
-            <p className="mt-1 text-xs text-muted">{active.headlineStat.source}</p>
+            <div className="mt-2 bg-accent/25 px-3 py-2">
+              <p className="text-xs text-muted">{active.headlineStat.source}</p>
+              {active.headlineStat.sourceUrl && (
+                <a href={active.headlineStat.sourceUrl} target="_blank" rel="noreferrer" className="btn btn-paper mt-2 !min-h-[2rem] !px-3 !py-1 !text-xs">
+                  {t("view_source")} <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              )}
+            </div>
           </div>
           <div>
             <p className="label text-muted mb-2">{t("main_threats")}</p>
@@ -67,7 +75,14 @@ export const GlobalInsightsVisualizer: React.FC = () => {
                   <span className="font-display font-bold text-xl leading-tight">{i + 1}. {d.disease}</span>
                   <span className="font-mono text-xl">{d.crop}</span>
                 </div>
-                <p className="text-sm text-muted">{d.source}</p>
+                <div className="mt-1 bg-accent/25 px-3 py-2">
+                  <p className="text-sm text-muted">{d.source}</p>
+                  {d.sourceUrl && (
+                    <a href={d.sourceUrl} target="_blank" rel="noreferrer" className="btn btn-paper mt-2 !min-h-[2rem] !px-3 !py-1 !text-xs">
+                      {t("view_source")} <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
