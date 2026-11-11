@@ -454,6 +454,9 @@ function ResultContent() {
                         <span className="label !text-[10px] border-2 border-ink px-2 py-1">{chem.type}</span>
                       </div>
                       <p className="mt-2 text-sm leading-relaxed">{chem.detail}</p>
+                      {chem.source && (
+                        <p className="mt-3 text-xs text-muted">{t("sources_label")}: {chem.source}</p>
+                      )}
                       <p className="label text-muted mt-4 mb-2">{t("buy_from")}</p>
                       <ul className="space-y-3">
                         {STORES.map((store) => (
