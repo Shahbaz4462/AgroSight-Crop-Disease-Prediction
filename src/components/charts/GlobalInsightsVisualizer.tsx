@@ -4,8 +4,21 @@ import React, { useState } from "react";
 import { GLOBAL_REGIONS_DATA } from "../../data/globalRegionsData";
 import { useApp } from "../../context/AppContext";
 
+const regionKey: Record<string, string> = {
+  Asia: "region_asia",
+  Europe: "region_europe",
+  Africa: "region_africa",
+  "North America": "region_north_america",
+  "South America": "region_south_america",
+  Oceania: "region_oceania",
+};
+
 export const GlobalInsightsVisualizer: React.FC = () => {
-  const { t } = useApp();
+  const { t, language } = useApp();
+  // Urdu/Roman Urdu display text for data that is English in the data file.
+  // Falls back to English when a translation is absent.
+  const langText = (en: string, ur?: string, roman?: string) =>
+    language === "ur" ? (ur ?? en) : language === "roman" ? (roman ?? en) : en;
   const [active, setActive] = useState(GLOBAL_REGIONS_DATA[0]);
 
   return (
@@ -19,7 +32,7 @@ export const GlobalInsightsVisualizer: React.FC = () => {
             onClick={() => setActive(r)}
             className={`h-14 px-6 label whitespace-nowrap border-r-2 border-ink shrink-0 ${active.id === r.id ? "bg-ink text-paper" : "hover:bg-accent hover:text-[#0b1a12]"}`}
           >
-            {r.region}
+            {t(regionKey[r.region])}
           </button>
         ))}
       </div>
@@ -29,7 +42,7 @@ export const GlobalInsightsVisualizer: React.FC = () => {
           <div>
             <p className="label text-muted">{t("headline_label")}</p>
             <p className="mt-2 font-mono text-4xl font-medium">{active.headlineStat.value}</p>
-            <p className="mt-2 text-sm">{active.headlineStat.label}</p>
+            <p className="mt-2 text-sm">{langText(active.headlineStat.label, active.headlineStat.labelUr, active.headlineStat.labelRoman)}</p>
             <p className="mt-1 text-xs text-muted">{active.headlineStat.source}</p>
           </div>
           <div>
@@ -46,7 +59,7 @@ export const GlobalInsightsVisualizer: React.FC = () => {
         </div>
 
         <div className="md:col-span-8 p-5 sm:p-8">
-          <p className="label text-muted mb-4">{t("most_common")} {active.region}</p>
+          <p className="label text-muted mb-4">{t("most_common")} {t(regionKey[active.region])}</p>
           <ul className="space-y-5">
             {active.prevalentDiseases.map((d, i) => (
               <li key={d.disease}>

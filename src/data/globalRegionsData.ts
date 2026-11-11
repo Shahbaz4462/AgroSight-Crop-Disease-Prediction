@@ -18,6 +18,8 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
     headlineStat: {
       value: "60M",
       label: "people who could be fed by the rice lost to rice blast each year",
+      labelUr: "وہ لوگ جنہیں ہر سال چاول کی بلاسٹ سے ضائع ہونے والے چاول سے کھانا کھلایا جا سکتا تھا",
+      labelRoman: "Wo log jinhein har saal chawal ki blast se zaya honay walay chawal se khana khilaya ja sakta tha",
       source: "IRRI — Rice Today, 2026 (IRRI/Bangladesh Rice Research Institute/UPLB study, The Plant Genome, 2026)",
     },
     primaryCropThreats: ["Rice Blast", "Cotton Leaf Curl Disease", "Wheat Stripe Rust", "Potato Late Blight"],
@@ -53,6 +55,8 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
     headlineStat: {
       value: "€1bn",
       label: "spent on fungicides for Septoria tritici blotch in Europe each year",
+      labelUr: "یورپ میں ہر سال سیپٹوریا ٹریٹسی بلاچ کے لیے فنگس کش ادویات پر خرچ",
+      labelRoman: "Europe mein har saal Septoria tritici blotch ke liye fungicide par kharch",
       source: "Frontiers in Plant Science, 2016 (via FAO AGRIS)",
     },
     primaryCropThreats: ["Septoria Tritici Blotch", "Wheat Stripe Rust", "Potato Late Blight", "Grapevine Downy Mildew"],
@@ -88,6 +92,8 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
     headlineStat: {
       value: "$1.2–2.3bn",
       label: "lost each year to cassava mosaic disease across sub-Saharan Africa",
+      labelUr: "سب صحارا افریقہ میں ہر سال کساوا موزیک بیماری سے نقصان",
+      labelRoman: "Sub-Sahara Africa mein har saal cassava mosaic bimari se nuqsan",
       source: "CABI Crop Protection Compendium, cited 19 Apr 2024 (also FAO, 2007)",
     },
     primaryCropThreats: ["Cassava Mosaic Disease", "Cassava Brown Streak Disease", "Maize Streak Virus", "Wheat Stem Rust (Ug99)"],
@@ -123,6 +129,8 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
     headlineStat: {
       value: "1.3bn",
       label: "bushels of US corn lost to disease in 2025 (7.0% of yield)",
+      labelUr: "2025 میں بیماری سے ضائع ہونے والے امریکی مکئی کے بشل (پیداوار کا 7.0٪)",
+      labelRoman: "2025 mein bimari se zaya honay walay Amriki makai ke bushel (paidawar ka 7.0%)",
       source: "Crop Protection Network — Corn Disease Loss Estimates, 2025",
     },
     primaryCropThreats: ["Corn Tar Spot", "Corn Southern Rust", "Soybean Cyst Nematode", "Citrus Greening"],
@@ -158,6 +166,8 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
     headlineStat: {
       value: "$2.2bn",
       label: "lost by Brazil to Asian soybean rust in the 2013–14 season alone",
+      labelUr: "صرف 2013–14 کے سیزن میں برازیل کو ایشیائی سویا بین زنگ سے نقصان",
+      labelRoman: "Sirf 2013–14 ke season mein Brazil ko Asian soybean rust se nuqsan",
       source: "Godoy et al., 2016 (via SciELO systematic review, 2025)",
     },
     primaryCropThreats: ["Soybean Asian Rust", "Coffee Leaf Rust", "Sugarcane Smut", "Citrus Canker"],
@@ -193,6 +203,8 @@ export const GLOBAL_REGIONS_DATA: GlobalRegionStatistic[] = [
     headlineStat: {
       value: "AU$120M",
       label: "lost by Australian growers to wheat stripe rust each year (+ AU$150M in control)",
+      labelUr: "آسٹریلوی کاشتکاروں کو ہر سال گندم کی پٹی والی زنگ سے نقصان (+ کنٹرول پر AU$150M)",
+      labelRoman: "Australian kashtkaron ko har saal gandum ki patti wali zang se nuqsan (+ control par AU$150M)",
       source: "GRDC GroundCover, 2025",
     },
     primaryCropThreats: ["Wheat Stripe Rust", "Canola Blackleg", "Barley Spot-Form Net Blotch", "Grapevine Downy Mildew"],
