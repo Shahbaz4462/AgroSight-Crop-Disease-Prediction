@@ -113,9 +113,14 @@ function project(features: typeof PAKISTAN_BOUNDARIES.features): Projected[] {
 }
 
 const riskBg: Record<string, string> = { Low: "bg-ok", Medium: "bg-warn", High: "bg-danger", Alert: "bg-danger" };
+const riskKey: Record<string, string> = { Low: "risk_low", Medium: "risk_medium", High: "risk_high", Alert: "risk_alert" };
 
 export const PakistanMapInteractive: React.FC = () => {
-  const { t } = useApp();
+  const { t, language } = useApp();
+  // Urdu/Roman Urdu display text for data that is English in the data file.
+  // Falls back to English when a translation is absent.
+  const langText = (en: string, ur?: string, roman?: string) =>
+    language === "ur" ? (ur ?? en) : language === "roman" ? (roman ?? en) : en;
   const [sel, setSel] = useState<ProvinceStatistic>(PAKISTAN_REGIONS_DATA[0]);
   const shapes = useMemo(() => project(PAKISTAN_BOUNDARIES.features), []);
 
@@ -156,7 +161,7 @@ export const PakistanMapInteractive: React.FC = () => {
               onClick={() => setSel(p)}
               className={`h-11 label !text-[10px] border-r-2 last:border-r-0 border-ink ${sel.id === p.id ? "bg-ink text-paper" : "bg-card hover:bg-accent hover:text-[#0b1a12]"}`}
             >
-              {p.name.split(" ")[0]}
+              {langText(p.name.split(" ")[0], p.urduName)}
             </button>
           ))}
         </div>
@@ -165,10 +170,10 @@ export const PakistanMapInteractive: React.FC = () => {
       <div className="lg:col-span-5 p-5 sm:p-8 space-y-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="label text-muted">{sel.capital}</p>
-            <h3 className="mt-2 font-display font-extrabold text-4xl leading-none">{sel.name}</h3>
+            <p className="label text-muted">{langText(sel.capital, sel.urduCapital)}</p>
+            <h3 className="mt-2 font-display font-extrabold text-4xl leading-none">{langText(sel.name, sel.urduName)}</h3>
           </div>
-          <span className={`label !text-[10px] px-2 py-1.5 border-2 border-ink text-[#0b1a12] ${riskBg[sel.riskLevel] ?? "bg-warn"}`}>{sel.riskLevel} {t("risk_label")}</span>
+          <span className={`label !text-[10px] px-2 py-1.5 border-2 border-ink text-[#0b1a12] ${riskBg[sel.riskLevel] ?? "bg-warn"}`}>{t(riskKey[sel.riskLevel])} {t("risk_label")}</span>
         </div>
 
         <dl className={`grid ${sel.keyFacts.length === 2 ? "grid-cols-2" : "grid-cols-3"} border-2 border-ink divide-x-2 divide-ink text-center`}>
@@ -206,7 +211,7 @@ export const PakistanMapInteractive: React.FC = () => {
         {sel.currentAlert && (
           <p className="text-sm">
             <span className="label text-muted">{t("alert_label")} · </span>
-            {sel.currentAlert.text} <span className="text-muted">— {sel.currentAlert.source}</span>
+            {langText(sel.currentAlert.text, sel.currentAlert.textUr, sel.currentAlert.textRoman)} <span className="text-muted">— {sel.currentAlert.source}</span>
           </p>
         )}
 

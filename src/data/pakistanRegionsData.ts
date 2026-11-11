@@ -20,6 +20,7 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     name: "Punjab",
     urduName: "پنجاب",
     capital: "Lahore",
+    urduCapital: "لاہور",
     majorCrops: ["Wheat", "Cotton", "Rice", "Sugarcane", "Potato", "Citrus (Kinnow)", "Maize"],
     topDiseases: [
       {
@@ -51,6 +52,8 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     riskLevel: "High",
     currentAlert: {
       text: "Cotton pink bollworm — 2nd pest alert",
+      textUr: "کپاس کا گلابی سنڈی — دوسرا کیڑوں کا انتباہ",
+      textRoman: "Kapas ka gulabi sundi — dusra keeron ka intebah",
       source: "Punjab Agriculture Dept, Pest Warning & Quality Control of Pesticides, letter No. 3927-83, 18 Aug 2026",
     },
     sources:
@@ -62,6 +65,7 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     name: "Sindh",
     urduName: "سندھ",
     capital: "Karachi",
+    urduCapital: "کراچی",
     majorCrops: ["Cotton", "Rice", "Sugarcane", "Wheat", "Mango", "Banana"],
     topDiseases: [
       {
@@ -93,6 +97,8 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     riskLevel: "High",
     currentAlert: {
       text: "Banana Panama wilt (TR4) outbreak — Tando Allahyar",
+      textUr: "کیلے کی پاناما مرجھاؤ (TR4) کی وبا — ٹنڈو الہ یار",
+      textRoman: "Kelay ki Panama murjhao (TR4) ki waba — Tando Allahyar",
       source: "Dawn, 10 Nov 2025; PARC confirmed",
     },
     sources:
@@ -104,6 +110,7 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     name: "Khyber Pakhtunkhwa (KPK)",
     urduName: "خیبر پختونخوا",
     capital: "Peshawar",
+    urduCapital: "پشاور",
     majorCrops: ["Maize", "Wheat", "Tobacco", "Sugarcane", "Peach", "Apple"],
     topDiseases: [
       {
@@ -135,6 +142,8 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     riskLevel: "Medium",
     currentAlert: {
       text: "Wheat rust awareness field visits — Swabi",
+      textUr: "گندم کی زنگ سے آگاہی کے لیے کھیتوں کے دورے — صوابی",
+      textRoman: "Gandum ki zang se agahi ke liye kheiton ke doray — Swabi",
       source: "Agriculture Department Khyber Pakhtunkhwa, 9 & 25 Mar 2026",
     },
     sources:
@@ -146,6 +155,7 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     name: "Balochistan",
     urduName: "بلوچستان",
     capital: "Quetta",
+    urduCapital: "کوئٹہ",
     majorCrops: ["Apple", "Grape", "Pomegranate", "Dates", "Almond", "Wheat"],
     topDiseases: [
       {
@@ -180,6 +190,7 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     name: "Gilgit-Baltistan (GB)",
     urduName: "گلگت بلتستان",
     capital: "Gilgit",
+    urduCapital: "گلگت",
     majorCrops: ["Cherry", "Apricot", "Walnut", "Apple", "Potato", "Wheat", "Maize"],
     topDiseases: [
       {
@@ -218,6 +229,7 @@ export const PAKISTAN_REGIONS_DATA: ProvinceStatistic[] = [
     name: "Azad Jammu & Kashmir (AJK)",
     urduName: "آزاد جموں و کشمیر",
     capital: "Muzaffarabad",
+    urduCapital: "مظفرآباد",
     majorCrops: ["Maize", "Wheat", "Walnut", "Apple", "Barley", "Millet", "Vegetables"],
     topDiseases: [
       {

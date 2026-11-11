@@ -455,7 +455,14 @@ function ResultContent() {
                       </div>
                       <p className="mt-2 text-sm leading-relaxed">{chem.detail}</p>
                       {chem.source && (
-                        <p className="mt-3 text-xs text-muted">{t("sources_label")}: {chem.source}</p>
+                        <div className="mt-3 bg-accent/25 px-3 py-2">
+                          <p className="text-xs leading-relaxed text-muted">{t("sources_label")}: {chem.source}</p>
+                          {chem.sourceUrl && (
+                            <a href={chem.sourceUrl} target="_blank" rel="noreferrer" className="btn btn-paper mt-2 !min-h-[2rem] !px-3 !py-1 !text-xs">
+                              {t("view_source")} <ArrowUpRight className="w-3.5 h-3.5" />
+                            </a>
+                          )}
+                        </div>
                       )}
                       <p className="label text-muted mt-4 mb-2">{t("buy_from")}</p>
                       <ul className="space-y-3">

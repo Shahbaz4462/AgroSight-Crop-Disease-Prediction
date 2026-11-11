@@ -65,6 +65,7 @@ export interface ProvinceStatistic {
   name: string;
   urduName: string;
   capital: string;
+  urduCapital: string;
   majorCrops: string[];
   // Ranked by documented importance. No percentages: no institution
   // publishes province-level disease-share percentages, so the list is
@@ -76,7 +77,8 @@ export interface ProvinceStatistic {
   keyFacts: { labelKey: string; value: string }[];
   riskLevel: "Low" | "Medium" | "High" | "Alert";
   // Most recent significant official alert, if one exists.
-  currentAlert?: { text: string; source: string };
+  // textUr/textRoman are the same alert translated for Urdu/Roman Urdu.
+  currentAlert?: { text: string; source: string; textUr?: string; textRoman?: string };
   // Complete references (institution + document + date/year) for every
   // fact and disease above, plus the verification date.
   sources: string;
@@ -88,7 +90,8 @@ export interface GlobalRegionStatistic {
   region: "Asia" | "Europe" | "Africa" | "North America" | "South America" | "Oceania";
   // One real published figure per region (value + what it means + source).
   // Replaces the invented totalDiagnosesSample number.
-  headlineStat: { value: string; label: string; source: string };
+  // labelUr/labelRoman are the same label translated for Urdu/Roman Urdu.
+  headlineStat: { value: string; label: string; source: string; labelUr?: string; labelRoman?: string };
   primaryCropThreats: string[];
   // Ranked by documented importance. No rates: no institution publishes
   // regional disease-share percentages, so the list is qualitative —
