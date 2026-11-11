@@ -217,15 +217,39 @@ async function fetchModelText(
 // Probing is local-only: a part that is not on this deployment is
 // simply not part of this model, so asking the CDN for every
 // missing part would double the wasted round-trips.
+//
+// A 404 means "no more parts" (the shard ends here). A network
+// failure is retried and, if it persists, thrown — so a dropped
+// request on a slow connection can never silently truncate the
+// weights. The old code treated any failed fetch as "no more
+// parts", so one dropped part silently shortened the weights and
+// the scan failed with a generic error (and the short weights
+// could even be cached, breaking every later scan too).
 async function fetchShardParts(
   file: string,
   localBase: string,
   cdnBase: string
 ): Promise<string | null> {
+  const fetchPart = async (i: number): Promise<string | null> => {
+    const url = `${localBase}/${file}.b64.part${String(i).padStart(2, "0")}`;
+    let lastError: unknown = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const res = await fetch(url);
+        if (res.ok) return await res.text();
+        if (res.status === 404) return null;
+        lastError = new Error(`Request failed (${res.status}) for ${url}`);
+      } catch (e) {
+        lastError = e;
+      }
+      if (attempt < 2) {
+        await new Promise((r) => setTimeout(r, 300 * (attempt + 1)));
+      }
+    }
+    throw lastError ?? new Error(`Could not download ${url}`);
+  };
   const found = await Promise.all(
-    Array.from({ length: 24 }, (_, i) =>
-      fetchModelText(`${file}.b64.part${String(i).padStart(2, "0")}`, localBase, cdnBase, true)
-    )
+    Array.from({ length: 24 }, (_, i) => fetchPart(i))
   );
   const parts: string[] = [];
   for (const part of found) {
@@ -233,6 +257,48 @@ async function fetchShardParts(
     parts.push(part);
   }
   return parts.length > 0 ? parts.join("") : null;
+}
+
+// Fetch a small JSON file (class list, solutions) local-first with
+// a CDN fallback, retried once. A single dropped request on a slow
+// connection must not fail the whole scan.
+async function fetchJsonText(
+  relative: string,
+  localBase: string,
+  cdnBase: string
+): Promise<string> {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const text = await fetchModelText(relative, localBase, cdnBase);
+    if (text !== null) return text;
+    if (attempt === 0) {
+      await new Promise((r) => setTimeout(r, 400));
+    }
+  }
+  throw new Error(`Could not load ${relative} — please check your connection and try again.`);
+}
+
+// Expected stored weight bytes from the manifest. Weights are
+// stored float16-quantized (2 bytes/element) unless the entry has
+// no quantization (float32/int32 = 4 bytes, uint8/bool = 1).
+function expectedWeightBytes(modelJson: ModelJson): number {
+  let total = 0;
+  for (const group of modelJson.weightsManifest) {
+    for (const w of group.weights as {
+      shape: number[];
+      dtype: string;
+      quantization?: { dtype: string };
+    }[]) {
+      const elements = w.shape.reduce((n, s) => n * s, 1);
+      const bytes =
+        w.quantization?.dtype === "float16"
+          ? 2
+          : w.dtype === "float32" || w.dtype === "int32"
+            ? 4
+            : 1;
+      total += elements * bytes;
+    }
+  }
+  return total;
 }
 
 type CachedModel = { modelJsonText: string; weightData: ArrayBuffer };
@@ -373,6 +439,16 @@ async function loadGraphModelArtifacts(
     })
   );
   const total = buffers.reduce((n, b) => n + b.byteLength, 0);
+  // Never trust a truncated download: if the assembled weights are
+  // shorter than the manifest says they must be, a part was lost
+  // and the model would fail (or worse, be cached broken). Throw
+  // here, before caching, so the next scan retries the download.
+  const expected = expectedWeightBytes(modelJson);
+  if (total !== expected) {
+    throw new Error(
+      `Model weights are incomplete (${total} of ${expected} bytes) — please try again.`
+    );
+  }
   const weightData = new Uint8Array(total);
   let offset = 0;
   for (const b of buffers) {
@@ -398,9 +474,9 @@ async function loadLeafcropModelData() {
       });
   }
   if (!leafcropClassNames) {
-    leafcropClassNames = (await (
-      await fetch("/model/leafcrop/leafcrop_class_names.json")
-    ).json()) as string[];
+    leafcropClassNames = JSON.parse(
+      await fetchJsonText("leafcrop_class_names.json", LEAFCROP_LOCAL_BASE, LEAFCROP_CDN_BASE)
+    ) as string[];
   }
   const model = await leafcropModelPromise;
   // Safety net: the leaf+crop model must output exactly one
@@ -432,14 +508,14 @@ async function loadDiseaseModelData(crop: string) {
       });
   }
   if (!diseaseClassNames[crop]) {
-    diseaseClassNames[crop] = (await (
-      await fetch(`${bases.local}/${crop}_class_names.json`)
-    ).json()) as string[];
+    diseaseClassNames[crop] = JSON.parse(
+      await fetchJsonText(`${crop}_class_names.json`, bases.local, bases.cdn)
+    ) as string[];
   }
   if (!diseaseSolutions[crop]) {
-    diseaseSolutions[crop] = (await (
-      await fetch(`${bases.local}/solutions.json`)
-    ).json()) as Record<string, Solution>;
+    diseaseSolutions[crop] = JSON.parse(
+      await fetchJsonText("solutions.json", bases.local, bases.cdn)
+    ) as Record<string, Solution>;
   }
   const model = await diseaseModelPromises[crop];
   const outputSize = (model.outputs?.[0]?.shape as number[] | undefined)?.[1];
